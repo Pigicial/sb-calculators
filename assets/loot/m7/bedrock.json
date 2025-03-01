@@ -1,0 +1,260 @@
+{
+  "floor": 7,
+  "master_mode": true,
+  "chest_type": "Bedrock",
+  "base_quality": 420,
+  "base_cost": 2000000,
+  "loot": [
+    {
+      "item": "IMPLOSION_SCROLL",
+      "quality": 380,
+      "weight": 25,
+      "extra_chest_cost": 48000000
+    },
+    {
+      "item": "SHADOW_WARP_SCROLL",
+      "quality": 380,
+      "weight": 25,
+      "extra_chest_cost": 48000000
+    },
+    {
+      "item": "WITHER_SHIELD_SCROLL",
+      "quality": 380,
+      "weight": 25,
+      "extra_chest_cost": 48000000
+    },
+    {
+      "item": "NECRON_HANDLE",
+      "quality": 380,
+      "weight": 18,
+      "extra_chest_cost": 98000000
+    },
+    {
+      "item": "DARK_CLAYMORE",
+      "quality": 360,
+      "weight": 10,
+      "extra_chest_cost": 148000000
+    },
+    {
+      "item": "AUTO_RECOMBOBULATOR",
+      "quality": 330,
+      "weight": 80,
+      "extra_chest_cost": 8000000
+    },
+    {
+      "item": "FIFTH_MASTER_STAR",
+      "quality": 320,
+      "weight": 30,
+      "extra_chest_cost": 7000000
+    },
+    {
+      "item": "WITHER_CHESTPLATE",
+      "quality": 310,
+      "weight": 80,
+      "extra_chest_cost": 8000000
+    },
+    {
+      "enchantment": "ONE_FOR_ALL",
+      "enchantment_level": 1,
+      "quality": 290,
+      "weight": 80,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "quality": 250,
+      "weight": 500,
+      "extra_chest_cost": 4000000
+    },
+    {
+      "item": "WITHER_LEGGINGS",
+      "quality": 250,
+      "weight": 320,
+      "extra_chest_cost": 4000000
+    },
+    {
+      "item": "MASTER_SKULL_TIER_5",
+      "quality": 250,
+      "weight": 24,
+      "extra_chest_cost": 30000000
+    },
+    {
+      "item": "WITHER_CLOAK",
+      "quality": 230,
+      "weight": 480,
+      "extra_chest_cost": 2500000
+    },
+    {
+      "item": "WITHER_BLOOD",
+      "quality": 210,
+      "weight": 480,
+      "extra_chest_cost": 1000000
+    },
+    {
+      "item": "WITHER_HELMET",
+      "quality": 210,
+      "weight": 480,
+      "extra_chest_cost": 2000000
+    },
+    {
+      "enchantment": "THUNDERLORD",
+      "enchantment_level": 7,
+      "quality": 200,
+      "weight": 20,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "SOUL_EATER",
+      "enchantment_level": 1,
+      "quality": 180,
+      "weight": 800,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "quality": 175,
+      "weight": 400,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "WITHER_BOOTS",
+      "quality": 170,
+      "weight": 480,
+      "extra_chest_cost": 500000
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "quality": 160,
+      "weight": 800,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "WITHER_CATALYST",
+      "quality": 160,
+      "weight": 400,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "PRECURSOR_GEAR",
+      "quality": 140,
+      "weight": 1200,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 2,
+      "quality": 120,
+      "weight": 1000,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 2,
+      "quality": 120,
+      "weight": 400,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 3,
+      "quality": 100,
+      "weight": 1000,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 2,
+      "quality": 100,
+      "weight": 1000,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 2,
+      "quality": 100,
+      "weight": 800,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 3,
+      "quality": 100,
+      "weight": 600,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 3,
+      "quality": 100,
+      "weight": 500,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 2,
+      "quality": 100,
+      "weight": 500,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 7,
+      "quality": 80,
+      "weight": 1000,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 7,
+      "quality": 80,
+      "weight": 320,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "MAXOR_THE_FISH",
+      "quality": 61,
+      "weight": 5,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "GOLDOR_THE_FISH",
+      "quality": 61,
+      "weight": 5,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "STORM_THE_FISH",
+      "quality": 61,
+      "weight": 5,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "quality": 10,
+      "weight": 1,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "quality": 1,
+      "weight": 0,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 100,
+      "quality": 0,
+      "weight": 0,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 125,
+      "quality": 0,
+      "weight": 0,
+      "extra_chest_cost": 0
+    }
+  ]
+}

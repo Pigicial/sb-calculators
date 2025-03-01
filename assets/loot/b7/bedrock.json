@@ -1,0 +1,73 @@
+{
+  "floor": 1,
+  "master_mode": false,
+  "chest_type": "Bedrock",
+  "base_cost": 200000,
+  "base_quality": 240,
+  "loot": [
+    {
+      "item": "HASH_BROWNS_MEAL",
+      "extra_chest_cost": 1000000,
+      "quality": 200,
+      "weight": 100
+    },
+    {
+      "item": "EXTRA_CRISPY_HASH_BROWNS",
+      "extra_chest_cost": 1000000,
+      "quality": 110,
+      "weight": 20
+    },
+    {
+      "item": "REGULAR_HASH_BROWNS",
+      "extra_chest_cost": 1000000,
+      "quality": 80,
+      "weight": 50
+    },
+    {
+      "item": "SLIGHTLY_BURNT_HASH_BROWNS",
+      "extra_chest_cost": 1000000,
+      "quality": 65,
+      "weight": 55
+    },
+    {
+      "item": "FRENCH_FRIES",
+      "extra_chest_cost": 1000000,
+      "quality": 55,
+      "weight": 45
+    },
+    {
+      "item": "KETCHUP_PACKET",
+      "extra_chest_cost": 1000000,
+      "quality": 20,
+      "weight": 60
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 6,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 8,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}
