@@ -1,0 +1,78 @@
+{
+  "floor": 1,
+  "master_mode": false,
+  "chest_type": "Wood",
+  "base_cost": 0,
+  "base_quality": 110,
+  "loot": [
+    {
+      "item": "NECROMANCER_BROOCH",
+      "extra_chest_cost": 0,
+      "quality": 110,
+      "weight": 1
+    },
+    {
+      "enchantment": "ULTIMATE_BANK",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 40
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 40
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 30
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 4,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 3,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

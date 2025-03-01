@@ -1,0 +1,134 @@
+{
+  "floor": 1,
+  "master_mode": false,
+  "chest_type": "Obsidian",
+  "base_quality": 300,
+  "base_cost": 250000,
+  "loot": [
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "quality": 250,
+      "weight": 3,
+      "extra_chest_cost": 5000000
+    },
+    {
+      "item": "BONZO_STAFF",
+      "quality": 240,
+      "weight": 1,
+      "extra_chest_cost": 2000000
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "quality": 220,
+      "weight": 2,
+      "extra_chest_cost": 1000000
+    },
+    {
+      "item": "BONZO_MASK",
+      "quality": 200,
+      "weight": 3,
+      "extra_chest_cost": 1000000
+    },
+    {
+      "item": "RED_NOSE",
+      "quality": 180,
+      "weight": 3,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "BALLOON_SNAKE",
+      "quality": 170,
+      "weight": 4,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "quality": 160,
+      "weight": 5,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "quality": 120,
+      "weight": 15,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "quality": 120,
+      "weight": 15,
+      "extra_chest_cost": 0
+    },
+    {
+      "item": "NECROMANCER_BROOCH",
+      "quality": 110,
+      "weight": 10,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 1,
+      "quality": 100,
+      "weight": 2,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 1,
+      "quality": 100,
+      "weight": 1,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 1,
+      "quality": 80,
+      "weight": 25,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "quality": 80,
+      "weight": 8,
+      "extra_chest_cost": 0
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "quality": 80,
+      "weight": 8,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "quality": 10,
+      "weight": 1,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "quality": 1,
+      "weight": 0,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 6,
+      "quality": 0,
+      "weight": 0,
+      "extra_chest_cost": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 15,
+      "quality": 0,
+      "weight": 0,
+      "extra_chest_cost": 0
+    }
+  ]
+}
