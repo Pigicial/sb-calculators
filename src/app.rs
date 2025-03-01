@@ -1,6 +1,6 @@
 use crate::loot::{ChestType, LootChest, LootEntry};
 use crate::{loot, loot_calculator};
-use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, ScrollArea, TextStyle, Ui, Widget};
+use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, ScrollArea, TextStyle, ThemePreference, Ui, Widget};
 use std::collections::HashMap;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
@@ -9,7 +9,7 @@ use egui::scroll_area::ScrollBarVisibility;
 use egui_extras::{Column, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
-use crate::loot_calculator::{calculate_chances, calculate_weight, RngMeterData};
+use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, RngMeterData};
 
 static ASSETS_DIR: Dir = include_dir!("assets");
 
@@ -24,7 +24,7 @@ pub struct LootApp {
 
     rng_meter_data: RngMeterData,
 
-    hashed_chances: HashMap<u64, Vec<(Rc<LootEntry>, f64)>>,
+    hashed_chances: HashMap<u64, CalculationResult>,
 
     images: HashMap<String, TextureHandle>,
     loot: HashMap<String, Vec<Rc<LootChest>>>,
@@ -51,7 +51,7 @@ impl eframe::App for LootApp {
                     ui.add_space(16.0);
                 }
 
-                egui::widgets::global_theme_preference_buttons(ui);
+                ui.ctx().set_theme(ThemePreference::Dark);
                 ui.add_space(16.0);
                 egui::gui_zoom::zoom_menu_buttons(ui);
             });
@@ -59,7 +59,7 @@ impl eframe::App for LootApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            self.add_settings_section(ui);
+            self.add_regular_settings_section(ui);
             ui.separator();
 
             if self.floor.is_some() && self.chest.is_some() {
@@ -77,7 +77,7 @@ impl eframe::App for LootApp {
                         self.s_plus || self.require_s_plus(),
                     );
 
-                    let new_chances = calculate_chances(chest, starting_quality);
+                    let new_chances = calculate_chances(chest, starting_quality, &self.rng_meter_data);
                     self.hashed_chances.insert(hash, new_chances);
 
                     self.add_loot_section(ui);
@@ -85,7 +85,7 @@ impl eframe::App for LootApp {
             }
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::Center), |ui| {
-                powered_by_egui_and_eframe(ui);
+                // powered_by_egui_and_eframe(ui);
                 egui::warn_if_debug_build(ui);
             });
             ui.max_rect().with_max_x(200.0)
@@ -121,7 +121,7 @@ impl LootApp {
         app
     }
 
-    fn add_settings_section(&mut self, ui: &mut Ui) {
+    fn add_regular_settings_section(&mut self, ui: &mut Ui) {
         ui.heading("Options");
 
         Grid::new("config_grid")
@@ -138,6 +138,9 @@ impl LootApp {
                 self.add_floor_options(ui);
                 ui.end_row();
                 self.add_chest_options(ui);
+                ui.end_row();
+
+                self.add_rng_meter_section(ui);
             });
     }
 
@@ -250,6 +253,64 @@ impl LootApp {
             });
     }
 
+    fn add_rng_meter_section(&mut self, ui: &mut Ui) {
+        let highest_tier_chest = if let Some(floor) = &self.floor {
+            self.loot.get(floor).unwrap().last()
+        } else {
+            return;
+        };
+
+        let highest_tier_chest = highest_tier_chest.unwrap();
+
+        ui.heading("RNG Meter");
+        ui.end_row();
+
+        ui.horizontal(|ui| {
+            self.add_image(ui, "painting.png");
+            ui.label("Item: ");
+        });
+
+        egui::ComboBox::from_label("Select an item")
+            .selected_text(loot::floor_to_text(
+                self.rng_meter_data.selected_item.as_deref().map(|e| e.to_string()).unwrap_or(String::from("None")).to_string(),
+            ))
+            .show_ui(ui, |ui| {
+                let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
+
+                ui.selectable_value(&mut self.rng_meter_data.selected_item, None, "None");
+
+                for entry in highest_tier_chest.loot.iter() {
+                    if entry.is_essence_and_can_roll_multiple_times() { // essence doesn't show in rng meter
+                        continue;
+                    }
+                    let item_weight = entry.get_weight();
+                    let required_xp: i32 = (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
+
+                    let text = format!("{} ({:} XP)", entry, required_xp);
+                    let label = egui::SelectableLabel::new(self.rng_meter_data.selected_item == Some(Rc::clone(entry)), text);
+                    if ui.add(label).clicked() {
+                        let rng_meter_data = &mut self.rng_meter_data;
+                        rng_meter_data.selected_item = Some(Rc::clone(entry));
+                        rng_meter_data.required_xp = Some(required_xp);
+                        rng_meter_data.selected_xp = rng_meter_data.selected_xp.min(required_xp);
+                    }
+                }
+            });
+
+        ui.end_row();
+        let selected_item = &self.rng_meter_data.selected_item;
+        if selected_item.is_some() {
+            ui.horizontal(|ui| {
+                self.add_first_valid_image(ui, selected_item.as_ref().unwrap().get_possible_file_names());
+                ui.label("XP: ");
+            });
+
+            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=self.rng_meter_data.required_xp.unwrap()).suffix(" XP"));
+        }
+
+        ui.end_row();
+    }
+
     fn add_loot_section(&mut self, ui: &mut Ui) {
         let chances = self.get_chances();
         if chances.is_none() {
@@ -283,6 +344,7 @@ impl LootApp {
                     .column(Column::auto())
                     .column(Column::auto())
                     .column(Column::auto())
+                    //.column(Column::auto())
                     .column(Column::auto())
                     .min_scrolled_height(0.0)
                     .max_scroll_height(available_height);
@@ -290,12 +352,19 @@ impl LootApp {
                 table.header(20.0, |mut header| {
                     header.col(|ui| { ui.strong("Entry"); });
                     header.col(|ui| { ui.strong(format!("Quality ({})", starting_quality)); });
-                    header.col(|ui| { ui.strong("Weight"); });
-                    header.col(|ui| { ui.strong("First Roll Chance").on_hover_text("As shown in the RNG Meter"); });
+                    header.col(|ui| { 
+                        ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.'))); }
+                    );
+                    // header.col(|ui| { ui.strong("First Roll Chance").on_hover_text("As shown in the RNG Meter"); });
                     header.col(|ui| { ui.strong("Chance"); });
                 }).body(|mut body| {
-                    for (entry, chance) in chances {
+                    for entry in chances.chances.iter() {
+                        let weight = entry.used_weight;
+                        let chance = entry.chance;
+                        let entry = &entry.entry;
+
                         body.row(text_height, |mut row| {
+                            row.set_hovered(true);
                             row.col(|ui| {
                                 self.add_first_valid_image(ui, entry.get_possible_file_names());
                                 ui.label(entry.to_string());
@@ -304,7 +373,8 @@ impl LootApp {
                                 ui.label(widget_text::RichText::new(format!("{}", entry.get_quality())).color(Color32::from_rgb(85, 255, 255)));
                             });
                             row.col(|ui| {
-                                ui.label(widget_text::RichText::new(format!("{}", entry.get_weight())).color(Color32::from_rgb(85, 255, 255)));
+                                ui.label(widget_text::RichText::new(format!("{:.1$}", weight, 2)).color(Color32::from_rgb(85, 255, 255)))
+                                    .on_hover_text(format!("More Decimals: {}", weight));
                             });
 
                             row.col(|ui| {
@@ -341,10 +411,12 @@ impl LootApp {
         self.boss_luck_increase.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.chest.hash(&mut hasher);
+        self.rng_meter_data.selected_xp.hash(&mut hasher);
+        self.rng_meter_data.selected_item.hash(&mut hasher);
         hasher.finish()
     }
 
-    fn get_chances(&self) -> Option<&Vec<(Rc<LootEntry>, f64)>> {
+    fn get_chances(&self) -> Option<&CalculationResult> {
         let hash = self.generate_hash();
         self.hashed_chances.get(&hash)
     }
