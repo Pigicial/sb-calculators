@@ -66,6 +66,19 @@ pub enum ChestType {
     Bedrock,
 }
 
+impl ChestType {
+    pub fn get_order(&self) -> u8 {
+        match self {
+            ChestType::Wood => 1,
+            ChestType::Gold => 2,
+            ChestType::Diamond => 3,
+            ChestType::Emerald => 4,
+            ChestType::Obsidian => 5,
+            ChestType::Bedrock => 6,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Eq, Hash)]
 #[serde(untagged)]
 pub enum LootEntry {
@@ -200,7 +213,10 @@ pub fn read_all_chests(dir: &Dir) -> HashMap<String, Vec<LootChest>> {
                     .to_string();
 
                 chest.fill_in_quality();
-                chests.entry(floor).or_insert(Vec::new()).push(chest);
+
+                let registered_chests = chests.entry(floor).or_insert(Vec::new());
+                registered_chests.push(chest);
+                registered_chests.sort_by(|a, b| a.chest_type.get_order().cmp(&b.chest_type.get_order()))
             }
             Err(e) => eprintln!("Failed to parse JSON from {}: {}", path.display(), e),
         }
