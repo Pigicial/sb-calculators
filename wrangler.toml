@@ -2,5 +2,3 @@ name = "cata-calc"
 compatibility_date = "2025-03-02"
 pages_build_output_dir = "./dist"
 
-[build]
-command = "cargo install -q worker-build && worker-build --release"
