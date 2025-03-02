@@ -78,12 +78,14 @@
     },
     {
       "item": "MASTER_SKULL_TIER_5",
+      "item_name": "Master Skull - Tier 5",
       "quality": 250,
       "weight": 24,
       "extra_chest_cost": 30000000
     },
     {
       "item": "WITHER_CLOAK",
+      "item_name": "Wither Cloak Sword",
       "quality": 230,
       "weight": 480,
       "extra_chest_cost": 2500000

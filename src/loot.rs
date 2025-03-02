@@ -28,7 +28,7 @@ pub struct FilteredEntryData {
 
 impl LootChest {
     fn fill_in_quality(&mut self) {
-        let max_quality = loot_calculator::calculate_weight(self, 1.03, 10, true);
+        let max_quality = loot_calculator::calculate_quality(self, 1.03, 10, true);
 
         let mut array: Vec<FilteredEntryData> = vec![Default::default(); (max_quality + 1) as usize];
         for quality_threshold in 0..=max_quality {
