@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::Display;
 use std::rc::Rc;
+use convert_case::{Case, Casing};
+use roman;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {
@@ -139,11 +141,13 @@ impl LootEntry {
         }
     }
 
-    pub fn is_debug_item(&self) -> bool {
-        match self {
-            LootEntry::Item { item, .. } => item.contains("STORM_THE_FISH"),
-            _ => false,
-        }
+    pub fn get_wiki_page_name(&self) -> String {
+        format!("https://wiki.hypixel.net/{}", match self {
+            LootEntry::Item { item, ..} => item.clone(),
+            LootEntry::Pet { pet, .. } => pet.to_case(Case::Title),
+            LootEntry::Enchantment { enchantment, .. } => format!("{} Enchantment", enchantment.to_case(Case::Title)),
+            LootEntry::Essence { essence_type, .. } => format!("{} Essence", essence_type.to_case(Case::Title))
+        })
     }
 
     pub fn is_essence_and_can_roll_multiple_times(&self) -> bool {
@@ -166,22 +170,37 @@ impl LootEntry {
 impl Display for LootEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            LootEntry::Item { item: id, .. } => write!(f, "{}", id),
-            LootEntry::Enchantment {
-                enchantment,
-                enchantment_level: level,
-                ..
-            } => {
-                write!(f, "{}_{}", enchantment, level)
-            }
-            LootEntry::Pet { pet, tier, .. } => write!(f, "PET_{}_{}", pet, tier),
-            LootEntry::Essence {
-                essence_type: essence,
-                essence_amount: amount,
-                ..
-            } => {
-                write!(f, "{}_ESSENCE ({})", essence, amount)
-            }
+            LootEntry::Item { item, ..} => {
+                let default = &*item.to_case(Case::Title);
+                write!(f, "{}", match item as &str {
+                    "NECROMANCER_BROOCH" => "Necromancer's Brooch",
+                    "BONZO_MASK" => "Bonzo's Mask",
+                    "NECRON_HANDLE" => "Necron's Handle",
+                    "AOTE_STONE" => "Warped Stone",
+                    "IMPLOSION_SCROLL" => "Implosion",
+                    "SHADOW_WARP_SCROLL" => "Shadow Warp",
+                    "WITHER_SHIELD_SCROLL" => "Wither Shield",
+                    "MASTER_SKULL_TIER_1" => "Master Skull - Tier 1",
+                    "MASTER_SKULL_TIER_2" => "Master Skull - Tier 2",
+                    "MASTER_SKULL_TIER_3" => "Master Skull - Tier 3",
+                    "MASTER_SKULL_TIER_4" => "Master Skull - Tier 4",
+                    "MASTER_SKULL_TIER_5" => "Master Skull - Tier 5",
+                    _ => default
+                })
+            },
+            LootEntry::Pet { pet, .. } => write!(f, "{}", pet.to_case(Case::Title)),
+            LootEntry::Enchantment { enchantment, enchantment_level, .. } => write!(
+                f,
+                "{} {} Book",
+                enchantment.to_case(Case::Title),
+                roman::to(*enchantment_level as i32).unwrap()
+            ),
+            LootEntry::Essence { essence_type, essence_amount, .. } => write!(
+                f,
+                "{} Essence ({})",
+                essence_type.to_case(Case::Title),
+                essence_amount
+            )
         }
     }
 }

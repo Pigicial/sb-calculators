@@ -1,4 +1,4 @@
-use crate::loot::{ChestType, LootChest, LootEntry};
+use crate::loot::{ChestType, LootChest};
 use crate::loot;
 use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, ScrollArea, TextStyle, ThemePreference, Ui, Widget};
 use std::collections::HashMap;
@@ -10,9 +10,9 @@ use egui_extras::{Column, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
-use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, LootChanceEntry, RngMeterData};
+use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, RngMeterData};
 
-static ASSETS_DIR: Dir = include_dir!("assets");
+static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
 pub struct LootApp {
     floor: Option<String>,
@@ -295,14 +295,19 @@ impl LootApp {
             self.add_image(ui, "painting.png");
             ui.label("Item: ");
         });
-        
+
+        let selected_item_string = self.rng_meter_data.selected_item
+            .as_deref()
+            .map(|entry| {
+                let required_xp: i32 = (300.0 * (total_weight as f32 / entry.get_weight() as f32)).round() as i32;
+                format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en))
+            })
+            .unwrap_or(String::from("None"))
+            .to_string();
+
+
         egui::ComboBox::from_label("Select an item")
-            .selected_text(loot::floor_to_text(
-                self.rng_meter_data.selected_item.as_deref().map(|entry| {
-                    let required_xp: i32 = (300.0 * (total_weight as f32 / entry.get_weight() as f32)).round() as i32;
-                    format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en))
-                }).unwrap_or(String::from("None")).to_string(),
-            ))
+            .selected_text(selected_item_string)
             .show_ui(ui, |ui| {
                 ui.selectable_value(&mut self.rng_meter_data.selected_item, None, "None");
 
@@ -325,10 +330,10 @@ impl LootApp {
             });
 
         ui.end_row();
-        let selected_item = &self.rng_meter_data.selected_item;
-        if selected_item.is_some() {
+        
+        if let Some(selected_item) = self.rng_meter_data.selected_item.as_ref() {
             ui.horizontal(|ui| {
-                self.add_first_valid_image(ui, selected_item.as_ref().unwrap().get_possible_file_names());
+                self.add_first_valid_image(ui, selected_item.get_possible_file_names());
                 ui.label("XP: ");
             });
 
@@ -398,7 +403,7 @@ impl LootApp {
                     } else {
                         None
                     };
-                    
+
                     for entry in chances.chances.iter() {
                         let weight = entry.used_weight;
                         let chance = entry.chance;
@@ -411,7 +416,10 @@ impl LootApp {
                         body.row(text_height, |mut row| {
                             row.col(|ui| {
                                 self.add_first_valid_image(ui, entry.get_possible_file_names());
-                                ui.label(entry.to_string());
+
+                                let text = entry.to_string();
+                                let page_url = entry.get_wiki_page_name();
+                                ui.hyperlink_to(text, page_url);
                             });
                             row.col(|ui| {
                                 ui.label(widget_text::RichText::new((chest.base_cost + entry.get_added_chest_price()).to_formatted_string(&Locale::en)).color(Color32::from_rgb(255, 170, 0)));
@@ -516,19 +524,6 @@ fn match_chest_type_or_none(chest: &Rc<LootChest>, others: &Vec<Rc<LootChest>>) 
     for other_chest in others {
         if chest.chest_type == other_chest.chest_type {
             return Some(Rc::clone(other_chest));
-        }
-    }
-
-    None
-}
-
-fn match_item_or_none(entry: &Option<Rc<LootEntry>>, others: &Vec<LootChanceEntry>) -> Option<Rc<LootEntry>> {
-    if entry.is_some() {
-        let entry = entry.as_ref()?;
-        for other_entry in others {
-            if entry.to_string() == other_entry.entry.to_string() {
-                return Some(Rc::clone(&other_entry.entry));
-            }
         }
     }
 

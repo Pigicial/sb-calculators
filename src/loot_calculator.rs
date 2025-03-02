@@ -120,7 +120,7 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
             }
         };
     }
-    
+
     let entry_data = Rc::new(RefCell::new(EntryData {
         weighted_entries,
         weighted_essence_entry: weighted_essence_entry.unwrap(),
@@ -162,8 +162,10 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
 }
 
 pub fn sort_entries(entries: &mut[LootChanceEntry], rng_meter_item: Option<&Rc<LootEntry>>) {
+    let rng_meter_string = rng_meter_item.map_or(String::new(), |e| e.to_string());
+    
     entries.sort_by(|a, b| {
-        Some(&b.entry).eq(&rng_meter_item).cmp(&Some(&a.entry).eq(&rng_meter_item))
+        b.entry.to_string().eq(&rng_meter_string).cmp(&a.entry.to_string().eq(&rng_meter_string))
             .then((a.chance == 0.0).cmp(&(b.chance == 0.0)))
             .then(a.entry.is_essence_and_can_roll_multiple_times().cmp(&b.entry.is_essence_and_can_roll_multiple_times()))
             .then(b.entry.get_quality().cmp(&a.entry.get_quality()))
