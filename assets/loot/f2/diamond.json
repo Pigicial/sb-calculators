@@ -1,0 +1,121 @@
+{
+  "floor": 2,
+  "master_mode": false,
+  "chest_type": "Diamond",
+  "base_cost": 100000,
+  "base_quality": 210,
+  "loot": [
+    {
+      "item": "RED_SCARF",
+      "item_name": "Red Scarf",
+      "extra_chest_cost": 0,
+      "quality": 210,
+      "weight": 1
+    },
+    {
+      "item": "SCARF_STUDIES",
+      "item_name": "Scarf\u0027s Studies",
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 3
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 7
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 15
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 15
+    },
+    {
+      "item": "NECROMANCER_BROOCH",
+      "item_name": "Necromancer\u0027s Brooch",
+      "extra_chest_cost": 0,
+      "quality": 110,
+      "weight": 14
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 10
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 15
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 20
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 35
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 8,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 12,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "floor": 5,
+  "master_mode": true,
+  "chest_type": "Emerald",
+  "base_cost": 500000,
+  "base_quality": 280,
+  "loot": [
+    {
+      "item": "AOTE_STONE",
+      "item_name": "Warped Stone",
+      "extra_chest_cost": 4500000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "SHADOW_ASSASSIN_HELMET",
+      "item_name": "Shadow Assassin Helmet",
+      "extra_chest_cost": 1500000,
+      "quality": 230,
+      "weight": 15
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "item_name": "Fuming Potato Book",
+      "extra_chest_cost": 500000,
+      "quality": 220,
+      "weight": 14
+    },
+    {
+      "item": "SHADOW_ASSASSIN_BOOTS",
+      "item_name": "Shadow Assassin Boots",
+      "extra_chest_cost": 1000000,
+      "quality": 210,
+      "weight": 23
+    },
+    {
+      "enchantment": "OVERLOAD",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 30
+    },
+    {
+      "enchantment": "LEGION",
+      "enchantment_level": 1,
+      "extra_chest_cost": 500000,
+      "quality": 170,
+      "weight": 30
+    },
+    {
+      "item": "DARK_ORB",
+      "item_name": "Dark Orb",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 20
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 105
+    },
+    {
+      "enchantment": "LETHALITY",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 75
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 130,
+      "weight": 180
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 150
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 150
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 150
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 150
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 15
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 270
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 150
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 60
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 150
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 70,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 56,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

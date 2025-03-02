@@ -1,0 +1,149 @@
+{
+  "floor": 6,
+  "master_mode": true,
+  "chest_type": "Emerald",
+  "base_cost": 500000,
+  "base_quality": 290,
+  "loot": [
+    {
+      "item": "NECROMANCER_LORD_HELMET",
+      "item_name": "Necromancer Lord Helmet",
+      "extra_chest_cost": 1500000,
+      "quality": 240,
+      "weight": 2
+    },
+    {
+      "item": "SADAN_BROOCH",
+      "item_name": "Sadan\u0027s Brooch",
+      "extra_chest_cost": 1000000,
+      "quality": 220,
+      "weight": 2
+    },
+    {
+      "item": "NECROMANCER_LORD_BOOTS",
+      "item_name": "Necromancer Lord Boots",
+      "extra_chest_cost": 1000000,
+      "quality": 210,
+      "weight": 3
+    },
+    {
+      "enchantment": "SWARM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 8
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 5
+    },
+    {
+      "item": "GIANT_TOOTH",
+      "item_name": "Giant Tooth",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 8
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 5
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 16
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 16
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 15
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 15
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 20
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 25
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 25
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 75,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 60,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

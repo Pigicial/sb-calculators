@@ -1,0 +1,135 @@
+{
+  "floor": 3,
+  "master_mode": true,
+  "chest_type": "Diamond",
+  "base_cost": 250000,
+  "base_quality": 235,
+  "loot": [
+    {
+      "item": "ADAPTIVE_HELMET",
+      "item_name": "Adaptive Helmet",
+      "extra_chest_cost": 250000,
+      "quality": 185,
+      "weight": 2
+    },
+    {
+      "item": "ADAPTIVE_BOOTS",
+      "item_name": "Adaptive Boots",
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 3
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 7
+    },
+    {
+      "item": "SUSPICIOUS_VIAL",
+      "item_name": "Suspicious Vial",
+      "extra_chest_cost": 0,
+      "quality": 145,
+      "weight": 5
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 14
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 14
+    },
+    {
+      "item": "NECROMANCER_BROOCH",
+      "item_name": "Necromancer\u0027s Brooch",
+      "extra_chest_cost": 0,
+      "quality": 110,
+      "weight": 14
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 15
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 5
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "INFINITE_QUIVER",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 10
+    },
+    {
+      "enchantment": "FEATHER_FALLING",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 15
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 30
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 45,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 35,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

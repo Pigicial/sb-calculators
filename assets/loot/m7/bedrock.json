@@ -7,24 +7,28 @@
   "loot": [
     {
       "item": "IMPLOSION_SCROLL",
+      "item_name": "Implosion",
       "quality": 380,
       "weight": 25,
       "extra_chest_cost": 48000000
     },
     {
       "item": "SHADOW_WARP_SCROLL",
+      "item_name": "Shadow Warp",
       "quality": 380,
       "weight": 25,
       "extra_chest_cost": 48000000
     },
     {
       "item": "WITHER_SHIELD_SCROLL",
+      "item_name": "Wither Shield",
       "quality": 380,
       "weight": 25,
       "extra_chest_cost": 48000000
     },
     {
       "item": "NECRON_HANDLE",
+      "item_name": "Necron's Handle",
       "quality": 380,
       "weight": 18,
       "extra_chest_cost": 98000000

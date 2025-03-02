@@ -1,0 +1,170 @@
+{
+  "floor": 3,
+  "master_mode": true,
+  "chest_type": "Obsidian",
+  "base_cost": 1000000,
+  "base_quality": 350,
+  "loot": [
+    {
+      "item": "FIRST_MASTER_STAR",
+      "item_name": "First Master Star",
+      "extra_chest_cost": 4000000,
+      "quality": 280,
+      "weight": 2
+    },
+    {
+      "item": "ADAPTIVE_CHESTPLATE",
+      "item_name": "Adaptive Chestplate",
+      "extra_chest_cost": 1000000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "item_name": "Recombobulator 3000",
+      "extra_chest_cost": 5000000,
+      "quality": 250,
+      "weight": 4
+    },
+    {
+      "item": "MASTER_SKULL_TIER_3",
+      "item_name": "Master Skull - Tier 3",
+      "extra_chest_cost": 1000000,
+      "quality": 250,
+      "weight": 4
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "item_name": "Fuming Potato Book",
+      "extra_chest_cost": 500000,
+      "quality": 220,
+      "weight": 3
+    },
+    {
+      "item": "ADAPTIVE_LEGGINGS",
+      "item_name": "Adaptive Leggings",
+      "extra_chest_cost": 0,
+      "quality": 210,
+      "weight": 1
+    },
+    {
+      "item": "ADAPTIVE_HELMET",
+      "item_name": "Adaptive Helmet",
+      "extra_chest_cost": 0,
+      "quality": 185,
+      "weight": 2
+    },
+    {
+      "item": "ADAPTIVE_BOOTS",
+      "item_name": "Adaptive Boots",
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 2
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 5
+    },
+    {
+      "item": "SUSPICIOUS_VIAL",
+      "item_name": "Suspicious Vial",
+      "extra_chest_cost": 0,
+      "quality": 145,
+      "weight": 5
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 5
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 5
+    },
+    {
+      "item": "NECROMANCER_BROOCH",
+      "item_name": "Necromancer\u0027s Brooch",
+      "extra_chest_cost": 0,
+      "quality": 110,
+      "weight": 4
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 8
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 8
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 70,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 50,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "floor": 4,
+  "master_mode": true,
+  "chest_type": "Obsidian",
+  "base_cost": 1000000,
+  "base_quality": 355,
+  "loot": [
+    {
+      "item": "SECOND_MASTER_STAR",
+      "item_name": "Second Master Star",
+      "extra_chest_cost": 5000000,
+      "quality": 270,
+      "weight": 2
+    },
+    {
+      "item": "SPIRIT_SWORD",
+      "item_name": "Spirit Sword",
+      "extra_chest_cost": 2000000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "ITEM_SPIRIT_BOW",
+      "item_name": "Spirit Shortbow",
+      "extra_chest_cost": 3000000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "THORNS_BOOTS",
+      "item_name": "Spirit Boots",
+      "extra_chest_cost": 3000000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "SPIRIT_WING",
+      "item_name": "Spirit Wing",
+      "extra_chest_cost": 1000000,
+      "quality": 250,
+      "weight": 2
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "item_name": "Recombobulator 3000",
+      "extra_chest_cost": 5000000,
+      "quality": 250,
+      "weight": 3
+    },
+    {
+      "item": "MASTER_SKULL_TIER_3",
+      "item_name": "Master Skull - Tier 3",
+      "extra_chest_cost": 1000000,
+      "quality": 250,
+      "weight": 3
+    },
+    {
+      "item": "SPIRIT_BONE",
+      "item_name": "Spirit Bone",
+      "extra_chest_cost": 500000,
+      "quality": 240,
+      "weight": 2
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "item_name": "Fuming Potato Book",
+      "extra_chest_cost": 500000,
+      "quality": 220,
+      "weight": 3
+    },
+    {
+      "pet": "SPIRIT",
+      "tier": "LEGENDARY",
+      "extra_chest_cost": 4000000,
+      "quality": 210,
+      "weight": 1
+    },
+    {
+      "item": "SPIRIT_DECOY",
+      "item_name": "Spirit Stone",
+      "extra_chest_cost": 500000,
+      "quality": 185,
+      "weight": 2
+    },
+    {
+      "enchantment": "REND",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 2
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 5
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 5
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 4
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 8
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 1
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 8
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 6
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 90,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 65,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}
