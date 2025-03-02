@@ -52,11 +52,7 @@ struct EntryData {
 #[derive(Default)]
 struct RecursiveData {
     iterations: i32,
-    iterations_past_d10: i32,
     highest_depth: i32,
-    total_add_ns: u64,
-    total_remove_ns: u64,
-    total_checks_ns: u64,
 }
 
 pub struct CalculationResult {
@@ -64,7 +60,7 @@ pub struct CalculationResult {
     pub total_weight: f64,
 }
 
-pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_data: &RngMeterData) -> CalculationResult {
+pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter_data: &RngMeterData) -> CalculationResult {
     let mut weighted_entries: Vec<Rc<RefCell<LootChanceEntry>>> = Vec::new();
 
     let mut weighted_essence_entry: Option<Rc<RefCell<LootChanceEntry>>> = None;
@@ -76,7 +72,7 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
     let mut lowest_non_essence_quality: Option<i16> = None;
 
     for entry in &chest.loot {
-        let mut chance_entry = LootChanceEntry::new(Rc::clone(&entry));
+        let mut chance_entry = LootChanceEntry::new(Rc::clone(entry));
 
         match entry.as_ref() {
             LootEntry::Essence { weight, quality, .. } => {
@@ -94,14 +90,6 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
                 }
             }
             _ => {
-                if let Some(item) = &rng_meter_data.selected_item {
-                    if item.eq(entry) {
-                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / rng_meter_data.required_xp.unwrap() as f32).min(2.0) as f64;
-                        chance_entry.used_weight *= multiplier;
-                    }
-                }
-
-                weighted_entries.push(Rc::new(RefCell::new(chance_entry)));
                 let quality = entry.get_quality();
                 match lowest_non_essence_quality {
                     None => { lowest_non_essence_quality = Some(quality); }
@@ -111,36 +99,36 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
                         }
                     }
                 }
+
+                if let Some(item) = &rng_meter_data.selected_item {
+                    // comparing by strings lets it easily check for the same item type (even if the entries are technically different, due to the fact
+                    // that the rng meter options are taken from the highest tier chest of the floor, so if you're in a say, obsidian chest with bedrock
+                    // loot selected, then that bedrock chest's option needs to be valid for the obsidian chest equivalent entry)
+                    if item.to_string().eq(&entry.to_string()) {
+                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / rng_meter_data.required_xp.unwrap() as f32).min(2.0) as f64;
+                        chance_entry.used_weight *= multiplier;
+
+                        if multiplier >= 3.0 {
+                            chance_entry.chance = 1.0;
+                            chance_entry.disabled = true;
+                            starting_quality -= chance_entry.entry.get_quality();
+                        }
+                    }
+                }
+
+                weighted_entries.push(Rc::new(RefCell::new(chance_entry)));
             }
         };
     }
-
-    println!("{}", weighted_entries.len());
-
-    let entry1 = weighted_essence_entry.unwrap();
+    
     let entry_data = Rc::new(RefCell::new(EntryData {
         weighted_entries,
-        weighted_essence_entry: entry1,
+        weighted_essence_entry: weighted_essence_entry.unwrap(),
         leftover_essence_entry: leftover_essence_entry.unwrap(),
         lowest_non_essence_quality: lowest_non_essence_quality.unwrap(),
     }));
 
-    // let starting_time = std::time::Instant::now();
-    process_random_entries(chest, Rc::clone(&entry_data), &mut recursion_data, 1.0, starting_quality, 0);
-
-    /*
-    println!(
-        "Time Taken = {:.6} seconds, iterations = {}, iterations past d10: {}, highest = {}, add = {:.9} seconds, remove = {:.9} seconds, checks = {:.9} seconds, lowest: {}",
-        starting_time.elapsed().as_secs_f64(),
-        recursion_data.iterations,
-        recursion_data.iterations_past_d10,
-        recursion_data.highest_depth,
-        recursion_data.total_add_ns as f64 / 1_000_000_000.0,
-        recursion_data.total_remove_ns as f64 / 1_000_000_000.0,
-        recursion_data.total_checks_ns as f64 / 1_000_000_000.0,
-        entry_data.borrow().lowest_non_essence_quality
-    );
-     */
+    process_random_entries(Rc::clone(&entry_data), &mut recursion_data, 1.0, starting_quality, 0);
 
     match Rc::try_unwrap(entry_data).map(|refcell| refcell.into_inner()) {
         Ok(data) => {
@@ -148,6 +136,10 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
                 .into_iter()
                 .filter_map(|rc| Rc::try_unwrap(rc).ok().map(|refcell| refcell.into_inner()))
                 .collect::<Vec<LootChanceEntry>>();
+
+            if let Some(leftover) = Rc::try_unwrap(data.weighted_essence_entry).ok().map(|rc| rc.into_inner()) {
+                results.push(leftover);
+            }
 
             if let Some(leftover) = Rc::try_unwrap(data.leftover_essence_entry).ok().map(|rc| rc.into_inner()) {
                 results.push(leftover);
@@ -172,15 +164,15 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
 pub fn sort_entries(entries: &mut[LootChanceEntry], rng_meter_item: Option<&Rc<LootEntry>>) {
     entries.sort_by(|a, b| {
         Some(&b.entry).eq(&rng_meter_item).cmp(&Some(&a.entry).eq(&rng_meter_item))
+            .then((a.chance == 0.0).cmp(&(b.chance == 0.0)))
             .then(a.entry.is_essence_and_can_roll_multiple_times().cmp(&b.entry.is_essence_and_can_roll_multiple_times()))
             .then(b.entry.get_quality().cmp(&a.entry.get_quality()))
-            .then((a.used_weight.ceil() as i64).cmp(&(b.used_weight.ceil() as i64)))
+            .then((b.used_weight.ceil() as i64).cmp(&(a.used_weight.ceil() as i64)))
             .then(a.entry.to_string().cmp(&b.entry.to_string()))
     });
 }
 
-fn process_random_entries(chest: &LootChest,
-                          entry_data: Rc<RefCell<EntryData>>,
+fn process_random_entries(entry_data: Rc<RefCell<EntryData>>,
                           recursion_data: &mut RecursiveData,
                           overall_chance: f64,
                           remaining_quality: i16,
@@ -226,13 +218,13 @@ fn process_random_entries(chest: &LootChest,
             // if the entry rolled here is also the essence entry, then there's no need to pre-subtract quality, as if it
             // were to roll after (since it's not rolling after, it's rolling now)
             let leftover_quality_for_essence = if is_essence_entry { remaining_quality } else { new_remaining_quality };
-            let quality_multiplier = (leftover_quality_for_essence as f64 / 10.0).floor();
+            let quality_multiplier = 1.0; //(leftover_quality_for_essence as f64 / 10.0).floor();
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
             entry_data.borrow().weighted_essence_entry.borrow_mut().increase_chance(chance_increase);
             // println!("Quality multiplier from {}: {} (new: {})", leftover_quality_for_essence, quality_multiplier, new_remaining_quality);
 
             // handle final "leftover essence" entry with 1 quality and 0 weight
-            let quality_multiplier = ((remaining_quality % 10) as f64).min(10.0);
+            let quality_multiplier = 1.0; // ((remaining_quality % 10) as f64).min(10.0);
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
             entry_data.borrow().leftover_essence_entry.borrow_mut().increase_chance(chance_increase);
 
@@ -242,13 +234,7 @@ fn process_random_entries(chest: &LootChest,
             let chance_increase = weight_roll_chance * overall_chance;
             entry.borrow_mut().increase_chance(chance_increase);
 
-            if entry.borrow().entry.is_debug_item() {
-                recursion_data.iterations_past_d10 += 1;
-                //println!("Essence ({:?}), has fish, rq = {}, nrq = {}", entry, remaining_quality, new_remaining_quality);
-            }
-
             if new_remaining_quality == 0 {
-                // println!("Iteration C {}, new remaining quality {}, chance: {}", recursion_data.iterations, new_remaining_quality, chance_increase);
                 continue;
             }
 
@@ -258,10 +244,10 @@ fn process_random_entries(chest: &LootChest,
             let roll_once = !entry.borrow().entry.is_essence_and_can_roll_multiple_times();
             if roll_once {
                 entry.borrow_mut().disabled = true;
-                process_random_entries(chest, Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
+                process_random_entries(Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
                 entry.borrow_mut().disabled = false;
             } else {
-                process_random_entries(chest, Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
+                process_random_entries(Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
             }
         }
     }

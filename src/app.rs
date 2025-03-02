@@ -9,6 +9,7 @@ use egui::scroll_area::ScrollBarVisibility;
 use egui_extras::{Column, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
+use num_format::{Locale, ToFormattedString};
 use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, LootChanceEntry, RngMeterData};
 
 static ASSETS_DIR: Dir = include_dir!("assets");
@@ -49,11 +50,11 @@ impl eframe::App for LootApp {
                         }
                     });
                     ui.add_space(16.0);
+                } else {
+                    egui::gui_zoom::zoom_menu_buttons(ui);
                 }
 
                 ui.ctx().set_theme(ThemePreference::Dark);
-                ui.add_space(16.0);
-                egui::gui_zoom::zoom_menu_buttons(ui);
             });
         });
 
@@ -65,7 +66,7 @@ impl eframe::App for LootApp {
             if self.floor.is_some() && self.chest.is_some() {
                 let hash = self.generate_hash();
                 let chances = self.get_chances();
-                
+
                 if chances.is_some() {
                     self.add_loot_section(ui);
                 } else {
@@ -210,23 +211,39 @@ impl LootApp {
             ))
             .show_ui(ui, |ui| {
                 for floor in self.loot.keys() {
-                    let label = egui::SelectableLabel::new(self.floor == Some(floor.clone()), loot::floor_to_text(floor.clone()));
-                    if ui.add(label).clicked() {
+                    let floor_label = egui::SelectableLabel::new(self.floor == Some(floor.clone()), loot::floor_to_text(floor.clone()));
+                    if ui.add(floor_label).clicked() {
                         self.floor = Some(floor.clone());
 
-                        if self.chest.is_none() {
+                        if let Some(current_chest) = self.chest.as_ref() {
+                            if let Some(new_floor_chests) = self.loot.get(floor) {
+                                self.chest = match_chest_type_or_none(current_chest, new_floor_chests);
+                            }
+                        }
+
+                        // try and find the entry of the same type from the new chest
+                        if self.rng_meter_data.selected_item.is_none() {
                             continue;
                         }
-                        let current_chest = self.chest.as_ref().unwrap();
+                        let selected_item = Rc::clone(self.rng_meter_data.selected_item.as_ref().unwrap());
+                        let selected_xp = self.rng_meter_data.selected_xp;
+                        let highest_tier_chest = self.loot.get(floor).and_then(|v| v.last()).unwrap();
+                        let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
 
-                        if let Some(new_floor_chests) = self.loot.get(floor) {
-                            self.chest = match_chest_type_or_none(current_chest, new_floor_chests);
-                        }
-
-                        // TODO: if possible, use the same type of selected item (if the id is the same) - will have to find the equivilent entry though
                         self.rng_meter_data.selected_item = None;
-                        self.rng_meter_data.selected_xp = 0;
                         self.rng_meter_data.required_xp = None;
+                        self.rng_meter_data.selected_xp = 0;
+
+                        for replacement_entry in highest_tier_chest.loot.iter() {
+                            if replacement_entry.to_string() == selected_item.to_string() {
+                                let item_weight = replacement_entry.get_weight();
+                                let required_xp: i32 = (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
+
+                                self.rng_meter_data.selected_item = Some(Rc::clone(replacement_entry));
+                                self.rng_meter_data.required_xp = Some(required_xp);
+                                self.rng_meter_data.selected_xp = selected_xp.min(required_xp);
+                            }
+                        }
                     }
                 }
             });
@@ -257,11 +274,6 @@ impl LootApp {
                     let label = egui::SelectableLabel::new(self.chest == Some(chest.clone()), format!("{:?}", chest.chest_type));
                     if ui.add(label).clicked() {
                         self.chest = Some(chest.clone());
-
-                        // TODO: if possible, use the same type of selected item (if the id is the same) - will have to find the equivilent entry though
-                        self.rng_meter_data.selected_item = None;
-                        self.rng_meter_data.selected_xp = 0;
-                        self.rng_meter_data.required_xp = None;
                     }
                 }
             });
@@ -275,6 +287,7 @@ impl LootApp {
         };
 
         let highest_tier_chest = highest_tier_chest.unwrap();
+        let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
 
         ui.heading("RNG Meter");
         ui.end_row();
@@ -283,14 +296,15 @@ impl LootApp {
             self.add_image(ui, "painting.png");
             ui.label("Item: ");
         });
-
+        
         egui::ComboBox::from_label("Select an item")
             .selected_text(loot::floor_to_text(
-                self.rng_meter_data.selected_item.as_deref().map(|e| e.to_string()).unwrap_or(String::from("None")).to_string(),
+                self.rng_meter_data.selected_item.as_deref().map(|entry| {
+                    let required_xp: i32 = (300.0 * (total_weight as f32 / entry.get_weight() as f32)).round() as i32;
+                    format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en))
+                }).unwrap_or(String::from("None")).to_string(),
             ))
             .show_ui(ui, |ui| {
-                let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
-
                 ui.selectable_value(&mut self.rng_meter_data.selected_item, None, "None");
 
                 for entry in highest_tier_chest.loot.iter() {
@@ -300,7 +314,7 @@ impl LootApp {
                     let item_weight = entry.get_weight();
                     let required_xp: i32 = (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
 
-                    let text = format!("{} ({:} XP)", entry, required_xp);
+                    let text = format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en));
                     let label = egui::SelectableLabel::new(self.rng_meter_data.selected_item == Some(Rc::clone(entry)), text);
                     if ui.add(label).clicked() {
                         let rng_meter_data = &mut self.rng_meter_data;
@@ -319,7 +333,9 @@ impl LootApp {
                 ui.label("XP: ");
             });
 
-            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=self.rng_meter_data.required_xp.unwrap()).suffix(" XP"));
+            let required_xp = self.rng_meter_data.required_xp.unwrap();
+            let xp_and_percent = format!(" XP ({:.2}%)", 100.0 * self.rng_meter_data.selected_xp as f32 / required_xp as f32);
+            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp).suffix(xp_and_percent));
         }
 
         ui.end_row();
@@ -358,30 +374,48 @@ impl LootApp {
                     .column(Column::auto())
                     .column(Column::auto())
                     .column(Column::auto())
-                    //.column(Column::auto())
+                    .column(Column::auto())
+                    .column(Column::auto())
                     .column(Column::auto())
                     .min_scrolled_height(0.0)
                     .max_scroll_height(available_height);
 
                 table.header(20.0, |mut header| {
                     header.col(|ui| { ui.strong("Entry"); });
+                    header.col(|ui| { ui.strong("Coins Cost"); });
                     header.col(|ui| { ui.strong(format!("Quality ({})", starting_quality)); });
                     header.col(|ui| {
                         ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.')));
                     });
-                    // header.col(|ui| { ui.strong("First Roll Chance").on_hover_text("As shown in the RNG Meter"); });
-                    header.col(|ui| { ui.strong("Chance"); });
+                    header.col(|ui| { ui.strong("First Roll Chance"); });
+                    header.col(|ui| { ui.strong("Average Chance"); });
                 }).body(|mut body| {
+                    let rng_meter_entry = if let Some(rng_entry) = &self.rng_meter_data.selected_item {
+                        if self.rng_meter_data.selected_xp >= self.rng_meter_data.required_xp.unwrap() {
+                            chances.chances.iter().find(|e| e.entry.to_string() == rng_entry.to_string())
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    };
+                    
                     for entry in chances.chances.iter() {
                         let weight = entry.used_weight;
                         let chance = entry.chance;
                         let entry = &entry.entry;
 
+                        if chance == 0.0 {
+                            continue;
+                        }
+
                         body.row(text_height, |mut row| {
-                            row.set_hovered(true);
                             row.col(|ui| {
                                 self.add_first_valid_image(ui, entry.get_possible_file_names());
                                 ui.label(entry.to_string());
+                            });
+                            row.col(|ui| {
+                                ui.label(widget_text::RichText::new((chest.base_cost + entry.get_added_chest_price()).to_formatted_string(&Locale::en)).color(Color32::from_rgb(255, 170, 0)));
                             });
                             row.col(|ui| {
                                 ui.label(widget_text::RichText::new(format!("{}", entry.get_quality())).color(Color32::from_rgb(85, 255, 255)));
@@ -392,15 +426,16 @@ impl LootApp {
                             });
 
                             row.col(|ui| {
-                                let width = ui.fonts(|f| f.glyph_width(&TextStyle::Body.resolve(ui.style()), ' '));
-                                ui.spacing_mut().item_spacing.x = width;
+                                let first_roll_chance: f64 = if let Some(rng_entry) = rng_meter_entry {
+                                    if rng_entry.entry == *entry { 1.0 } else { 0.0 }
+                                } else {
+                                    weight / chances.total_weight
+                                };
+                                fill_in_chance_column(ui, first_roll_chance);
+                            });
 
-                                ui.label(widget_text::RichText::new(format!("{:.4}%", chance * 100.0)).color(Color32::from_rgb(85, 255, 85)));
-                                ui.label(" (");
-                                ui.label(widget_text::RichText::new("1").color(Color32::from_rgb(85, 255, 85)));
-                                ui.label(" in ");
-                                ui.label(widget_text::RichText::new(format!("{:.3}", 1.0 / chance)).color(Color32::from_rgb(255, 255, 85)));
-                                ui.label(" runs)");
+                            row.col(|ui| {
+                                fill_in_chance_column(ui, chance);
                             });
                         });
                     }
@@ -464,6 +499,18 @@ impl LootApp {
             }
         }
     }
+}
+
+fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
+    let width = ui.fonts(|f| f.glyph_width(&TextStyle::Body.resolve(ui.style()), ' '));
+    ui.spacing_mut().item_spacing.x = width;
+
+    ui.label(widget_text::RichText::new(format!("{:.4}%", chance * 100.0)).color(Color32::from_rgb(85, 255, 85)));
+    ui.label(" (");
+    ui.label(widget_text::RichText::new("1").color(Color32::from_rgb(85, 255, 85)));
+    ui.label(" in ");
+    ui.label(widget_text::RichText::new(format!("{:.3}", 1.0 / chance)).color(Color32::from_rgb(255, 255, 85)));
+    ui.label(" runs)");
 }
 
 fn match_chest_type_or_none(chest: &Rc<LootChest>, others: &Vec<Rc<LootChest>>) -> Option<Rc<LootChest>> {

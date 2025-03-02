@@ -24,6 +24,7 @@ log = "0.4"
 walkdir = "2.5.0"
 include_dir = { version = "0.7.4", features = ["glob"] }
 image = "0.25.5"
+num-format = "0.4.4"
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }

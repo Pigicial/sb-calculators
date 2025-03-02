@@ -11,7 +11,7 @@ pub struct LootChest {
     pub master_mode: bool,
     pub chest_type: ChestType,
     pub base_quality: u16,
-    base_cost: u32,
+    pub base_cost: u32,
     pub loot: Vec<Rc<LootEntry>>,
 
     #[serde(skip_serializing, skip_deserializing, default)]
@@ -127,6 +127,15 @@ impl LootEntry {
             LootEntry::Pet { quality, .. } => *quality,
             LootEntry::Enchantment { quality, .. } => *quality,
             LootEntry::Essence { quality, .. } => *quality,
+        }
+    }
+
+    pub fn get_added_chest_price(&self) -> u32 {
+        match self {
+            LootEntry::Item { extra_chest_cost, .. } => *extra_chest_cost,
+            LootEntry::Pet { extra_chest_cost, .. } => *extra_chest_cost,
+            LootEntry::Enchantment { extra_chest_cost, .. } => *extra_chest_cost,
+            LootEntry::Essence { extra_chest_cost, .. } => *extra_chest_cost,
         }
     }
 
