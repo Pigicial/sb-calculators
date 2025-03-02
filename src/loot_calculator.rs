@@ -96,8 +96,8 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
             _ => {
                 if let Some(item) = &rng_meter_data.selected_item {
                     if item.eq(entry) {
-                        let multiplier = 1.0 + (rng_meter_data.selected_xp as f32 / rng_meter_data.required_xp.unwrap() as f32).min(2.0) as f64;
-                        chance_entry.used_weight = chance_entry.used_weight * multiplier;
+                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / rng_meter_data.required_xp.unwrap() as f32).min(2.0) as f64;
+                        chance_entry.used_weight *= multiplier;
                     }
                 }
 
@@ -125,9 +125,10 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
         lowest_non_essence_quality: lowest_non_essence_quality.unwrap(),
     }));
 
-    let starting_time = std::time::Instant::now();
+    // let starting_time = std::time::Instant::now();
     process_random_entries(chest, Rc::clone(&entry_data), &mut recursion_data, 1.0, starting_quality, 0);
 
+    /*
     println!(
         "Time Taken = {:.6} seconds, iterations = {}, iterations past d10: {}, highest = {}, add = {:.9} seconds, remove = {:.9} seconds, checks = {:.9} seconds, lowest: {}",
         starting_time.elapsed().as_secs_f64(),
@@ -139,6 +140,7 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
         recursion_data.total_checks_ns as f64 / 1_000_000_000.0,
         entry_data.borrow().lowest_non_essence_quality
     );
+     */
 
     match Rc::try_unwrap(entry_data).map(|refcell| refcell.into_inner()) {
         Ok(data) => {
@@ -161,7 +163,8 @@ pub fn calculate_chances(chest: &LootChest, starting_quality: i16, rng_meter_dat
             CalculationResult { chances: results, total_weight }
         }
         Err(..) => {
-            panic!("Something went wrong");
+            // panic!("Something went wrong");
+            CalculationResult { chances: Vec::new(), total_weight: 0.0 }
         }
     }
 }

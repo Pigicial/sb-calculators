@@ -55,7 +55,7 @@ fn main() {
             .start(
                 canvas,
                 web_options,
-                Box::new(|cc| Ok(Box::new(cata_calc::LootApp::new()))),
+                Box::new(|cc| Ok(Box::new(cata_calc::LootApp::new(&cc.egui_ctx)))),
             )
             .await;
 
