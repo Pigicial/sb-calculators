@@ -1,6 +1,7 @@
 name = "cata-calc"
 main = "build/worker/shim.mjs"
 compatibility_date = "2025-03-02"
+pages_build_output_dir = "./dist"
 
 [build]
 command = "cargo install -q trunk && trunk build --release"
