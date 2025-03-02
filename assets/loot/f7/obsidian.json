@@ -1,0 +1,173 @@
+{
+  "floor": 7,
+  "master_mode": false,
+  "chest_type": "Obsidian",
+  "base_cost": 1000000,
+  "base_quality": 330,
+  "loot": [
+    {
+      "item": "WITHER_CHESTPLATE",
+      "extra_chest_cost": 9000000,
+      "quality": 310,
+      "weight": 1
+    },
+    {
+      "enchantment": "ULTIMATE_ONE_FOR_ALL",
+      "enchantment_level": 1,
+      "extra_chest_cost": 1000000,
+      "quality": 290,
+      "weight": 1
+    },
+    {
+      "item": "WITHER_LEGGINGS",
+      "extra_chest_cost": 5000000,
+      "quality": 250,
+      "weight": 4
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "extra_chest_cost": 5000000,
+      "quality": 250,
+      "weight": 2
+    },
+    {
+      "item": "WITHER_CLOAK",
+      "extra_chest_cost": 3500000,
+      "quality": 230,
+      "weight": 6
+    },
+    {
+      "item": "WITHER_BLOOD",
+      "extra_chest_cost": 1500000,
+      "quality": 210,
+      "weight": 6
+    },
+    {
+      "item": "WITHER_HELMET",
+      "extra_chest_cost": 3000000,
+      "quality": 210,
+      "weight": 6
+    },
+    {
+      "enchantment": "SOUL_EATER",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 180,
+      "weight": 14
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "extra_chest_cost": 0,
+      "quality": 175,
+      "weight": 14
+    },
+    {
+      "item": "WITHER_BOOTS",
+      "extra_chest_cost": 1500000,
+      "quality": 170,
+      "weight": 14
+    },
+    {
+      "item": "WITHER_CATALYST",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 14
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 10
+    },
+    {
+      "item": "PRECURSOR_GEAR",
+      "extra_chest_cost": 0,
+      "quality": 140,
+      "weight": 16
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 32
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 10
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 50
+    },
+    {
+      "enchantment": "WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 40
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 30
+    },
+    {
+      "enchantment": "ULTIMATE_BANK",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 20
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 8
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 35,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 55,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

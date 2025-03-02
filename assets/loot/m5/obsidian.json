@@ -1,0 +1,198 @@
+{
+  "floor": 5,
+  "master_mode": true,
+  "chest_type": "Obsidian",
+  "base_cost": 1000000,
+  "base_quality": 355,
+  "loot": [
+    {
+      "item": "LIVID_DAGGER",
+      "item_name": "Livid Dagger",
+      "extra_chest_cost": 6000000,
+      "quality": 320,
+      "weight": 1
+    },
+    {
+      "item": "THIRD_MASTER_STAR",
+      "item_name": "Third Master Star",
+      "extra_chest_cost": 0,
+      "quality": 320,
+      "weight": 1
+    },
+    {
+      "item": "SHADOW_ASSASSIN_LEGGINGS",
+      "item_name": "Shadow Assassin Leggings",
+      "extra_chest_cost": 3000000,
+      "quality": 275,
+      "weight": 4
+    },
+    {
+      "item": "SHADOW_ASSASSIN_CLOAK",
+      "item_name": "Shadow Assassin Cloak",
+      "extra_chest_cost": 1500000,
+      "quality": 275,
+      "weight": 4
+    },
+    {
+      "item": "AOTE_STONE",
+      "item_name": "Warped Stone",
+      "extra_chest_cost": 4000000,
+      "quality": 260,
+      "weight": 1
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "item_name": "Recombobulator 3000",
+      "extra_chest_cost": 5000000,
+      "quality": 250,
+      "weight": 6
+    },
+    {
+      "item": "MASTER_SKULL_TIER_3",
+      "item_name": "Master Skull - Tier 3",
+      "extra_chest_cost": 1000000,
+      "quality": 250,
+      "weight": 4
+    },
+    {
+      "item": "SHADOW_ASSASSIN_HELMET",
+      "item_name": "Shadow Assassin Helmet",
+      "extra_chest_cost": 1000000,
+      "quality": 230,
+      "weight": 8
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "item_name": "Fuming Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 220,
+      "weight": 9
+    },
+    {
+      "item": "SHADOW_ASSASSIN_BOOTS",
+      "item_name": "Shadow Assassin Boots",
+      "extra_chest_cost": 500000,
+      "quality": 210,
+      "weight": 12
+    },
+    {
+      "enchantment": "OVERLOAD",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 16
+    },
+    {
+      "enchantment": "LEGION",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 16
+    },
+    {
+      "item": "DARK_ORB",
+      "item_name": "Dark Orb",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 10
+    },
+    {
+      "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 20
+    },
+    {
+      "enchantment": "LETHALITY",
+      "enchantment_level": 6,
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 16
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 20
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 20
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 40
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 30
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 3
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 30
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 40
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 30
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 85,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 65,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}

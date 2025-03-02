@@ -1,11 +1,11 @@
 use crate::loot_calculator;
+use convert_case::{Case, Casing};
 use include_dir::Dir;
+use roman;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use convert_case::{Case, Casing};
-use roman;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {
@@ -86,6 +86,7 @@ impl ChestType {
 pub enum LootEntry {
     Item {
         item: String,
+        item_name: Option<String>,
         weight: u16,
         quality: i16,
         extra_chest_cost: u32,
@@ -170,23 +171,9 @@ impl LootEntry {
 impl Display for LootEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            LootEntry::Item { item, ..} => {
-                let default = &*item.to_case(Case::Title);
-                write!(f, "{}", match item as &str {
-                    "NECROMANCER_BROOCH" => "Necromancer's Brooch",
-                    "BONZO_MASK" => "Bonzo's Mask",
-                    "NECRON_HANDLE" => "Necron's Handle",
-                    "AOTE_STONE" => "Warped Stone",
-                    "IMPLOSION_SCROLL" => "Implosion",
-                    "SHADOW_WARP_SCROLL" => "Shadow Warp",
-                    "WITHER_SHIELD_SCROLL" => "Wither Shield",
-                    "MASTER_SKULL_TIER_1" => "Master Skull - Tier 1",
-                    "MASTER_SKULL_TIER_2" => "Master Skull - Tier 2",
-                    "MASTER_SKULL_TIER_3" => "Master Skull - Tier 3",
-                    "MASTER_SKULL_TIER_4" => "Master Skull - Tier 4",
-                    "MASTER_SKULL_TIER_5" => "Master Skull - Tier 5",
-                    _ => default
-                })
+            LootEntry::Item { item, item_name, ..} => {
+                let default = item.to_case(Case::Title);
+                write!(f, "{}", item_name.as_ref().unwrap_or(&default))
             },
             LootEntry::Pet { pet, .. } => write!(f, "{}", pet.to_case(Case::Title)),
             LootEntry::Enchantment { enchantment, enchantment_level, .. } => write!(
@@ -221,8 +208,8 @@ pub fn floor_to_text(floor: String) -> String {
     }
 }
 
-pub fn read_all_chests(dir: &Dir) -> HashMap<String, Vec<LootChest>> {
-    let mut chests = HashMap::new();
+pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
+    let mut chests = BTreeMap::new();
 
     let json_files = dir.find("loot/**/*.json").unwrap();
     for entry in json_files {
@@ -246,7 +233,7 @@ pub fn read_all_chests(dir: &Dir) -> HashMap<String, Vec<LootChest>> {
                 registered_chests.push(chest);
                 registered_chests.sort_by(|a, b| a.chest_type.get_order().cmp(&b.chest_type.get_order()))
             }
-            Err(e) => eprintln!("Failed to parse JSON from {}: {}", path.display(), e),
+            Err(e) => println!("Failed to parse JSON from {}: {}", path.display(), e),
         }
     }
 

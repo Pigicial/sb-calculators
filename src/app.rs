@@ -1,7 +1,7 @@
 use crate::loot::{ChestType, LootChest};
 use crate::loot;
 use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, ScrollArea, TextStyle, ThemePreference, Ui, Widget};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 use eframe::epaint::{Color32, TextureHandle};
@@ -28,7 +28,7 @@ pub struct LootApp {
     hashed_chances: HashMap<u64, CalculationResult>,
 
     images: HashMap<String, TextureHandle>,
-    loot: HashMap<String, Vec<Rc<LootChest>>>,
+    loot: BTreeMap<String, Vec<Rc<LootChest>>>,
 }
 
 impl eframe::App for LootApp {
@@ -330,7 +330,7 @@ impl LootApp {
             });
 
         ui.end_row();
-        
+
         if let Some(selected_item) = self.rng_meter_data.selected_item.as_ref() {
             ui.horizontal(|ui| {
                 self.add_first_valid_image(ui, selected_item.get_possible_file_names());

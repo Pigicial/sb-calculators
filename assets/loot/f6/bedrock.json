@@ -1,0 +1,198 @@
+{
+  "floor": 6,
+  "master_mode": false,
+  "chest_type": "Bedrock",
+  "base_cost": 2000000,
+  "base_quality": 370,
+  "loot": [
+    {
+      "item": "PRECURSOR_EYE",
+      "item_name": "Precursor Eye",
+      "extra_chest_cost": 28000000,
+      "quality": 370,
+      "weight": 3
+    },
+    {
+      "item": "GIANTS_SWORD",
+      "item_name": "Giant\u0027s Sword",
+      "extra_chest_cost": 23000000,
+      "quality": 340,
+      "weight": 5
+    },
+    {
+      "item": "NECROMANCER_LORD_CHESTPLATE",
+      "item_name": "Necromancer Lord Chestplate",
+      "extra_chest_cost": 8000000,
+      "quality": 325,
+      "weight": 8
+    },
+    {
+      "item": "SUMMONING_RING",
+      "item_name": "Summoning Ring",
+      "extra_chest_cost": 10000000,
+      "quality": 310,
+      "weight": 10
+    },
+    {
+      "item": "FEL_SKULL",
+      "item_name": "Fel Skull",
+      "extra_chest_cost": 4000000,
+      "quality": 300,
+      "weight": 15
+    },
+    {
+      "item": "NECROMANCER_SWORD",
+      "item_name": "Necromancer Sword",
+      "extra_chest_cost": 8000000,
+      "quality": 285,
+      "weight": 20
+    },
+    {
+      "item": "NECROMANCER_LORD_LEGGINGS",
+      "item_name": "Necromancer Lord Leggings",
+      "extra_chest_cost": 2000000,
+      "quality": 260,
+      "weight": 30
+    },
+    {
+      "item": "SOULWEAVER_GLOVES",
+      "item_name": "Soulweaver Gloves",
+      "extra_chest_cost": 3000000,
+      "quality": 250,
+      "weight": 30
+    },
+    {
+      "item": "RECOMBOBULATOR_3000",
+      "item_name": "Recombobulator 3000",
+      "extra_chest_cost": 4000000,
+      "quality": 250,
+      "weight": 100
+    },
+    {
+      "item": "NECROMANCER_LORD_HELMET",
+      "item_name": "Necromancer Lord Helmet",
+      "extra_chest_cost": 0,
+      "quality": 240,
+      "weight": 40
+    },
+    {
+      "item": "SADAN_BROOCH",
+      "item_name": "Sadan\u0027s Brooch",
+      "extra_chest_cost": 0,
+      "quality": 220,
+      "weight": 40
+    },
+    {
+      "item": "NECROMANCER_LORD_BOOTS",
+      "item_name": "Necromancer Lord Boots",
+      "extra_chest_cost": 0,
+      "quality": 210,
+      "weight": 60
+    },
+    {
+      "item": "FUMING_POTATO_BOOK",
+      "item_name": "Fuming Potato Book",
+      "extra_chest_cost": 0,
+      "quality": 175,
+      "weight": 200
+    },
+    {
+      "enchantment": "SWARM",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 150
+    },
+    {
+      "item": "GIANT_TOOTH",
+      "item_name": "Giant Tooth",
+      "extra_chest_cost": 0,
+      "quality": 160,
+      "weight": 50
+    },
+    {
+      "enchantment": "COMBO",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 200
+    },
+    {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 175
+    },
+    {
+      "enchantment": "ULTIMATE_WISE",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 330
+    },
+    {
+      "enchantment": "ULTIMATE_JERRY",
+      "enchantment_level": 3,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 40
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 3,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 380
+    },
+    {
+      "enchantment": "LAST_STAND",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 380
+    },
+    {
+      "enchantment": "BANK",
+      "enchantment_level": 3,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 175
+    },
+    {
+      "enchantment": "WISDOM",
+      "enchantment_level": 2,
+      "extra_chest_cost": 0,
+      "quality": 100,
+      "weight": 225
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 10,
+      "weight": 1
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 1,
+      "extra_chest_cost": 0,
+      "quality": 1,
+      "weight": 0
+    },
+    {
+      "essence_type": "UNDEAD",
+      "essence_amount": 55,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    },
+    {
+      "essence_type": "WITHER",
+      "essence_amount": 40,
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
+    }
+  ]
+}
