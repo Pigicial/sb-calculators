@@ -12,13 +12,36 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          source $HOME/.cargo/env
+      - name: Cache Rust and Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo
+            ~/.rustup
+          key: rust-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            rust-${{ runner.os }}-
 
-      - name: Install Trunk
-        run: cargo install trunk
+      - name: Install Rust (if not cached)
+        run: |
+          if ! command -v rustc &> /dev/null; then
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            source $HOME/.cargo/env
+          fi
+
+      - name: Cache Trunk
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin/trunk
+          key: trunk-${{ runner.os }}-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: |
+            trunk-${{ runner.os }}-
+
+      - name: Install Trunk (if not cached)
+        run: |
+          if ! command -v trunk &> /dev/null; then
+            cargo install trunk
+          fi
 
       - name: Build the Project
         run: trunk build --release
