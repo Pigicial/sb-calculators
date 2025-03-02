@@ -713,6 +713,7 @@ dependencies = [
 name = "cata_calc"
 version = "0.1.0"
 dependencies = [
+ "convert_case",
  "eframe",
  "egui",
  "egui_extras",
@@ -721,6 +722,7 @@ dependencies = [
  "include_dir",
  "log",
  "num-format",
+ "roman",
  "serde",
  "serde_json",
  "walkdir",
@@ -826,6 +828,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d16048cd947b08fa32c24458a22f5dc5e835264f689f4f5653210c69fd107363"
 dependencies = [
  "crossbeam-utils",
+]
+
+[[package]]
+name = "convert_case"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb402b8d4c85569410425650ce3eddc7d698ed96d39a73f941b08fb63082f1e7"
+dependencies = [
+ "unicode-segmentation",
 ]
 
 [[package]]
@@ -2965,6 +2976,12 @@ dependencies = [
  "untrusted",
  "windows-sys 0.52.0",
 ]
+
+[[package]]
+name = "roman"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2c543f0c827ae24df93159810fd4bce2d0abe3785bb4c4d68fae3c467d58d9b"
 
 [[package]]
 name = "ron"
