@@ -2,14 +2,14 @@ use crate::loot::{LootChest, LootEntry};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub fn calculate_weight(chest: &LootChest, treasure_talisman_multiplier: f32, boss_luck_increase: u8, s_plus: bool) -> i16 {
-    let base_quality = chest.base_quality;
+pub fn calculate_quality(chest: &LootChest, treasure_talisman_multiplier: f64, boss_luck_increase: u8, s_plus: bool) -> i16 {
+    let base_quality = chest.base_quality as f64;
 
     let s_plus_multiplier = if s_plus { 1.05 } else { 1.0 };
-    let floor_quality: i16 = (base_quality as f32 * s_plus_multiplier).floor() as i16;
-    let modified_quality: i16 = ((floor_quality as f32 * treasure_talisman_multiplier) + (boss_luck_increase as f32)).round() as i16;
-    let final_quality: i16 = ((modified_quality as f32 * treasure_talisman_multiplier) + (boss_luck_increase as f32)).round() as i16;
-    final_quality
+    let floor_quality: f64 = (base_quality * s_plus_multiplier).floor();
+    let modified_quality: f64 = ((floor_quality * treasure_talisman_multiplier) + (boss_luck_increase as f64)).round();
+    let final_rounded_quality: i16 = ((modified_quality * treasure_talisman_multiplier) + (boss_luck_increase as f64)).round() as i16;
+    final_rounded_quality
 }
 
 #[derive(Clone)]

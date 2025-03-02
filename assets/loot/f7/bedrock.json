@@ -66,6 +66,7 @@
     },
     {
       "item": "WITHER_CLOAK",
+      "item_name": "Wither Cloak Sword",
       "quality": 230,
       "weight": 480,
       "extra_chest_cost": 2500000

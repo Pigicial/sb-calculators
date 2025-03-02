@@ -10,7 +10,7 @@ use egui_extras::{Column, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
-use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, RngMeterData};
+use crate::loot_calculator::{calculate_chances, calculate_quality, CalculationResult, RngMeterData};
 
 static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -18,7 +18,7 @@ pub struct LootApp {
     floor: Option<String>,
     chest: Option<Rc<LootChest>>,
 
-    treasure_accessory_multiplier: f32,
+    treasure_accessory_multiplier: f64,
     boss_luck_increase: u8,
     s_plus: bool,
     forced_s_plus_const: bool,
@@ -70,7 +70,7 @@ impl eframe::App for LootApp {
                     self.add_loot_section(ui);
                 } else {
                     let chest = self.chest.as_ref().unwrap();
-                    let starting_quality = calculate_weight(
+                    let starting_quality = calculate_quality(
                         chest,
                         self.treasure_accessory_multiplier,
                         self.boss_luck_increase,
@@ -358,14 +358,16 @@ impl LootApp {
             .max(ui.spacing().interact_size.y);
 
         let chest = self.chest.as_ref().unwrap();
-        let starting_quality = calculate_weight(
+        let starting_quality = calculate_quality(
             chest,
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
             self.s_plus || self.require_s_plus(),
         );
 
-        ScrollArea::vertical()
+        // fix mobile horizontal scrolling (for all sections)
+        // also fix site reload bug
+        ScrollArea::horizontal()
             .auto_shrink(false)
             .scroll_bar_visibility(ScrollBarVisibility::VisibleWhenNeeded)
             .stick_to_right(true)
