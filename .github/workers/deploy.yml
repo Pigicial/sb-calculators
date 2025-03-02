@@ -1,0 +1,30 @@
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: 1.60
+
+      - name: Install dependencies
+        run: |
+          cargo install trunk
+          trunk build --release
+
+      - name: Deploy to Cloudflare Workers
+        run: |
+          npm install -g wrangler
+          wrangler login
+          wrangler publish
