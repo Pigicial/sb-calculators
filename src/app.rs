@@ -1,5 +1,5 @@
 use crate::loot::{ChestType, LootChest, LootEntry};
-use crate::{loot, loot_calculator};
+use crate::loot;
 use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, ScrollArea, TextStyle, ThemePreference, Ui, Widget};
 use std::collections::HashMap;
 use std::hash::{DefaultHasher, Hash, Hasher};
@@ -9,7 +9,7 @@ use egui::scroll_area::ScrollBarVisibility;
 use egui_extras::{Column, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
-use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, RngMeterData};
+use crate::loot_calculator::{calculate_chances, calculate_weight, CalculationResult, LootChanceEntry, RngMeterData};
 
 static ASSETS_DIR: Dir = include_dir!("assets");
 
@@ -65,7 +65,7 @@ impl eframe::App for LootApp {
             if self.floor.is_some() && self.chest.is_some() {
                 let hash = self.generate_hash();
                 let chances = self.get_chances();
-
+                
                 if chances.is_some() {
                     self.add_loot_section(ui);
                 } else {
@@ -222,6 +222,11 @@ impl LootApp {
                         if let Some(new_floor_chests) = self.loot.get(floor) {
                             self.chest = match_chest_type_or_none(current_chest, new_floor_chests);
                         }
+
+                        // TODO: if possible, use the same type of selected item (if the id is the same) - will have to find the equivilent entry though
+                        self.rng_meter_data.selected_item = None;
+                        self.rng_meter_data.selected_xp = 0;
+                        self.rng_meter_data.required_xp = None;
                     }
                 }
             });
@@ -248,7 +253,16 @@ impl LootApp {
 
                 let default = Vec::new();
                 for chest in self.loot.get(floor).unwrap_or(&default).iter() {
-                    ui.selectable_value(&mut self.chest, Some(chest.clone()), format!("{:?}", chest.chest_type));
+                    // ui.selectable_value(&mut self.chest, Some(chest.clone()), format!("{:?}", chest.chest_type));
+                    let label = egui::SelectableLabel::new(self.chest == Some(chest.clone()), format!("{:?}", chest.chest_type));
+                    if ui.add(label).clicked() {
+                        self.chest = Some(chest.clone());
+
+                        // TODO: if possible, use the same type of selected item (if the id is the same) - will have to find the equivilent entry though
+                        self.rng_meter_data.selected_item = None;
+                        self.rng_meter_data.selected_xp = 0;
+                        self.rng_meter_data.required_xp = None;
+                    }
                 }
             });
     }
@@ -324,7 +338,7 @@ impl LootApp {
             .max(ui.spacing().interact_size.y);
 
         let chest = self.chest.as_ref().unwrap();
-        let starting_quality = loot_calculator::calculate_weight(
+        let starting_quality = calculate_weight(
             chest,
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
@@ -352,9 +366,9 @@ impl LootApp {
                 table.header(20.0, |mut header| {
                     header.col(|ui| { ui.strong("Entry"); });
                     header.col(|ui| { ui.strong(format!("Quality ({})", starting_quality)); });
-                    header.col(|ui| { 
-                        ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.'))); }
-                    );
+                    header.col(|ui| {
+                        ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.')));
+                    });
                     // header.col(|ui| { ui.strong("First Roll Chance").on_hover_text("As shown in the RNG Meter"); });
                     header.col(|ui| { ui.strong("Chance"); });
                 }).body(|mut body| {
@@ -373,8 +387,8 @@ impl LootApp {
                                 ui.label(widget_text::RichText::new(format!("{}", entry.get_quality())).color(Color32::from_rgb(85, 255, 255)));
                             });
                             row.col(|ui| {
-                                ui.label(widget_text::RichText::new(format!("{:.1$}", weight, 2)).color(Color32::from_rgb(85, 255, 255)))
-                                    .on_hover_text(format!("More Decimals: {}", weight));
+                                let text = widget_text::RichText::new(format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.'));
+                                ui.label(text.color(Color32::from_rgb(85, 255, 255))).on_hover_text(format!("More Decimals: {}", weight));
                             });
 
                             row.col(|ui| {
@@ -456,6 +470,19 @@ fn match_chest_type_or_none(chest: &Rc<LootChest>, others: &Vec<Rc<LootChest>>) 
     for other_chest in others {
         if chest.chest_type == other_chest.chest_type {
             return Some(Rc::clone(other_chest));
+        }
+    }
+
+    None
+}
+
+fn match_item_or_none(entry: &Option<Rc<LootEntry>>, others: &Vec<LootChanceEntry>) -> Option<Rc<LootEntry>> {
+    if entry.is_some() {
+        let entry = entry.as_ref()?;
+        for other_entry in others {
+            if entry.to_string() == other_entry.entry.to_string() {
+                return Some(Rc::clone(&other_entry.entry));
+            }
         }
     }
 
