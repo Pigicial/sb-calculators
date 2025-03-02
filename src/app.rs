@@ -50,7 +50,6 @@ impl eframe::App for LootApp {
                         }
                     });
                     ui.add_space(16.0);
-                } else {
                     egui::gui_zoom::zoom_menu_buttons(ui);
                 }
 
