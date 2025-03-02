@@ -218,13 +218,13 @@ fn process_random_entries(entry_data: Rc<RefCell<EntryData>>,
             // if the entry rolled here is also the essence entry, then there's no need to pre-subtract quality, as if it
             // were to roll after (since it's not rolling after, it's rolling now)
             let leftover_quality_for_essence = if is_essence_entry { remaining_quality } else { new_remaining_quality };
-            let quality_multiplier = 1.0; //(leftover_quality_for_essence as f64 / 10.0).floor();
+            let quality_multiplier = (leftover_quality_for_essence as f64 / 10.0).floor();
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
             entry_data.borrow().weighted_essence_entry.borrow_mut().increase_chance(chance_increase);
             // println!("Quality multiplier from {}: {} (new: {})", leftover_quality_for_essence, quality_multiplier, new_remaining_quality);
 
             // handle final "leftover essence" entry with 1 quality and 0 weight
-            let quality_multiplier = 1.0; // ((remaining_quality % 10) as f64).min(10.0);
+            let quality_multiplier = ((remaining_quality % 10) as f64).min(10.0);
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
             entry_data.borrow().leftover_essence_entry.borrow_mut().increase_chance(chance_increase);
 
