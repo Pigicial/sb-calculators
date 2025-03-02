@@ -458,7 +458,7 @@ impl LootApp {
     fn add_first_valid_image(&self, ui: &mut Ui, possible_file_names: Vec<String>) {
         for file_name in possible_file_names {
             let png_texture = self.images.get(&file_name);
-            if let Some(texture) = png_texture {
+            if let Some(texture) = png_texture { //test
                 Image::new(texture).fit_to_exact_size(vec2(18.0, 18.0)).ui(ui);
                 break;
             }
