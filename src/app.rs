@@ -6,7 +6,7 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 use eframe::epaint::{Color32, TextureHandle};
 use egui::scroll_area::ScrollBarVisibility;
-use egui_extras::{Column, TableBuilder};
+use egui_extras::{Column, Size, StripBuilder, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
@@ -59,31 +59,43 @@ impl eframe::App for LootApp {
         });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-            self.add_regular_settings_section(ui);
-            ui.separator();
+            StripBuilder::new(ui)
+                .size(Size::remainder().at_least(100.0)) // for the table
+                .vertical(|mut strip| {
+                    strip.cell(|ui| {
+                        ScrollArea::horizontal().show(ui, |ui| {
+                            self.add_regular_settings_section(ui);
+                        });
+                        ui.separator();
+                    });
+                    if self.floor.is_some() && self.chest.is_some() {
+                        strip.cell(|ui| {
+                            ScrollArea::horizontal()
+                                .show(ui, |ui| {
+                                let hash = self.generate_hash();
+                                let chances = self.get_chances();
 
-            if self.floor.is_some() && self.chest.is_some() {
-                let hash = self.generate_hash();
-                let chances = self.get_chances();
+                                if chances.is_none() {
+                                    let chest = self.chest.as_ref().unwrap();
+                                    let starting_quality = calculate_quality(
+                                        chest,
+                                        self.treasure_accessory_multiplier,
+                                        self.boss_luck_increase,
+                                        self.s_plus || self.require_s_plus(),
+                                    );
 
-                if chances.is_some() {
-                    self.add_loot_section(ui);
-                } else {
-                    let chest = self.chest.as_ref().unwrap();
-                    let starting_quality = calculate_quality(
-                        chest,
-                        self.treasure_accessory_multiplier,
-                        self.boss_luck_increase,
-                        self.s_plus || self.require_s_plus(),
-                    );
-
-                    let new_chances = calculate_chances(chest, starting_quality, &self.rng_meter_data);
-                    self.hashed_chances.insert(hash, new_chances);
-
-                    self.add_loot_section(ui);
-                }
-            }
+                                    let new_chances = calculate_chances(chest, starting_quality, &self.rng_meter_data);
+                                    self.hashed_chances.insert(hash, new_chances);
+                                }
+                                
+                                self.add_loot_section(ui);
+                            });
+                        });
+                    }
+                    strip.cell(|ui| {
+                        powered_by_egui_and_eframe(ui);
+                    });
+                });
 
             ui.with_layout(egui::Layout::bottom_up(egui::Align::Center), |ui| {
                 // powered_by_egui_and_eframe(ui);
@@ -127,7 +139,7 @@ impl LootApp {
 
         Grid::new("config_grid")
             .num_columns(2)
-            .spacing([40.0, 4.0])
+            .spacing([15.0, 4.0])
             .striped(true)
             .show(ui, |ui| {
                 self.add_treasure_talisman_options(ui);
@@ -316,11 +328,11 @@ impl LootApp {
                 if self.chest.is_some() && !self.chest.as_ref().unwrap().has_rng_entry(entry) {
                     text = text.strikethrough();
                 }
-                
+
                 text
             })
             .unwrap_or(RichText::new(String::from("None")));
-        
+
         egui::ComboBox::from_label("Select an item")
             .selected_text(selected_item_string)
             .show_ui(ui, |ui| {
@@ -334,7 +346,7 @@ impl LootApp {
                     }
                 }).collect::<Vec<(&Rc<LootEntry>, bool)>>();
                 sorted_loot.sort_by(|a, b| b.1.cmp(&a.1));
-                
+
                 for entry in sorted_loot {
                     let in_loot = entry.1;
                     let entry = entry.0;
@@ -452,92 +464,86 @@ impl LootApp {
             self.s_plus || self.require_s_plus(),
         );
 
-        // fix mobile horizontal scrolling (for all sections)
-        // also fix site reload bug
-        ScrollArea::horizontal()
-            .auto_shrink(false)
-            .scroll_bar_visibility(ScrollBarVisibility::VisibleWhenNeeded)
-            .stick_to_right(true)
-            .show(ui, |ui| {
-                let available_height = ui.available_height();
-                let table = TableBuilder::new(ui)
-                    .striped(true)
-                    .resizable(false)
-                    .cell_layout(egui::Layout::left_to_right(egui::Align::Center))
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .column(Column::auto())
-                    .min_scrolled_height(0.0)
-                    .max_scroll_height(available_height);
+        let available_height = ui.available_height();
+        let table = TableBuilder::new(ui)
+            .striped(true)
+            .resizable(false)
+            .cell_layout(egui::Layout::left_to_right(egui::Align::Center))
+            .column(Column::auto())
+            .column(Column::auto())
+            .column(Column::auto())
+            .column(Column::auto())
+            .column(Column::auto())
+            .column(Column::auto())
+            .drag_to_scroll(true)
+            .min_scrolled_height(0.0)
+            .max_scroll_height(available_height);
 
-                table.header(20.0, |mut header| {
-                    header.col(|ui| { ui.strong("Entry"); });
-                    header.col(|ui| { ui.strong("Coins Cost"); });
-                    header.col(|ui| { ui.strong(format!("Quality ({})", starting_quality)); });
-                    header.col(|ui| {
-                        ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.')));
-                    });
-                    header.col(|ui| { ui.strong("First Roll Chance"); });
-                    header.col(|ui| { ui.strong("Average Chance"); });
-                }).body(|mut body| {
-                    let rng_meter_entry = if let Some(rng_entry) = &self.rng_meter_data.selected_item {
-                        if self.rng_meter_data.selected_xp >= rng_entry.required_xp {
-                            // entry is only guaranteed in the lowest tier chest, although boosted in all chest tiers
-                            chances.chances.iter().find(|e| e.entry == rng_entry.lowest_tier_chest_entry)
-                        } else {
-                            None
-                        }
-                    } else {
-                        None
-                    };
-
-                    for entry in chances.chances.iter() {
-                        let weight = entry.used_weight;
-                        let chance = entry.chance;
-                        let entry = &entry.entry;
-
-                        if chance == 0.0 {
-                            continue;
-                        }
-
-                        body.row(text_height, |mut row| {
-                            row.col(|ui| {
-                                self.add_first_valid_image(ui, entry.get_possible_file_names());
-
-                                let text = entry.to_string();
-                                let page_url = entry.get_wiki_page_name();
-                                ui.hyperlink_to(text, page_url);
-                            });
-                            row.col(|ui| {
-                                ui.label(RichText::new((chest.base_cost + entry.get_added_chest_price()).to_formatted_string(&Locale::en)).color(Color32::from_rgb(255, 170, 0)));
-                            });
-                            row.col(|ui| {
-                                ui.label(RichText::new(format!("{}", entry.get_quality())).color(Color32::from_rgb(85, 255, 255)));
-                            });
-                            row.col(|ui| {
-                                let text = RichText::new(format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.'));
-                                ui.label(text.color(Color32::from_rgb(85, 255, 255))).on_hover_text(format!("More Decimals: {}", weight));
-                            });
-
-                            row.col(|ui| {
-                                let first_roll_chance: f64 = if let Some(rng_entry) = rng_meter_entry {
-                                    if rng_entry.entry == *entry { 1.0 } else { 0.0 }
-                                } else {
-                                    weight / chances.total_weight
-                                };
-                                fill_in_chance_column(ui, first_roll_chance);
-                            });
-
-                            row.col(|ui| {
-                                fill_in_chance_column(ui, chance);
-                            });
-                        });
-                    }
-                });
+        table.header(20.0, |mut header| {
+            header.col(|ui| { ui.strong("Entry"); });
+            header.col(|ui| { ui.strong("Coins Cost"); });
+            header.col(|ui| { ui.strong(format!("Quality ({})", starting_quality)); });
+            header.col(|ui| {
+                ui.strong(format!("Weight ({})", format!("{:.1$}", chances.total_weight, 2).trim_end_matches('0').trim_end_matches('.')));
             });
+            header.col(|ui| { ui.strong("First Roll Chance"); });
+            header.col(|ui| { ui.strong("Average Chance"); });
+        }).body(|mut body| {
+            let rng_meter_entry = if let Some(rng_entry) = &self.rng_meter_data.selected_item {
+                if self.rng_meter_data.selected_xp >= rng_entry.required_xp {
+                    // entry is only guaranteed in the lowest tier chest, although boosted in all chest tiers
+                    chances.chances.iter().find(|e| e.entry == rng_entry.lowest_tier_chest_entry)
+                } else {
+                    None
+                }
+            } else {
+                None
+            };
+
+            for entry in chances.chances.iter() {
+                let weight = entry.used_weight;
+                let chance = entry.chance;
+                let entry = &entry.entry;
+
+                if chance == 0.0 {
+                    continue;
+                }
+
+                body.row(text_height, |mut row| {
+                    row.col(|ui| {
+                        self.add_first_valid_image(ui, entry.get_possible_file_names());
+
+                        let text = entry.to_string();
+                        let page_url = entry.get_wiki_page_name();
+                        ui.hyperlink_to(text, page_url);
+                    });
+                    row.col(|ui| {
+                        ui.label(RichText::new((chest.base_cost + entry.get_added_chest_price()).to_formatted_string(&Locale::en)).color(Color32::from_rgb(255, 170, 0)));
+                    });
+                    row.col(|ui| {
+                        ui.label(RichText::new(format!("{}", entry.get_quality())).color(Color32::from_rgb(85, 255, 255)));
+                    });
+                    row.col(|ui| {
+                        let text = RichText::new(format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.'));
+                        ui.label(text.color(Color32::from_rgb(85, 255, 255))).on_hover_text(format!("More Decimals: {}", weight));
+                    });
+
+                    row.col(|ui| {
+                        let first_roll_chance: f64 = if let Some(rng_entry) = rng_meter_entry {
+                            if rng_entry.entry == *entry { 1.0 } else { 0.0 }
+                        } else {
+                            weight / chances.total_weight
+                        };
+                        fill_in_chance_column(ui, first_roll_chance);
+                    });
+
+                    row.col(|ui| {
+                        fill_in_chance_column(ui, chance);
+                    });
+                });
+            }
+        });
+
         ui.separator();
     }
 
