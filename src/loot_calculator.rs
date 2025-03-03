@@ -239,10 +239,7 @@ fn process_random_entries(entry_data: Rc<RefCell<EntryData>>,
             if new_remaining_quality == 0 {
                 continue;
             }
-
-            // TODO: fix disabled_entry_total_weight "double removing" - aka the list of valid entries won't contain an entry, so there's no chance its weight
-            // TOOD: can be included in the total calculation anyways, but then it's still subtracted by the disabled_entry_total_weight value
-
+            
             let roll_once = !entry.borrow().entry.is_essence_and_can_roll_multiple_times();
             if roll_once {
                 entry.borrow_mut().disabled = true;
