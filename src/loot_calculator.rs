@@ -1,4 +1,4 @@
-use crate::loot::{LootChest, LootEntry};
+use crate::loot::{ChestType, LootChest, LootEntry};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -35,11 +35,20 @@ impl LootChanceEntry {
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Hash)]
 pub struct RngMeterData {
-    pub selected_item: Option<Rc<LootEntry>>,
+    pub selected_item: Option<SelectedRngMeterItem>,
     pub selected_xp: i32,
-    pub required_xp: Option<i32>,
+}
+
+#[derive(Hash, PartialEq)]
+pub struct SelectedRngMeterItem {
+    pub identifier: String,
+    pub required_xp: i32,
+    pub highest_tier_chest_entry: Rc<LootEntry>,
+    pub highest_tier_chest_type: ChestType,
+    pub lowest_tier_chest_entry: Rc<LootEntry>,
+    pub lowest_tier_chest_type: ChestType,
 }
 
 struct EntryData {
@@ -100,15 +109,18 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
                     }
                 }
 
-                if let Some(item) = &rng_meter_data.selected_item {
+                if let Some(selected_item_data) = &rng_meter_data.selected_item {
                     // comparing by strings lets it easily check for the same item type (even if the entries are technically different, due to the fact
                     // that the rng meter options are taken from the highest tier chest of the floor, so if you're in a say, obsidian chest with bedrock
                     // loot selected, then that bedrock chest's option needs to be valid for the obsidian chest equivalent entry)
-                    if item.to_string().eq(&entry.to_string()) {
-                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / rng_meter_data.required_xp.unwrap() as f32).min(2.0) as f64;
+                    if selected_item_data.identifier.eq(&entry.to_string()) {
+                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / selected_item_data.required_xp as f32).min(2.0) as f64;
                         chance_entry.used_weight *= multiplier;
 
-                        if multiplier >= 3.0 {
+                        // only guarantee the drop in the lowest tier chest
+                        if multiplier >= 3.0 && &selected_item_data.lowest_tier_chest_entry == entry {
+                            println!("Lowest: {}", selected_item_data.lowest_tier_chest_entry);
+                            println!("This: {}", entry);
                             chance_entry.chance = 1.0;
                             chance_entry.disabled = true;
                             starting_quality -= chance_entry.entry.get_quality();
@@ -161,8 +173,8 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
     }
 }
 
-pub fn sort_entries(entries: &mut[LootChanceEntry], rng_meter_item: Option<&Rc<LootEntry>>) {
-    let rng_meter_string = rng_meter_item.map_or(String::new(), |e| e.to_string());
+pub fn sort_entries(entries: &mut[LootChanceEntry], rng_meter_item: Option<&SelectedRngMeterItem>) {
+    let rng_meter_string = rng_meter_item.map_or(String::new(), |e| e.identifier.clone());
     
     entries.sort_by(|a, b| {
         b.entry.to_string().eq(&rng_meter_string).cmp(&a.entry.to_string().eq(&rng_meter_string))

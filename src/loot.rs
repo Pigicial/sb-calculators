@@ -1,11 +1,11 @@
 use crate::loot_calculator;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
-use roman;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
+use crate::loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {
@@ -18,6 +18,9 @@ pub struct LootChest {
 
     #[serde(skip_serializing, skip_deserializing, default)]
     pub quality_to_weighted_entries: Vec<FilteredEntryData>,
+
+    #[serde(skip_serializing, skip_deserializing, default)]
+    pub loot_strings: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, Clone, Default, Hash)]
@@ -55,6 +58,18 @@ impl LootChest {
             }
         }
         self.quality_to_weighted_entries = array;
+
+        for entry in self.loot.iter() {
+            self.loot_strings.push(entry.to_string());
+        }
+    }
+
+    pub fn has_matching_entry_type(&self, entry: &Rc<LootEntry>) -> bool {
+        self.loot_strings.contains(&entry.to_string())
+    }
+
+    pub fn has_rng_entry(&self, entry: &SelectedRngMeterItem) -> bool {
+        self.loot_strings.contains(&entry.identifier)
     }
 }
 
