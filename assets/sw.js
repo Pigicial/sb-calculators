@@ -3,7 +3,7 @@ var filesToCache = [
   './',
   './index.html',
   './cata_calc.js',
-  './cata_calc.wasm',
+  './cata_calc_bg.wasm',
 ];
 
 /* Start the service worker and cache all of the app's content */
