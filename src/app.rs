@@ -1,6 +1,6 @@
 use crate::loot::{ChestType, LootChest, LootEntry};
 use crate::loot;
-use egui::{vec2, Checkbox, Context, Grid, Image, Label, RichText, ScrollArea, TextFormat, TextStyle, TextWrapMode, ThemePreference, Ui, Widget};
+use egui::{vec2, Checkbox, Context, Grid, Image, Label, RichText, ScrollArea, TextStyle, TextWrapMode, ThemePreference, Ui, Widget};
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
@@ -360,12 +360,12 @@ impl LootApp {
                     if ui.add(label).clicked() {
                         let rng_meter_data = &mut self.rng_meter_data;
 
-                        let lowest_match = find_matching_item_from_lowest_chest(&entry, self.loot.get(floor).unwrap())
+                        let lowest_match = find_matching_item_from_lowest_chest(entry, self.loot.get(floor).unwrap())
                             .unwrap();
 
                         let new_selected_item_data = SelectedRngMeterItem {
                             identifier: entry.to_string(),
-                            highest_tier_chest_entry: Rc::clone(&entry),
+                            highest_tier_chest_entry: Rc::clone(entry),
                             highest_tier_chest_type: highest_tier_chest.chest_type.clone(),
                             lowest_tier_chest_entry: Rc::clone(lowest_match.1),
                             lowest_tier_chest_type: lowest_match.0.chest_type.clone(),
@@ -631,18 +631,4 @@ fn find_matching_item_from_lowest_chest<'a>(selected_item: &'a Rc<LootEntry>, fl
     }
 
     None
-}
-
-fn powered_by_egui_and_eframe(ui: &mut Ui) {
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = 0.0;
-        ui.label("Powered by ");
-        ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-        ui.label(" and ");
-        ui.hyperlink_to(
-            "eframe",
-            "https://github.com/emilk/egui/tree/master/crates/eframe",
-        );
-        ui.label(".");
-    });
 }
