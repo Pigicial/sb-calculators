@@ -1,16 +1,14 @@
 use crate::loot::{ChestType, LootChest, LootEntry};
 use crate::loot;
-use egui::{vec2, widget_text, Checkbox, Context, Grid, Image, RichText, ScrollArea, TextFormat, TextStyle, ThemePreference, Ui, Widget};
+use egui::{vec2, Checkbox, Context, Grid, Image, Label, RichText, ScrollArea, TextFormat, TextStyle, TextWrapMode, ThemePreference, Ui, Widget};
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 use eframe::epaint::{Color32, TextureHandle};
-use egui::scroll_area::ScrollBarVisibility;
 use egui_extras::{Column, Size, StripBuilder, TableBuilder};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
-use num_format::Locale::{fa, tr};
 use crate::loot_calculator::{calculate_chances, calculate_quality, CalculationResult, RngMeterData, SelectedRngMeterItem};
 
 static ASSETS_DIR: Dir<'static> = include_dir!("assets");
@@ -60,7 +58,8 @@ impl eframe::App for LootApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             StripBuilder::new(ui)
-                .size(Size::remainder().at_least(100.0)) // for the table
+                .size(Size::relative(0.1)) // for the options
+                .size(Size::relative(0.9)) // for the loot
                 .vertical(|mut strip| {
                     strip.cell(|ui| {
                         ScrollArea::horizontal().show(ui, |ui| {
@@ -68,10 +67,10 @@ impl eframe::App for LootApp {
                         });
                         ui.separator();
                     });
+
                     if self.floor.is_some() && self.chest.is_some() {
                         strip.cell(|ui| {
-                            ScrollArea::horizontal()
-                                .show(ui, |ui| {
+                            ScrollArea::both().show(ui, |ui| {
                                 let hash = self.generate_hash();
                                 let chances = self.get_chances();
 
@@ -87,20 +86,13 @@ impl eframe::App for LootApp {
                                     let new_chances = calculate_chances(chest, starting_quality, &self.rng_meter_data);
                                     self.hashed_chances.insert(hash, new_chances);
                                 }
-                                
+
                                 self.add_loot_section(ui);
                             });
                         });
                     }
-                    strip.cell(|ui| {
-                        powered_by_egui_and_eframe(ui);
-                    });
                 });
 
-            ui.with_layout(egui::Layout::bottom_up(egui::Align::Center), |ui| {
-                // powered_by_egui_and_eframe(ui);
-                egui::warn_if_debug_build(ui);
-            });
             ui.max_rect().with_max_x(200.0)
         });
     }
@@ -397,46 +389,51 @@ impl LootApp {
             let required_xp = selected_item_data.required_xp;
             let percent = 100.0 * self.rng_meter_data.selected_xp as f32 / required_xp as f32;
 
-            let mut slider = egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
-                .suffix(format!(" XP ({:.2}%)", percent));
+            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
+                .suffix(format!(" XP ({:.2}%)", percent)));
 
             let mut add_switch_to_lowest_chest_button = false;
+            let mut text_to_add: Option<String> = None;
             if let Some(chest) = &self.chest {
                 if !chest.has_rng_entry(selected_item_data) {
                     if selected_item_data.lowest_tier_chest_type == selected_item_data.highest_tier_chest_type {
-                        slider = slider.text(format!("This entry only appears in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                        text_to_add = Some(format!("This entry only appears in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
                     } else {
-                        slider = slider.text(format!("This entry only appears in {:?} to {:?} chests.",
-                                                     selected_item_data.lowest_tier_chest_type,
-                                                     selected_item_data.highest_tier_chest_type));
+                        text_to_add = Some(format!("This entry only appears in {:?} to {:?} chests.",
+                                                   selected_item_data.lowest_tier_chest_type,
+                                                   selected_item_data.highest_tier_chest_type));
                     }
                     add_switch_to_lowest_chest_button = true;
                 } else if selected_item_data.lowest_tier_chest_type != chest.chest_type {
                     if percent >= 100.0 {
-                        slider = slider.text(format!("This entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                        text_to_add = Some(format!("This entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
                     } else {
-                        slider = slider.text(format!("At 100%, this entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                        text_to_add = Some(format!("At 100%, this entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
                     }
                     add_switch_to_lowest_chest_button = true;
                 } else if percent >= 100.0 {
-                    slider = slider.text("This entry is guaranteed to appear in this chest.");
+                    text_to_add = Some("This entry is guaranteed to appear in this chest.".to_string());
                 } else {
-                    slider = slider.text("At 100%, this entry is guaranteed to appear in this chest.");
+                    text_to_add = Some("At 100%, this entry is guaranteed to appear in this chest.".to_string());
                 }
             }
 
-            ui.add(slider);
+            if let Some(text_to_add) = text_to_add {
+                ui.end_row();
+                ui.label("");
+                ui.add(Label::new(text_to_add).wrap_mode(TextWrapMode::Wrap));
 
-            if add_switch_to_lowest_chest_button {
-                let button_text = format!("Switch to {:?}", selected_item_data.lowest_tier_chest_type);
-                if ui.button(button_text).clicked() {
-                    let lowest_tier_chest = self.loot.get(floor)
-                        .unwrap()
-                        .iter()
-                        .find(|c| c.chest_type == selected_item_data.lowest_tier_chest_type)
-                        .unwrap();
+                if add_switch_to_lowest_chest_button {
+                    let button_text = format!("Switch to {:?}", selected_item_data.lowest_tier_chest_type);
+                    if ui.button(button_text).clicked() {
+                        let lowest_tier_chest = self.loot.get(floor)
+                            .unwrap()
+                            .iter()
+                            .find(|c| c.chest_type == selected_item_data.lowest_tier_chest_type)
+                            .unwrap();
 
-                    self.chest = Some(Rc::clone(lowest_tier_chest));
+                        self.chest = Some(Rc::clone(lowest_tier_chest));
+                    }
                 }
             }
         }
@@ -543,8 +540,6 @@ impl LootApp {
                 });
             }
         });
-
-        ui.separator();
     }
 
     fn require_s_plus(&self) -> bool {
