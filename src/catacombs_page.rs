@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 use eframe::epaint::{Color32, TextureHandle};
-use egui_extras::{Column, Size, StripBuilder, TableBuilder};
+use egui_extras::{Column, TableBuilder};
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
 use crate::catacombs_loot_calculator::{calculate_chances, calculate_quality, CalculationResult, RngMeterData, SelectedRngMeterItem};
@@ -33,39 +33,6 @@ impl eframe::App for CatacombsLootApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            if false {
-                ScrollArea::vertical().show(ui, |ui| {
-                    StripBuilder::new(ui)
-                        .size(Size::initial(100.0)) // top cell
-                        .size(Size::remainder()) // for the dungeon_loot
-                        .size(Size::exact(16.0)) // for the dungeon_loot
-                        .vertical(|mut strip| {
-                            // Add the top 'cell'
-                            strip.cell(|ui| {
-                                ui.label("Fixed");
-                            });
-                            // We add a nested strip in the bottom cell:
-                            strip.strip(|builder| {
-                                builder.sizes(Size::remainder(), 2).horizontal(|mut strip| {
-                                    strip.cell(|ui| {
-                                        ui.label("Top Left");
-                                    });
-                                    strip.cell(|ui| {
-                                        ui.label("Top Right");
-                                    });
-                                });
-                            });
-                            strip.cell(|ui| {
-                                ui.vertical_centered(|ui| {
-                                    ui.label("Middle");
-                                });
-                            });
-                        });
-                });
-
-                return;
-            }
-
             ScrollArea::horizontal().id_salt("cata_loot_config").show(ui, |ui| {
                 self.add_regular_settings_section(ui);
             });
@@ -74,7 +41,7 @@ impl eframe::App for CatacombsLootApp {
             if self.floor.is_some() && self.chest.is_some() {
                 // Horizontal scrolling is done here, vertical scrolling is done on the table scrolling end
                 // (this took painfully long to figure out)
-                //ScrollArea::horizontal().id_salt("cata_loot").show(ui, |ui| {
+                ScrollArea::horizontal().id_salt("cata_loot").show(ui, |ui| {
                     let hash = self.generate_hash();
                     let chances = self.get_chances();
 
@@ -92,7 +59,7 @@ impl eframe::App for CatacombsLootApp {
                     }
 
                     self.add_loot_section(ui);
-                //});
+                });
             }
         });
     }
@@ -267,7 +234,7 @@ impl CatacombsLootApp {
     fn add_chest_options(&mut self, ui: &mut Ui) {
         ui.horizontal(|ui| {
             images::add_image(&self.images, ui, "catacombs.png");
-            ui.label("Chest2: ");
+            ui.label("Chest: ");
         });
 
         egui::ComboBox::from_label("Select a chest")
@@ -460,7 +427,7 @@ impl CatacombsLootApp {
             self.s_plus || self.require_s_plus(),
         );
 
-        let available_height = ui.available_size_before_wrap().y;
+        let available_height = ui.available_height();
         let table = TableBuilder::new(ui)
             .striped(true)
             .resizable(false)
@@ -471,11 +438,9 @@ impl CatacombsLootApp {
             .column(Column::auto())
             .column(Column::auto())
             .column(Column::auto())
-            .drag_to_scroll(false)
-            .min_scrolled_height(available_height);
-        //.drag_to_scroll(true)
-            //.min_scrolled_height(available_height)
-            //.max_scroll_height(f32::INFINITY);
+            .drag_to_scroll(true)
+            .min_scrolled_height(0.0)
+            .max_scroll_height(available_height);
 
         table.header(20.0, |mut header| {
             header.col(|ui| { ui.strong("Entry"); });
