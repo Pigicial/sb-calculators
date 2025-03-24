@@ -1,0 +1,62 @@
+{
+  "boss_type": "Spider",
+  "boss_tier": 3,
+  "loot": [
+    {
+      "item": "TARANTULA_WEB",
+      "item_name": "Tarantula Web",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "28-48"
+    },
+    {
+      "item": "TOXIC_ARROW_POISON",
+      "item_name": "Toxic Arrow Poison",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 1800,
+      "quantity_range": "24-30"
+    },
+    {
+      "item": "RUNE_BITE_1",
+      "item_name": "Bite Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 333,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SPIDER_CATALYST",
+      "item_name": "Spider Catalyst",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 250,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "BANE_OF_ARTHROPODS",
+      "enchantment_level": 6,
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 50,
+      "quantity_range": "1"
+    },
+    {
+      "item": "FLY_SWATTER",
+      "item_name": "Fly Swatter",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 10,
+      "quantity_range": "1"
+    },
+    {
+      "item": "TARANTULA_TALISMAN",
+      "item_name": "Tarantula Talisman",
+      "level_requirement": 6,
+      "loot_table": "Main",
+      "weight": 10,
+      "quantity_range": "1"
+    }
+  ]
+}

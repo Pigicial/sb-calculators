@@ -1,0 +1,126 @@
+{
+  "boss_type": "Blaze",
+  "boss_tier": 3,
+  "loot": [
+    {
+      "item": "DERELICT_ASHE",
+      "item_name": "Derelict Ashe",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "60-80"
+    },
+    {
+      "item": "ENCHANTED_BLAZE_POWDER",
+      "item_name": "Enchanted Blaze Powder",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 2700,
+      "quantity_range": "4-8"
+    },
+    {
+      "item": "RUNE_LAVATEARS_1",
+      "item_name": "Lavatears Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 200,
+      "quantity_range": "1"
+    },
+    {
+      "item": "POTION_WISP_ICE_1",
+      "item_name": "Wisp\u0027s Ice-Flavored I Splash Potion",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 500,
+      "quantity_range": "2"
+    },
+    {
+      "item": "ARROW_BUNDLE_MAGMA",
+      "item_name": "Bundle of Magma Arrows",
+      "level_requirement": 1,
+      "loot_table": "Main",
+      "weight": 1500,
+      "quantity_range": "1"
+    },
+    {
+      "item": "MANA_DISINTEGRATOR",
+      "item_name": "Mana Disintegrator",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 700,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SCORCHED_BOOKS",
+      "item_name": "Scorched Books",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 400,
+      "quantity_range": "1"
+    },
+    {
+      "item": "KELVIN_INVERTER",
+      "item_name": "Kelvin Inverter",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 500,
+      "quantity_range": "1"
+    },
+    {
+      "item": "BLAZE_ROD_DISTILLATE",
+      "item_name": "Blaze Rod Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "6-10"
+    },
+    {
+      "item": "GLOWSTONE_DUST_DISTILLATE",
+      "item_name": "Glowstone Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "6-10"
+    },
+    {
+      "item": "MAGMA_CREAM_DISTILLATE",
+      "item_name": "Magma Cream Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "6-10"
+    },
+    {
+      "item": "NETHER_STALK_DISTILLATE",
+      "item_name": "Nether Wart Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "6-10"
+    },
+    {
+      "item": "CRUDE_GABAGOOL_DISTILLATE",
+      "item_name": "Gabagool Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "6-10"
+    },
+    {
+      "item": "SCORCHED_POWER_CRYSTAL",
+      "item_name": "Scorched Power Crystal",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 600,
+      "quantity_range": "1"
+    },
+    {
+      "item": "ARCHFIEND_DICE",
+      "item_name": "Archfiend Dice",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 200,
+      "quantity_range": "1"
+    }
+  ]
+}

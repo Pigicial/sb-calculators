@@ -1,0 +1,30 @@
+{
+  "boss_type": "Spider",
+  "boss_tier": 2,
+  "loot": [
+    {
+      "item": "TARANTULA_WEB",
+      "item_name": "Tarantula Web",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "9-18"
+    },
+    {
+      "item": "TOXIC_ARROW_POISON",
+      "item_name": "Toxic Arrow Poison",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 1800,
+      "quantity_range": "16"
+    },
+    {
+      "item": "RUNE_BITE_1",
+      "item_name": "Bite Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 83,
+      "quantity_range": "1"
+    }
+  ]
+}

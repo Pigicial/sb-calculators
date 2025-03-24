@@ -1,0 +1,182 @@
+{
+  "boss_type": "Blaze",
+  "boss_tier": 4,
+  "loot": [
+    {
+      "item": "DERELICT_ASHE",
+      "item_name": "Derelict Ashe",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "110-155"
+    },
+    {
+      "item": "ENCHANTED_BLAZE_POWDER",
+      "item_name": "Enchanted Blaze Powder",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 2700,
+      "quantity_range": "16-40"
+    },
+    {
+      "item": "RUNE_LAVATEARS_1",
+      "item_name": "Lavatears Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 450,
+      "quantity_range": "1"
+    },
+    {
+      "item": "POTION_WISP_ICE_1",
+      "item_name": "Wisp\u0027s Ice-Flavored I Splash Potion",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 500,
+      "quantity_range": "5"
+    },
+    {
+      "item": "ARROW_BUNDLE_MAGMA",
+      "item_name": "Bundle of Magma Arrows",
+      "level_requirement": 1,
+      "loot_table": "Main",
+      "weight": 1500,
+      "quantity_range": "1"
+    },
+    {
+      "item": "MANA_DISINTEGRATOR",
+      "item_name": "Mana Disintegrator",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 700,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SCORCHED_BOOKS",
+      "item_name": "Scorched Books",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 400,
+      "quantity_range": "1"
+    },
+    {
+      "item": "KELVIN_INVERTER",
+      "item_name": "Kelvin Inverter",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 500,
+      "quantity_range": "1"
+    },
+    {
+      "item": "BLAZE_ROD_DISTILLATE",
+      "item_name": "Blaze Rod Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "16-24"
+    },
+    {
+      "item": "GLOWSTONE_DUST_DISTILLATE",
+      "item_name": "Glowstone Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "16-24"
+    },
+    {
+      "item": "MAGMA_CREAM_DISTILLATE",
+      "item_name": "Magma Cream Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "16-24"
+    },
+    {
+      "item": "NETHER_STALK_DISTILLATE",
+      "item_name": "Nether Wart Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "16-24"
+    },
+    {
+      "item": "CRUDE_GABAGOOL_DISTILLATE",
+      "item_name": "Gabagool Distillate",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 840,
+      "quantity_range": "16-24"
+    },
+    {
+      "item": "SCORCHED_POWER_CRYSTAL",
+      "item_name": "Scorched Power Crystal",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 600,
+      "quantity_range": "1"
+    },
+    {
+      "item": "ARCHFIEND_DICE",
+      "item_name": "Archfiend Dice",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 200,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "FIRE_ASPECT",
+      "enchantment_level": 3,
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 250,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_FIERY_BURST_3",
+      "item_name": "Fiery Burst Rune I",
+      "level_requirement": 5,
+      "loot_table": "Extra",
+      "weight": 40,
+      "quantity_range": "1"
+    },
+    {
+      "item": "FLAWED_OPAL_GEM",
+      "item_name": "Flawed Opal Gemstone",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 550,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "DUPLEX",
+      "enchantment_level": 1,
+      "level_requirement": 6,
+      "loot_table": "Main",
+      "weight": 350,
+      "quantity_range": "1"
+    },
+    {
+      "item": "HIGH_CLASS_ARCHFIEND_DICE",
+      "item_name": "High Class Archfiend Dice",
+      "level_requirement": 7,
+      "loot_table": "Extra",
+      "weight": 50,
+      "quantity_range": "1"
+    },
+    {
+      "item": "WILSON_ENGINEERING_PLANS",
+      "item_name": "Wilson\u0027s Engineering Plans",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 17,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SUBZERO_INVERTER",
+      "item_name": "Subzero Inverter",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 17,
+      "quantity_range": "1"
+    }
+  ]
+}

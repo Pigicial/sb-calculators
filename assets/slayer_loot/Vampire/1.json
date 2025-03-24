@@ -1,0 +1,14 @@
+{
+  "boss_type": "Vampire",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "COVEN_SEAL",
+      "item_name": "Coven Seal",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 100,
+      "quantity_range": "8-10"
+    }
+  ]
+}

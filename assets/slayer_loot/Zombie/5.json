@@ -1,0 +1,110 @@
+{
+  "boss_type": "Zombie",
+  "boss_tier": 5,
+  "loot": [
+    {
+      "item": "REVENANT_FLESH",
+      "item_name": "Revenant Flesh",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "63-64"
+    },
+    {
+      "item": "FOUL_FLESH",
+      "item_name": "Foul Flesh",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 2000,
+      "quantity_range": "3-4"
+    },
+    {
+      "item": "RUNE_ZOMBIE_SLAYER_1",
+      "item_name": "Pestilence Rune I",
+      "level_requirement": 2,
+      "loot_table": "Extra",
+      "weight": 833,
+      "quantity_range": "1"
+    },
+    {
+      "item": "UNDEAD_CATALYST",
+      "item_name": "Undead Catalyst",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 250,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "SMITE",
+      "enchantment_level": 6,
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 100,
+      "quantity_range": "1"
+    },
+    {
+      "item": "BEHEADED_HORROR",
+      "item_name": "Beheaded Horror",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 20,
+      "quantity_range": "1"
+    },
+    {
+      "item": "REVENANT_CATALYST",
+      "item_name": "Revenant Catalyst",
+      "level_requirement": 6,
+      "loot_table": "Main",
+      "weight": 125,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_SNAKE_1",
+      "item_name": "Snake Rune I",
+      "level_requirement": 6,
+      "loot_table": "Extra",
+      "weight": 20,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SCYTHE_BLADE",
+      "item_name": "Scythe Blade",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 15,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SHARD_OF_THE_SHREDDED",
+      "item_name": "Shard of the Shredded",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 8,
+      "quantity_range": "1"
+    },
+    {
+      "item": "WARDEN_HEART",
+      "item_name": "Warden Heart",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 2,
+      "quantity_range": "1"
+    },
+    {
+      "item": "REVENANT_VISCERA",
+      "item_name": "Revenant Viscera",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 2000,
+      "quantity_range": "1-2"
+    },
+    {
+      "enchantment": "SMITE",
+      "enchantment_level": 7,
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 7,
+      "quantity_range": "1"
+    }
+  ]
+}

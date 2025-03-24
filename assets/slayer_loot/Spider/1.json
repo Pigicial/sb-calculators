@@ -1,0 +1,14 @@
+{
+  "boss_type": "Spider",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "TARANTULA_WEB",
+      "item_name": "Tarantula Web",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "1-3"
+    }
+  ]
+}

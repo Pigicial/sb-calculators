@@ -1,0 +1,78 @@
+{
+  "boss_type": "Wolf",
+  "boss_tier": 4,
+  "loot": [
+    {
+      "item": "WOLF_TOOTH",
+      "item_name": "Wolf Tooth",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "50-64"
+    },
+    {
+      "item": "HAMSTER_WHEEL",
+      "item_name": "Hamster Wheel",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 2000,
+      "quantity_range": "4-5"
+    },
+    {
+      "item": "RUNE_SPIRIT_1",
+      "item_name": "Spirit Rune I",
+      "level_requirement": 2,
+      "loot_table": "Extra",
+      "weight": 833,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "CRITICAL",
+      "enchantment_level": 6,
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 100,
+      "quantity_range": "1"
+    },
+    {
+      "item": "FURBALL",
+      "item_name": "Furball",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 200,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RED_CLAW_EGG",
+      "item_name": "Red Claw Egg",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 15,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_COUTURE_1",
+      "item_name": "Couture Rune I",
+      "level_requirement": 6,
+      "loot_table": "Extra",
+      "weight": 30,
+      "quantity_range": "1"
+    },
+    {
+      "item": "OVERFLUX_CAPACITOR",
+      "item_name": "Overflux Capacitor",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 5,
+      "quantity_range": "1"
+    },
+    {
+      "item": "Grizzly Bait",
+      "item_name": "Grizzly Salmon",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 7,
+      "quantity_range": "1"
+    }
+  ]
+}
