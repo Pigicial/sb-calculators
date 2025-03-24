@@ -1,0 +1,158 @@
+{
+  "boss_type": "Enderman",
+  "boss_tier": 4,
+  "loot": [
+    {
+      "item": "NULL_SPHERE",
+      "item_name": "Null Sphere",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "105-155"
+    },
+    {
+      "item": "TWILIGHT_ARROW_POISON",
+      "item_name": "Twilight Arrow Poison",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 1800,
+      "quantity_range": "60-64"
+    },
+    {
+      "item": "RUNE_ENDERSNAKE_1",
+      "item_name": "EnderSnake Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 800,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SUMMONING_EYE",
+      "item_name": "Summoning Eye",
+      "level_requirement": 1,
+      "loot_table": "Main",
+      "weight": 80,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "MANA_STEAL",
+      "enchantment_level": 1,
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 600,
+      "quantity_range": "1"
+    },
+    {
+      "item": "TRANSMISSION_TUNER",
+      "item_name": "Transmission Tuner",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 300,
+      "quantity_range": "1"
+    },
+    {
+      "item": "NULL_ATOM",
+      "item_name": "Null Atom",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 700,
+      "quantity_range": "1"
+    },
+    {
+      "item": "HAZMAT_ENDERMAN",
+      "item_name": "Hazmat Enderman",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 220,
+      "quantity_range": "1"
+    },
+    {
+      "item": "POCKET_ESPRESSO_MACHINE",
+      "item_name": "Pocket Espresso Machine",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 55,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "SMARTY_PANTS",
+      "enchantment_level": 1,
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 250,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_DRAGON_1",
+      "item_name": "Dragon Rune I",
+      "level_requirement": 5,
+      "loot_table": "Extra",
+      "weight": 100,
+      "quantity_range": "1"
+    },
+    {
+      "item": "HANDY_BLOOD_CHALICE",
+      "item_name": "Handy Blood Chalice",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 25,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SINFUL_DICE",
+      "item_name": "Sinful Dice",
+      "level_requirement": 6,
+      "loot_table": "Main",
+      "weight": 65,
+      "quantity_range": "1"
+    },
+    {
+      "item": "Exceedingly Rare Ender Artifact Upgrader",
+      "item_name": "Exceedingly Rare Ender Artifact Upgrader",
+      "level_requirement": 6,
+      "loot_table": "Main",
+      "weight": 4,
+      "quantity_range": "1"
+    },
+    {
+      "item": "PET_SKIN_ENDERMAN_SLAYER",
+      "item_name": "Void Conqueror Enderman Skin",
+      "level_requirement": 7,
+      "loot_table": "Extra",
+      "weight": 25,
+      "quantity_range": "1"
+    },
+    {
+      "item": "ETHERWARP_MERGER",
+      "item_name": "Etherwarp Merger",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 60,
+      "quantity_range": "1"
+    },
+    {
+      "item": "JUDGEMENT_CORE",
+      "item_name": "Judgement Core",
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 8,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_ENCHANT_1",
+      "item_name": "Enchant Rune I",
+      "level_requirement": 7,
+      "loot_table": "Extra",
+      "weight": 7,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "ENDER_SLAYER",
+      "enchantment_level": 7,
+      "level_requirement": 7,
+      "loot_table": "Main",
+      "weight": 2,
+      "quantity_range": "1"
+    }
+  ]
+}

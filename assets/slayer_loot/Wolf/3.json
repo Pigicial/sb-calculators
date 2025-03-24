@@ -1,0 +1,54 @@
+{
+  "boss_type": "Wolf",
+  "boss_tier": 3,
+  "loot": [
+    {
+      "item": "WOLF_TOOTH",
+      "item_name": "Wolf Tooth",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "30-50"
+    },
+    {
+      "item": "HAMSTER_WHEEL",
+      "item_name": "Hamster Wheel",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 2000,
+      "quantity_range": "2-4"
+    },
+    {
+      "item": "RUNE_SPIRIT_1",
+      "item_name": "Spirit Rune I",
+      "level_requirement": 2,
+      "loot_table": "Extra",
+      "weight": 333,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "CRITICAL",
+      "enchantment_level": 6,
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 50,
+      "quantity_range": "1"
+    },
+    {
+      "item": "FURBALL",
+      "item_name": "Furball",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 100,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RED_CLAW_EGG",
+      "item_name": "Red Claw Egg",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 5,
+      "quantity_range": "1"
+    }
+  ]
+}

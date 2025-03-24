@@ -1,4 +1,4 @@
-use crate::loot::{ChestType, LootChest, LootEntry};
+use crate::catacombs_loot::{ChestType, LootChest, LootEntry};
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -251,7 +251,7 @@ fn process_random_entries(entry_data: Rc<RefCell<EntryData>>,
             if new_remaining_quality == 0 {
                 continue;
             }
-            
+
             let roll_once = !entry.borrow().entry.is_essence_and_can_roll_multiple_times();
             if roll_once {
                 entry.borrow_mut().disabled = true;

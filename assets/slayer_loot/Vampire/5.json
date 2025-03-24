@@ -1,0 +1,78 @@
+{
+  "boss_type": "Vampire",
+  "boss_tier": 5,
+  "loot": [
+    {
+      "item": "COVEN_SEAL",
+      "item_name": "Coven Seal",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 100,
+      "quantity_range": "64-128"
+    },
+    {
+      "item": "ENCHANTED_BOOK_BUNDLE_QUANTUM",
+      "item_name": "Enchanted Book Bundle (Quantum)",
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 20,
+      "quantity_range": "1"
+    },
+    {
+      "item": "RUNE_SOULTWIST_1",
+      "item_name": "Soultwist Rune I",
+      "level_requirement": 2,
+      "loot_table": "Extra",
+      "weight": 20,
+      "quantity_range": "1"
+    },
+    {
+      "item": "BUBBA_BLISTER",
+      "item_name": "Bubba Blister",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 15,
+      "quantity_range": "1"
+    },
+    {
+      "item": "Chocolate Chip",
+      "item_name": "Chocolate Chip",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 15,
+      "quantity_range": "1"
+    },
+    {
+      "item": "GUARDIAN_LUCKY_BLOCK",
+      "item_name": "Guardian Lucky Block",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 10,
+      "quantity_range": "1"
+    },
+    {
+      "item": "McGrubber Burger",
+      "item_name": "McGrubber Burger",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 2,
+      "quantity_range": "1"
+    },
+    {
+      "item": "UNFANGED_VAMPIRE_PART",
+      "item_name": "Unfanged Vampire Part",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 2,
+      "quantity_range": "1"
+    },
+    {
+      "item": "ENCHANTED_BOOK_BUNDLE_THE_ONE",
+      "item_name": "Enchanted Book Bundle (The One)",
+      "level_requirement": 5,
+      "loot_table": "Main",
+      "weight": 3,
+      "quantity_range": "1"
+    }
+  ]
+}

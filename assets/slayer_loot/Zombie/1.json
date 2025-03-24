@@ -1,0 +1,14 @@
+{
+  "boss_type": "Zombie",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "REVENANT_FLESH",
+      "item_name": "Revenant Flesh",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "1-3"
+    }
+  ]
+}

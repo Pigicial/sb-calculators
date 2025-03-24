@@ -1,0 +1,14 @@
+{
+  "boss_type": "Enderman",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "NULL_SPHERE",
+      "item_name": "Null Sphere",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "2-3"
+    }
+  ]
+}

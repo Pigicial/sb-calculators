@@ -1,0 +1,70 @@
+{
+  "boss_type": "Enderman",
+  "boss_tier": 3,
+  "loot": [
+    {
+      "item": "NULL_SPHERE",
+      "item_name": "Null Sphere",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "60-80"
+    },
+    {
+      "item": "TWILIGHT_ARROW_POISON",
+      "item_name": "Twilight Arrow Poison",
+      "level_requirement": 0,
+      "loot_table": "Main",
+      "weight": 1800,
+      "quantity_range": "24-32"
+    },
+    {
+      "item": "RUNE_ENDERSNAKE_1",
+      "item_name": "EnderSnake Rune I",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 333,
+      "quantity_range": "1"
+    },
+    {
+      "item": "SUMMONING_EYE",
+      "item_name": "Summoning Eye",
+      "level_requirement": 1,
+      "loot_table": "Main",
+      "weight": 80,
+      "quantity_range": "1"
+    },
+    {
+      "enchantment": "MANA_STEAL",
+      "enchantment_level": 1,
+      "level_requirement": 2,
+      "loot_table": "Main",
+      "weight": 600,
+      "quantity_range": "1"
+    },
+    {
+      "item": "TRANSMISSION_TUNER",
+      "item_name": "Transmission Tuner",
+      "level_requirement": 3,
+      "loot_table": "Main",
+      "weight": 300,
+      "quantity_range": "1"
+    },
+    {
+      "item": "NULL_ATOM",
+      "item_name": "Null Atom",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 500,
+      "quantity_range": "1"
+    },
+    {
+      "item": "HAZMAT_ENDERMAN",
+      "item_name": "Hazmat Enderman",
+      "level_requirement": 4,
+      "loot_table": "Main",
+      "weight": 140,
+      "quantity_range": "1"
+    }
+  ]
+}

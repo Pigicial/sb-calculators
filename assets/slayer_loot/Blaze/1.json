@@ -1,0 +1,22 @@
+{
+  "boss_type": "Blaze",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "DERELICT_ASHE",
+      "item_name": "Derelict Ashe",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "2-3"
+    },
+    {
+      "item": "ENCHANTED_BLAZE_POWDER",
+      "item_name": "Enchanted Blaze Powder",
+      "level_requirement": 0,
+      "loot_table": "Extra",
+      "weight": 2700,
+      "quantity_range": "1"
+    }
+  ]
+}

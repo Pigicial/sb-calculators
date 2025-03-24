@@ -1,0 +1,14 @@
+{
+  "boss_type": "Wolf",
+  "boss_tier": 1,
+  "loot": [
+    {
+      "item": "WOLF_TOOTH",
+      "item_name": "Wolf Tooth",
+      "level_requirement": 0,
+      "loot_table": "Token",
+      "weight": 10000,
+      "quantity_range": "1-3"
+    }
+  ]
+}

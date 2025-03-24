@@ -1,11 +1,11 @@
-use crate::loot_calculator;
+use crate::catacombs_loot_calculator;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use crate::loot_calculator::SelectedRngMeterItem;
+use crate::catacombs_loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {
@@ -31,7 +31,7 @@ pub struct FilteredEntryData {
 
 impl LootChest {
     fn fill_in_quality(&mut self) {
-        let max_quality = loot_calculator::calculate_quality(self, 1.03, 10, true);
+        let max_quality = catacombs_loot_calculator::calculate_quality(self, 1.03, 10, true);
 
         let mut array: Vec<FilteredEntryData> = vec![Default::default(); (max_quality + 1) as usize];
         for quality_threshold in 0..=max_quality {
@@ -226,7 +226,7 @@ pub fn floor_to_text(floor: String) -> String {
 pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
     let mut chests = BTreeMap::new();
 
-    let json_files = dir.find("loot/**/*.json").unwrap();
+    let json_files = dir.find("dungeon_loot/**/*.json").unwrap();
     for entry in json_files {
         let path = entry.path();
         match serde_json::from_slice::<LootChest>(entry.as_file().unwrap().contents()) {
@@ -236,7 +236,7 @@ pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
                     .to_str()
                     .unwrap()
                     .to_string()
-                    .replace("loot/", "")
+                    .replace("dungeon_loot/", "")
                     .split("/")
                     .next()
                     .unwrap()
