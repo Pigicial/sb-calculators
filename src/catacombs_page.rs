@@ -74,7 +74,7 @@ impl eframe::App for CatacombsLootApp {
             if self.floor.is_some() && self.chest.is_some() {
                 // Horizontal scrolling is done here, vertical scrolling is done on the table scrolling end
                 // (this took painfully long to figure out)
-                ScrollArea::horizontal().id_salt("cata_loot").show(ui, |ui| {
+                //ScrollArea::horizontal().id_salt("cata_loot").show(ui, |ui| {
                     let hash = self.generate_hash();
                     let chances = self.get_chances();
 
@@ -92,7 +92,7 @@ impl eframe::App for CatacombsLootApp {
                     }
 
                     self.add_loot_section(ui);
-                });
+                //});
             }
         });
     }
