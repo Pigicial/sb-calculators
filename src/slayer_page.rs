@@ -211,7 +211,7 @@ impl SlayerLootApp {
 
     fn add_slayer_level_option(&mut self, ui: &mut Ui) {
         ui.horizontal(|ui| {
-            images::add_image(&self.images, ui, "slayer_level.gif");
+            images::add_image(&self.images, ui, "slayer_level.png");
             ui.label("Slayer Level: ");
         });
         ui.horizontal(|ui| {
