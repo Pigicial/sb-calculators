@@ -1,4 +1,4 @@
-use crate::catacombs_loot::{ChestType, LootChest, LootEntry};
+use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
 use std::cell::RefCell;
 use std::rc::Rc;
 

@@ -1,11 +1,11 @@
-use crate::catacombs_loot_calculator;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use crate::catacombs_loot_calculator::SelectedRngMeterItem;
+use crate::catacombs::catacombs_loot_calculator;
+use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {

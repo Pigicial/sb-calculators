@@ -1,4 +1,4 @@
-use crate::slayer_loot::{DropType, LootEntry, LootTable};
+use crate::slayer::slayer_loot::{DropType, LootEntry, LootTable};
 use std::rc::Rc;
 
 #[derive(Clone)]

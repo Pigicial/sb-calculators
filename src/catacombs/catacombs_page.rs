@@ -1,5 +1,5 @@
-use crate::catacombs_loot::{ChestType, LootChest, LootEntry};
-use crate::{catacombs_loot, images};
+use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
+use crate::images;
 use egui::{Checkbox, Context, Grid, Label, RichText, ScrollArea, TextStyle, TextWrapMode, Ui};
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
@@ -8,7 +8,8 @@ use eframe::epaint::{Color32, TextureHandle};
 use egui_extras::{Column, TableBuilder};
 use include_dir::{include_dir, Dir};
 use num_format::{Locale, ToFormattedString};
-use crate::catacombs_loot_calculator::{calculate_chances, calculate_quality, CalculationResult, RngMeterData, SelectedRngMeterItem};
+use crate::catacombs::catacombs_loot;
+use crate::catacombs::catacombs_loot_calculator::{calculate_chances, calculate_quality, CalculationResult, RngMeterData, SelectedRngMeterItem};
 
 static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -28,6 +29,16 @@ pub struct CatacombsLootApp {
 
     images: Rc<HashMap<String, TextureHandle>>,
 }
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum Page {
+    LootTableCalculator,
+    RngMeterDeselectionCalculator
+    
+}
+
+// rng meter deselection calculator
+
 
 impl eframe::App for CatacombsLootApp {
     /// Called each time the UI needs repainting, which may be many times per second.
@@ -555,7 +566,7 @@ fn parse_rng_meter_xp_input(text: &str, required_xp: i32) -> Option<f64> {
                 Some((percentage / 100.0) * (required_xp as f64))
             }
             Err(_) => None
-        }
+        };
     }
 
     text.parse().ok()

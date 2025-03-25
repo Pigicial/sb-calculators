@@ -4,8 +4,8 @@ use std::rc::Rc;
 use eframe::epaint::{TextureHandle};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
-use crate::catacombs_page::CatacombsLootApp;
-use crate::slayer_page::SlayerLootApp;
+use crate::catacombs::catacombs_page::CatacombsLootApp;
+use crate::slayer::slayer_page::SlayerLootApp;
 
 pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 

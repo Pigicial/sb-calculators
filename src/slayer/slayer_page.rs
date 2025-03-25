@@ -1,6 +1,6 @@
-use crate::slayer_loot::{DropType, LootEntry, LootTable};
-use crate::slayer_loot_calculator::{calculate_chances, LootChanceEntry, RngMeterData, SelectedRngMeterItem};
-use crate::{app, images, slayer_loot};
+use crate::slayer::slayer_loot::{DropType, LootEntry, LootTable};
+use crate::slayer::slayer_loot_calculator::{calculate_chances, LootChanceEntry, RngMeterData, SelectedRngMeterItem};
+use crate::{app, images};
 use eframe::epaint::{Color32, TextureHandle};
 use egui::{Context, Grid, Label, RichText, ScrollArea, TextStyle, TextWrapMode, Ui};
 use egui_extras::{Column, Size, StripBuilder, TableBuilder};
@@ -8,6 +8,7 @@ use num_format::{Locale, ToFormattedString};
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
+use crate::slayer::slayer_loot;
 
 pub struct SlayerLootApp {
     boss_type: Option<String>,
