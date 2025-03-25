@@ -1,6 +1,10 @@
 use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
 use std::cell::RefCell;
 use std::rc::Rc;
+use num_format::Locale::{en, es, qu};
+use rand::distr::weighted::Error;
+use rand::prelude::Distribution;
+use rand_distr::weighted::WeightedIndex;
 
 pub fn calculate_quality(chest: &LootChest, treasure_talisman_multiplier: f64, boss_luck_increase: u8, s_plus: bool) -> i16 {
     let base_quality = chest.base_quality as f64;
@@ -64,12 +68,12 @@ struct RecursiveData {
     highest_depth: i32,
 }
 
-pub struct CalculationResult {
+pub struct AveragesCalculationResult {
     pub chances: Vec<LootChanceEntry>,
     pub total_weight: f64,
 }
 
-pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter_data: &RngMeterData) -> CalculationResult {
+pub fn calculate_average_chances(chest: &LootChest, mut starting_quality: i16, rng_meter_data: &RngMeterData) -> AveragesCalculationResult {
     let mut weighted_entries: Vec<Rc<RefCell<LootChanceEntry>>> = Vec::new();
 
     let mut weighted_essence_entry: Option<Rc<RefCell<LootChanceEntry>>> = None;
@@ -119,8 +123,6 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
 
                         // only guarantee the drop in the lowest tier chest
                         if multiplier >= 3.0 && &selected_item_data.lowest_tier_chest_entry == entry {
-                            println!("Lowest: {}", selected_item_data.lowest_tier_chest_entry);
-                            println!("This: {}", entry);
                             chance_entry.chance = 1.0;
                             chance_entry.disabled = true;
                             starting_quality -= chance_entry.entry.get_quality();
@@ -164,18 +166,18 @@ pub fn calculate_chances(chest: &LootChest, mut starting_quality: i16, rng_meter
             sort_entries(&mut results, rng_meter_data.selected_item.as_ref());
 
             let total_weight = results.iter().map(|e| e.used_weight).sum();
-            CalculationResult { chances: results, total_weight }
+            AveragesCalculationResult { chances: results, total_weight }
         }
         Err(..) => {
             // panic!("Something went wrong");
-            CalculationResult { chances: Vec::new(), total_weight: 0.0 }
+            AveragesCalculationResult { chances: Vec::new(), total_weight: 0.0 }
         }
     }
 }
 
-pub fn sort_entries(entries: &mut[LootChanceEntry], rng_meter_item: Option<&SelectedRngMeterItem>) {
+fn sort_entries(entries: &mut [LootChanceEntry], rng_meter_item: Option<&SelectedRngMeterItem>) {
     let rng_meter_string = rng_meter_item.map_or(String::new(), |e| e.identifier.clone());
-    
+
     entries.sort_by(|a, b| {
         b.entry.to_string().eq(&rng_meter_string).cmp(&a.entry.to_string().eq(&rng_meter_string))
             .then((a.chance == 0.0).cmp(&(b.chance == 0.0)))
@@ -262,4 +264,108 @@ fn process_random_entries(entry_data: Rc<RefCell<EntryData>>,
             }
         }
     }
+}
+
+#[derive(Clone)]
+pub struct RandomlySelectedLootEntry {
+    pub entry: Rc<LootEntry>,
+    pub used_weight: f64,
+    pub total_weight: f64,
+    pub before_quality: i16, // subtract by entry.getQuality() to get after
+    pub roll_chance: f64,
+    pub overall_chance: f64,
+}
+
+pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data: &RngMeterData) -> Vec<RandomlySelectedLootEntry> {
+    let mut rolled_entries: Vec<RandomlySelectedLootEntry> = Vec::new();
+    let mut guaranteed_essence_entries = Vec::new();
+    
+    let mut weighted_entries: Vec<(Rc<LootEntry>, f64)> = Vec::new();
+
+    for entry in &chest.loot {
+        let mut weight = entry.get_weight() as f64;
+        match entry.as_ref() {
+            LootEntry::Essence { weight, quality, .. } => {
+                if weight == &0 && quality == &0 {
+                    guaranteed_essence_entries.push(RandomlySelectedLootEntry {
+                        entry: Rc::clone(entry),
+                        used_weight: 0.0,
+                        total_weight: 0.0,
+                        before_quality: 0,
+                        roll_chance: 1.0,
+                        overall_chance: 1.0,
+                    });
+                } else {
+                    weighted_entries.push((Rc::clone(entry), *weight as f64));
+                }
+            }
+            _ => {
+                if let Some(selected_item_data) = &rng_meter_data.selected_item {
+                    if selected_item_data.identifier.eq(&entry.to_string()) {
+                        let multiplier = 1.0 + (2.0 * rng_meter_data.selected_xp as f32 / selected_item_data.required_xp as f32).min(2.0) as f64;
+                        weight *= multiplier;
+
+                        // only guarantee the drop in the lowest tier chest
+                        if multiplier >= 3.0 && &selected_item_data.lowest_tier_chest_entry == entry {
+                            rolled_entries.push(RandomlySelectedLootEntry {
+                                entry: Rc::clone(entry),
+                                used_weight: weight,
+                                total_weight: weight,
+                                before_quality: quality,
+                                roll_chance: 1.0,
+                                overall_chance: 1.0,
+                            });
+                            quality -= entry.get_quality();
+                            continue;
+                        }
+                    }
+                }
+                weighted_entries.push((Rc::clone(entry), weight));
+            }
+        };
+    }
+
+    // run early here since the rng meter can affect it
+    weighted_entries.retain(|(e, _)| quality >= e.get_quality());
+
+    let mut rng = rand::rng();
+    let mut index = 0;
+    let mut overall_chance_so_far = 1.0;
+    
+    while quality > 0 && !weighted_entries.is_empty() {
+        let table_result = WeightedIndex::new(weighted_entries.iter().map(|item| item.1));
+        let (random_index, total_weight) = match table_result {
+            Ok(table) => (table.sample(&mut rng), table.total_weight()),
+            Err(Error::InvalidWeight) => (0, 0.0), // for the leftover 0 weight entry
+            _ => (0, 0.0)
+        };
+        let random_entry = &weighted_entries[random_index];
+        let weight = random_entry.1;
+        let iteration_chance = if total_weight == 0.0 { 1.0 } else { weight / total_weight };
+        overall_chance_so_far *= iteration_chance;
+        index += 1;
+        
+        let data = RandomlySelectedLootEntry {
+            entry: Rc::clone(&random_entry.0),
+            used_weight: weight,
+            total_weight,
+            before_quality: quality,
+            roll_chance: iteration_chance,
+            overall_chance: overall_chance_so_far,
+        };
+        
+        rolled_entries.push(data);
+        quality -= random_entry.0.get_quality();
+        
+        if !random_entry.0.is_essence_and_can_roll_multiple_times() {
+            weighted_entries.remove(random_index);
+        }
+        weighted_entries.retain(|(e, _)| quality >= e.get_quality());
+    }
+
+    for essence_entry in guaranteed_essence_entries {
+        rolled_entries.push(essence_entry);
+    }
+
+    rolled_entries
 }
