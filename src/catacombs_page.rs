@@ -355,8 +355,11 @@ impl CatacombsLootApp {
             let required_xp = selected_item_data.required_xp;
             let percent = 100.0 * self.rng_meter_data.selected_xp as f32 / required_xp as f32;
 
-            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
-                .suffix(format!(" XP ({:.2}%)", percent)));
+            let slider = egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
+                .suffix(format!(" XP ({:.2}%)", percent))
+                .step_by(300.0)
+                .custom_parser(|text| parse_rng_meter_xp_input(text, required_xp));
+            ui.add(slider);
 
             let mut add_switch_to_lowest_chest_button = false;
             let mut text_to_add: Option<String> = None;
@@ -533,6 +536,30 @@ impl CatacombsLootApp {
         let hash = self.generate_hash();
         self.hashed_chances.get(&hash)
     }
+}
+
+fn parse_rng_meter_xp_input(text: &str, required_xp: i32) -> Option<f64> {
+    // copied from drag_value::default_parser
+    let mut text: String = text
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        // Replace special minus character with normal minus (hyphen):
+        .map(|c| if c == '−' { '-' } else { c })
+        .collect();
+
+    if text.ends_with('%') {
+        text = text.replace('%', "");
+
+        return match text.parse::<f64>() {
+            Ok(mut percentage) => {
+                percentage = percentage.clamp(0.0, 100.0);
+                Some((percentage / 100.0) * (required_xp as f64))
+            }
+            Err(_) => None
+        }
+    }
+
+    text.parse().ok()
 }
 
 fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
