@@ -20,6 +20,7 @@ eframe = { version = "0.31.0", default-features = false, features = [
     "wayland",       # To support Linux (and CI)
 ] }
 egui_extras = { version = "0.31.0", features = ["file", "http", "image", "gif"] }
+egui_plot = "0.31.0"
 log = "0.4"
 walkdir = "2.5.0"
 include_dir = { version = "0.7.4", features = ["glob"] }
@@ -27,6 +28,8 @@ image = "0.25.5"
 num-format = "0.4.4"
 convert_case = "0.7.1"
 roman = "0.1.6"
+rand_distr = "0.5.1"
+rand = "0.9.0"
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
@@ -50,13 +53,4 @@ debug = true
 [profile.dev.package."*"]
 opt-level = 2
 
-
 [patch.crates-io]
-
-# If you want to use the bleeding edge version of egui and eframe:
-# egui = { git = "https://github.com/emilk/egui", branch = "master" }
-# eframe = { git = "https://github.com/emilk/egui", branch = "master" }
-
-# If you fork https://github.com/emilk/egui you can test with:
-# egui = { path = "../egui/crates/egui" }
-# eframe = { path = "../egui/crates/eframe" }

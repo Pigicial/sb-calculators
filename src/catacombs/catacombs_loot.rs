@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use crate::catacombs::catacombs_loot_calculator;
 use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
@@ -17,53 +16,10 @@ pub struct LootChest {
     pub loot: Vec<Rc<LootEntry>>,
 
     #[serde(skip_serializing, skip_deserializing, default)]
-    pub quality_to_weighted_entries: Vec<FilteredEntryData>,
-
-    #[serde(skip_serializing, skip_deserializing, default)]
     pub loot_strings: Vec<String>,
 }
 
-#[derive(Debug, PartialEq, Clone, Default, Hash)]
-pub struct FilteredEntryData {
-    pub entries: Vec<Rc<LootEntry>>,
-    pub total_weight: i32, // pre-calculation is faster than iterating a bunch of times later on
-}
-
 impl LootChest {
-    fn fill_in_quality(&mut self) {
-        let max_quality = catacombs_loot_calculator::calculate_quality(self, 1.03, 10, true);
-
-        let mut array: Vec<FilteredEntryData> = vec![Default::default(); (max_quality + 1) as usize];
-        for quality_threshold in 0..=max_quality {
-            let possible_entries = &mut array[quality_threshold as usize];
-
-            for loot_entry in &self.loot {
-                if quality_threshold >= loot_entry.get_quality() {
-                    match loot_entry.as_ref() {
-                        LootEntry::Essence { weight, quality, .. } => {
-                            // only use the "regular" essence roll
-                            if weight > &0 && quality > &0 {
-                                possible_entries.entries.push(Rc::clone(loot_entry));
-                            }
-                        }
-                        _ => {
-                            possible_entries.entries.push(Rc::clone(loot_entry));
-                        }
-                    }
-                }
-            }
-
-            for entry in possible_entries.entries.iter() {
-                possible_entries.total_weight += entry.get_weight() as i32;
-            }
-        }
-        self.quality_to_weighted_entries = array;
-
-        for entry in self.loot.iter() {
-            self.loot_strings.push(entry.to_string());
-        }
-    }
-
     pub fn has_matching_entry_type(&self, entry: &Rc<LootEntry>) -> bool {
         self.loot_strings.contains(&entry.to_string())
     }
@@ -207,22 +163,6 @@ impl Display for LootEntry {
     }
 }
 
-
-pub fn floor_to_text(floor: String) -> String {
-    match floor.chars().next().unwrap() {
-        'f' => {
-            format!("Floor {}", floor.chars().last().unwrap())
-        }
-        'b' => {
-            format!("Potato Mode Floor {}", floor.chars().last().unwrap())
-        }
-        'm' => {
-            format!("Master Mode Floor {}", floor.chars().last().unwrap())
-        }
-        _ => floor.to_string(),
-    }
-}
-
 pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
     let mut chests = BTreeMap::new();
 
@@ -242,7 +182,9 @@ pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
                     .unwrap()
                     .to_string();
 
-                chest.fill_in_quality();
+                for entry in chest.loot.iter() {
+                    chest.loot_strings.push(entry.to_string());
+                }
 
                 let registered_chests = chests.entry(floor).or_insert(Vec::new());
                 registered_chests.push(chest);

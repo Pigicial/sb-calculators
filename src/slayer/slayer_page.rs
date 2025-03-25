@@ -317,7 +317,7 @@ impl SlayerLootApp {
 
             ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
                 .suffix(format!(" XP ({:.2}%)", percent)));
-
+            
             let mut add_switch_to_lowest_chest_button = false;
             let mut text_to_add: Option<String> = None;
             if let Some(chest) = &self.loot_table {
