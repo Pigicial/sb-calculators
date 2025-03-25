@@ -357,7 +357,6 @@ impl CatacombsLootApp {
 
             let slider = egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
                 .suffix(format!(" XP ({:.2}%)", percent))
-                .step_by(300.0)
                 .custom_parser(|text| parse_rng_meter_xp_input(text, required_xp));
             ui.add(slider);
 
