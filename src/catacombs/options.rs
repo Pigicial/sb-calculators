@@ -4,7 +4,7 @@ use num_format::{Locale, ToFormattedString};
 use crate::catacombs::catacombs_loot::{LootChest, LootEntry};
 use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 use crate::catacombs::catacombs_page::CalculatorType::AveragesLootTable;
-use crate::catacombs::catacombs_page::CatacombsLootApp;
+use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootApp};
 use crate::images;
 
 pub fn add_treasure_talisman_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
@@ -190,7 +190,7 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
 
             let mut sorted_loot = highest_tier_chest.loot.iter().map(|e| {
                 if let Some(chest) = &calc.chest {
-                    (e, chest.has_matching_entry_type(e))
+                    (e, chest.has_matching_entry(e))
                 } else {
                     (e, true)
                 }
@@ -241,7 +241,12 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         let selected_item = &selected_item_data.lowest_tier_chest_entry;
         ui.horizontal(|ui| {
             images::add_first_valid_image(&calc.images, ui, selected_item.get_possible_file_names());
-            ui.label("XP: ");
+
+            if calc.calculator_type == CalculatorType::RngMeterDeselection {
+                ui.label("Starting XP: ");
+            } else {
+                ui.label("XP: ");
+            }
         });
 
         let required_xp = selected_item_data.required_xp;
