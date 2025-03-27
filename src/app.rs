@@ -1,11 +1,11 @@
-use egui::{vec2, Context, Image, ThemePreference, Ui, Widget};
-use std::collections::{HashMap};
-use std::rc::Rc;
-use eframe::epaint::{TextureHandle};
-use egui_extras::image::load_image_bytes;
-use include_dir::{include_dir, Dir};
 use crate::catacombs::catacombs_page::CatacombsLootApp;
 use crate::slayer::slayer_page::SlayerLootApp;
+use eframe::epaint::TextureHandle;
+use egui::{vec2, Context, Image, ThemePreference, Ui, Widget};
+use egui_extras::image::load_image_bytes;
+use include_dir::{include_dir, Dir};
+use std::collections::HashMap;
+use std::rc::Rc;
 
 pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -37,7 +37,6 @@ impl std::fmt::Display for Page {
     }
 }
 
-
 pub struct CalculatorApp {
     selected_page: Page,
     catacombs_page: CatacombsLootApp,
@@ -49,7 +48,14 @@ pub struct CalculatorApp {
 impl eframe::App for CalculatorApp {
     fn update(&mut self, ctx: &Context, frame: &mut eframe::Frame) {
         #[cfg(target_arch = "wasm32")]
-        if let Some(page) = frame.info().web_info.location.hash.strip_prefix('#').and_then(Page::from_str_case_insensitive) {
+        if let Some(page) = frame
+            .info()
+            .web_info
+            .location
+            .hash
+            .strip_prefix('#')
+            .and_then(Page::from_str_case_insensitive)
+        {
             self.selected_page = page;
         }
 
@@ -76,7 +82,8 @@ impl eframe::App for CalculatorApp {
                         if ui.selectable_label(selected_page == page, name).clicked() {
                             selected_page = page;
                             if frame.is_web() {
-                                ui.ctx().open_url(egui::OpenUrl::same_tab(format!("#{page}")));
+                                ui.ctx()
+                                    .open_url(egui::OpenUrl::same_tab(format!("#{page}")));
                             }
                         }
                     }
@@ -104,7 +111,7 @@ impl CalculatorApp {
             selected_page: Page::Catacombs,
             catacombs_page: CatacombsLootApp::new(Rc::clone(&images)),
             slayer_page: SlayerLootApp::new(Rc::clone(&images)),
-            images
+            images,
         }
     }
 
@@ -117,9 +124,15 @@ impl CalculatorApp {
         }
     }
 
-    pub fn apps_iter_mut(&mut self) -> impl Iterator<Item=(&'static str, Page, &mut dyn eframe::App)> {
+    pub fn apps_iter_mut(
+        &mut self,
+    ) -> impl Iterator<Item = (&'static str, Page, &mut dyn eframe::App)> {
         let vec = vec![
-            ("☠ Catacombs", Page::Catacombs, &mut self.catacombs_page as &mut dyn eframe::App),
+            (
+                "☠ Catacombs",
+                Page::Catacombs,
+                &mut self.catacombs_page as &mut dyn eframe::App,
+            ),
             //("⚔ Slayer", Page::Slayer, &mut self.slayer_page as &mut dyn eframe::App),
             // todo: enable slayer page
         ];
@@ -130,13 +143,18 @@ impl CalculatorApp {
 
 fn load_images(ctx: &Context) -> HashMap<String, TextureHandle> {
     let mut images = HashMap::new();
-    for file in ASSETS_DIR.find("**/*.png").unwrap().chain(ASSETS_DIR.find("**/*.gif").unwrap()) {
+    for file in ASSETS_DIR
+        .find("**/*.png")
+        .unwrap()
+        .chain(ASSETS_DIR.find("**/*.gif").unwrap())
+    {
         let file_name = file.path().file_name().and_then(|n| n.to_str()).unwrap();
         println!("Loading {}", file_name);
         let bytes = file.as_file().unwrap().contents();
 
         if let Ok(dynamic_image) = load_image_bytes(bytes) {
-            let texture = ctx.load_texture(file_name, dynamic_image, egui::TextureOptions::default());
+            let texture =
+                ctx.load_texture(file_name, dynamic_image, egui::TextureOptions::default());
             images.insert(file_name.to_string(), texture);
         }
     }

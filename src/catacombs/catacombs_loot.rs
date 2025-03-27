@@ -1,3 +1,4 @@
+use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
 use serde::{Deserialize, Serialize};
@@ -5,7 +6,6 @@ use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::process::id;
 use std::rc::Rc;
-use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootChest {
@@ -33,11 +33,15 @@ impl LootChest {
     }
 
     pub fn require_s_plus(&self) -> bool {
-        self.chest_type == ChestType::Bedrock && (self.floor == 5 || self.floor == 6 || (self.floor == 7 && !self.master_mode))
+        self.chest_type == ChestType::Bedrock
+            && (self.floor == 5 || self.floor == 6 || (self.floor == 7 && !self.master_mode))
     }
-    
+
     pub fn get_matching_entry_quality(&self, identifier: &String) -> Option<i16> {
-        self.loot.iter().find(|i| &i.to_string() == identifier).map(|i| i.get_quality())
+        self.loot
+            .iter()
+            .find(|i| &i.to_string() == identifier)
+            .map(|i| i.get_quality())
     }
 }
 
@@ -118,20 +122,33 @@ impl LootEntry {
 
     pub fn get_added_chest_price(&self) -> u32 {
         match self {
-            LootEntry::Item { extra_chest_cost, .. } => *extra_chest_cost,
-            LootEntry::Pet { extra_chest_cost, .. } => *extra_chest_cost,
-            LootEntry::Enchantment { extra_chest_cost, .. } => *extra_chest_cost,
-            LootEntry::Essence { extra_chest_cost, .. } => *extra_chest_cost,
+            LootEntry::Item {
+                extra_chest_cost, ..
+            } => *extra_chest_cost,
+            LootEntry::Pet {
+                extra_chest_cost, ..
+            } => *extra_chest_cost,
+            LootEntry::Enchantment {
+                extra_chest_cost, ..
+            } => *extra_chest_cost,
+            LootEntry::Essence {
+                extra_chest_cost, ..
+            } => *extra_chest_cost,
         }
     }
 
     pub fn get_wiki_page_name(&self) -> String {
-        format!("https://wiki.hypixel.net/{}", match self {
-            LootEntry::Item { item, ..} => item.clone(),
-            LootEntry::Pet { pet, .. } => pet.to_case(Case::Title),
-            LootEntry::Enchantment { enchantment, .. } => format!("{} Enchantment", enchantment.to_case(Case::Title)),
-            LootEntry::Essence { essence_type, .. } => format!("{} Essence", essence_type.to_case(Case::Title))
-        })
+        format!(
+            "https://wiki.hypixel.net/{}",
+            match self {
+                LootEntry::Item { item, .. } => item.clone(),
+                LootEntry::Pet { pet, .. } => pet.to_case(Case::Title),
+                LootEntry::Enchantment { enchantment, .. } =>
+                    format!("{} Enchantment", enchantment.to_case(Case::Title)),
+                LootEntry::Essence { essence_type, .. } =>
+                    format!("{} Essence", essence_type.to_case(Case::Title)),
+            }
+        )
     }
 
     pub fn is_essence_and_can_roll_multiple_times(&self) -> bool {
@@ -142,11 +159,13 @@ impl LootEntry {
         match self {
             LootEntry::Item { item, .. } => {
                 let id = item.clone().to_lowercase().to_string();
-                vec!(format!("{}.png", id), format!("{}.gif", id))
-            },
-            LootEntry::Pet { pet, .. } => vec!(format!("pet_{}.png", pet.to_lowercase())),
-            LootEntry::Enchantment { .. } => vec!("enchanted_book.gif".to_string()),
-            LootEntry::Essence { essence_type, .. } => vec!(format!("{}_essence.png", essence_type.to_lowercase())),
+                vec![format!("{}.png", id), format!("{}.gif", id)]
+            }
+            LootEntry::Pet { pet, .. } => vec![format!("pet_{}.png", pet.to_lowercase())],
+            LootEntry::Enchantment { .. } => vec!["enchanted_book.gif".to_string()],
+            LootEntry::Essence { essence_type, .. } => {
+                vec![format!("{}_essence.png", essence_type.to_lowercase())]
+            }
         }
     }
 }
@@ -154,23 +173,33 @@ impl LootEntry {
 impl Display for LootEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            LootEntry::Item { item, item_name, ..} => {
+            LootEntry::Item {
+                item, item_name, ..
+            } => {
                 let default = item.to_case(Case::Title);
                 write!(f, "{}", item_name.as_ref().unwrap_or(&default))
-            },
+            }
             LootEntry::Pet { pet, .. } => write!(f, "{}", pet.to_case(Case::Title)),
-            LootEntry::Enchantment { enchantment, enchantment_level, .. } => write!(
+            LootEntry::Enchantment {
+                enchantment,
+                enchantment_level,
+                ..
+            } => write!(
                 f,
                 "{} {} Book",
                 enchantment.to_case(Case::Title),
                 roman::to(*enchantment_level as i32).unwrap()
             ),
-            LootEntry::Essence { essence_type, essence_amount, .. } => write!(
+            LootEntry::Essence {
+                essence_type,
+                essence_amount,
+                ..
+            } => write!(
                 f,
                 "{} Essence ({})",
                 essence_type.to_case(Case::Title),
                 essence_amount
-            )
+            ),
         }
     }
 }
@@ -200,7 +229,8 @@ pub fn read_all_chests(dir: &Dir) -> BTreeMap<String, Vec<LootChest>> {
 
                 let registered_chests = chests.entry(floor).or_insert(Vec::new());
                 registered_chests.push(chest);
-                registered_chests.sort_by(|a, b| a.chest_type.get_order().cmp(&b.chest_type.get_order()))
+                registered_chests
+                    .sort_by(|a, b| a.chest_type.get_order().cmp(&b.chest_type.get_order()))
             }
             Err(e) => println!("Failed to parse JSON from {}: {}", path.display(), e),
         }

@@ -1,11 +1,11 @@
-use std::rc::Rc;
-use egui::{Checkbox, Label, RichText, TextWrapMode, Ui};
-use num_format::{Locale, ToFormattedString};
 use crate::catacombs::catacombs_loot::{LootChest, LootEntry};
-use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
+use crate::catacombs::catacombs_loot_calculator::{RngMeterCalculation, SelectedRngMeterItem};
 use crate::catacombs::catacombs_page::CalculatorType::AveragesLootTable;
 use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootApp};
 use crate::images;
+use egui::{Checkbox, Label, RichText, TextWrapMode, Ui};
+use num_format::{Locale, ToFormattedString};
+use std::rc::Rc;
 
 pub fn add_treasure_talisman_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     ui.horizontal(|ui| {
@@ -19,11 +19,7 @@ pub fn add_treasure_talisman_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
             1.01,
             "Talisman (1%)",
         );
-        ui.selectable_value(
-            &mut calc.treasure_accessory_multiplier,
-            1.02,
-            "Ring (2%)",
-        );
+        ui.selectable_value(&mut calc.treasure_accessory_multiplier, 1.02, "Ring (2%)");
         ui.selectable_value(
             &mut calc.treasure_accessory_multiplier,
             1.03,
@@ -73,7 +69,10 @@ pub fn add_floor_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         ))
         .show_ui(ui, |ui| {
             for floor in calc.loot.keys() {
-                let floor_label = egui::SelectableLabel::new(calc.floor == Some(floor.clone()), floor_to_text(floor.clone()));
+                let floor_label = egui::SelectableLabel::new(
+                    calc.floor == Some(floor.clone()),
+                    floor_to_text(floor.clone()),
+                );
                 if ui.add(floor_label).clicked() {
                     calc.floor = Some(floor.clone());
 
@@ -92,22 +91,33 @@ pub fn add_floor_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
                     let selected_xp = calc.rng_meter_data.selected_xp;
 
                     let highest_tier_chest = calc.loot.get(floor).and_then(|v| v.last()).unwrap();
-                    let highest_tier_chest_total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
+                    let highest_tier_chest_total_weight: i32 = highest_tier_chest
+                        .loot
+                        .iter()
+                        .map(|e| e.get_weight() as i32)
+                        .sum();
 
                     let mut reset_selected = true;
                     for replacement_entry in highest_tier_chest.loot.iter() {
                         if replacement_entry.to_string() == selected_item_data.identifier {
                             let item_weight = replacement_entry.get_weight();
-                            let required_xp: i32 = (300.0 * (highest_tier_chest_total_weight as f32 / item_weight as f32)).round() as i32;
+                            let required_xp: i32 = (300.0
+                                * (highest_tier_chest_total_weight as f32 / item_weight as f32))
+                                .round() as i32;
 
-                            let lowest_match = find_matching_item_from_lowest_chest(replacement_entry, calc.loot.get(floor).unwrap())
-                                .unwrap();
+                            let lowest_match = find_matching_item_from_lowest_chest(
+                                replacement_entry,
+                                calc.loot.get(floor).unwrap(),
+                            )
+                            .unwrap();
 
-                            selected_item_data.lowest_tier_chest_type = lowest_match.0.chest_type.clone();
+                            selected_item_data.lowest_tier_chest_type =
+                                lowest_match.0.chest_type.clone();
                             selected_item_data.lowest_tier_chest_entry = Rc::clone(lowest_match.1);
 
                             selected_item_data.required_xp = required_xp;
-                            selected_item_data.highest_tier_chest_entry = Rc::clone(replacement_entry);
+                            selected_item_data.highest_tier_chest_entry =
+                                Rc::clone(replacement_entry);
                             calc.rng_meter_data.selected_xp = selected_xp.min(required_xp);
 
                             reset_selected = false;
@@ -145,7 +155,10 @@ pub fn add_chest_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
             let default = Vec::new();
             for chest in calc.loot.get(floor).unwrap_or(&default).iter() {
                 // ui.selectable_value(&mut calc.chest, Some(chest.clone()), format!("{:?}", chest.chest_type));
-                let label = egui::SelectableLabel::new(calc.chest == Some(chest.clone()), format!("{:?}", chest.chest_type));
+                let label = egui::SelectableLabel::new(
+                    calc.chest == Some(chest.clone()),
+                    format!("{:?}", chest.chest_type),
+                );
                 if ui.add(label).clicked() {
                     calc.chest = Some(chest.clone());
                 }
@@ -159,7 +172,11 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     }
     let floor = calc.floor.as_ref().unwrap();
     let highest_tier_chest = calc.loot.get(floor).unwrap().last().unwrap();
-    let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
+    let total_weight: i32 = highest_tier_chest
+        .loot
+        .iter()
+        .map(|e| e.get_weight() as i32)
+        .sum();
 
     ui.heading("RNG Meter");
     ui.end_row();
@@ -169,11 +186,19 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         ui.label("Item: ");
     });
 
-    let selected_item_string = calc.rng_meter_data.selected_item
+    let selected_item_string = calc
+        .rng_meter_data
+        .selected_item
         .as_ref()
         .map(|entry| {
-            let required_xp: i32 = (300.0 * (total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32)).round() as i32;
-            let mut text = RichText::new(format!("{} ({} XP)", entry.highest_tier_chest_entry, required_xp.to_formatted_string(&Locale::en)));
+            let required_xp: i32 = (300.0
+                * (total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32))
+                .round() as i32;
+            let mut text = RichText::new(format!(
+                "{} ({} XP)",
+                entry.highest_tier_chest_entry,
+                required_xp.to_formatted_string(&Locale::en)
+            ));
 
             if calc.chest.is_some() && !calc.chest.as_ref().unwrap().has_rng_entry(entry) {
                 text = text.strikethrough();
@@ -188,27 +213,42 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         .show_ui(ui, |ui| {
             ui.selectable_value(&mut calc.rng_meter_data.selected_item, None, "None");
 
-            let mut sorted_loot = highest_tier_chest.loot.iter().map(|e| {
-                if let Some(chest) = &calc.chest {
-                    (e, chest.has_matching_entry(e))
-                } else {
-                    (e, true)
-                }
-            }).collect::<Vec<(&Rc<LootEntry>, bool)>>();
+            let mut sorted_loot = highest_tier_chest
+                .loot
+                .iter()
+                .map(|e| {
+                    if let Some(chest) = &calc.chest {
+                        (e, chest.has_matching_entry(e))
+                    } else {
+                        (e, true)
+                    }
+                })
+                .collect::<Vec<(&Rc<LootEntry>, bool)>>();
             sorted_loot.sort_by(|a, b| b.1.cmp(&a.1));
 
             for entry in sorted_loot {
                 let in_loot = entry.1;
                 let entry = entry.0;
 
-                if entry.is_essence_and_can_roll_multiple_times() { // essence doesn't show in rng meter
+                if entry.is_essence_and_can_roll_multiple_times() {
+                    // essence doesn't show in rng meter
                     continue;
                 }
                 let item_weight = entry.get_weight();
-                let required_xp: i32 = (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
+                let required_xp: i32 =
+                    (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
 
-                let selected = calc.rng_meter_data.selected_item.as_ref().map_or("", |e| &e.identifier) == entry.to_string();
-                let mut text = RichText::new(format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en)));
+                let selected = calc
+                    .rng_meter_data
+                    .selected_item
+                    .as_ref()
+                    .map_or("", |e| &e.identifier)
+                    == entry.to_string();
+                let mut text = RichText::new(format!(
+                    "{} ({} XP)",
+                    entry,
+                    required_xp.to_formatted_string(&Locale::en)
+                ));
 
                 if !in_loot {
                     text = text.strikethrough(); // easier way to distinguish entries that don't apply
@@ -218,8 +258,9 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
                 if ui.add(label).clicked() {
                     let rng_meter_data = &mut calc.rng_meter_data;
 
-                    let lowest_match = find_matching_item_from_lowest_chest(entry, calc.loot.get(floor).unwrap())
-                        .unwrap();
+                    let lowest_match =
+                        find_matching_item_from_lowest_chest(entry, calc.loot.get(floor).unwrap())
+                            .unwrap();
 
                     let new_selected_item_data = SelectedRngMeterItem {
                         identifier: entry.to_string(),
@@ -240,7 +281,11 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     if let Some(selected_item_data) = calc.rng_meter_data.selected_item.as_ref() {
         let selected_item = &selected_item_data.lowest_tier_chest_entry;
         ui.horizontal(|ui| {
-            images::add_first_valid_image(&calc.images, ui, selected_item.get_possible_file_names());
+            images::add_first_valid_image(
+                &calc.images,
+                ui,
+                selected_item.get_possible_file_names(),
+            );
 
             if calc.calculator_type == CalculatorType::RngMeterDeselection {
                 ui.label("Starting XP: ");
@@ -252,9 +297,14 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         let required_xp = selected_item_data.required_xp;
         let percent = 100.0 * calc.rng_meter_data.selected_xp as f32 / required_xp as f32;
 
-        let slider = egui::Slider::new(&mut calc.rng_meter_data.selected_xp, 0..=required_xp)
+        let mut slider = egui::Slider::new(&mut calc.rng_meter_data.selected_xp, 0..=required_xp)
             .suffix(format!(" XP ({:.2}%)", percent))
             .custom_parser(|text| parse_rng_meter_xp_input(text, required_xp));
+
+        if calc.calculator_type == CalculatorType::RngMeterDeselection {
+            slider = slider.step_by(300.0); // change this to whatever their xp per run is
+        }
+
         ui.add(slider);
 
         if calc.calculator_type == AveragesLootTable {
@@ -262,25 +312,41 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
             let mut text_to_add: Option<String> = None;
             if let Some(chest) = &calc.chest {
                 if !chest.has_rng_entry(selected_item_data) {
-                    if selected_item_data.lowest_tier_chest_type == selected_item_data.highest_tier_chest_type {
-                        text_to_add = Some(format!("This entry only appears in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                    if selected_item_data.lowest_tier_chest_type
+                        == selected_item_data.highest_tier_chest_type
+                    {
+                        text_to_add = Some(format!(
+                            "This entry only appears in the {:?} chest.",
+                            selected_item_data.lowest_tier_chest_type
+                        ));
                     } else {
-                        text_to_add = Some(format!("This entry only appears in {:?} to {:?} chests.",
-                                                   selected_item_data.lowest_tier_chest_type,
-                                                   selected_item_data.highest_tier_chest_type));
+                        text_to_add = Some(format!(
+                            "This entry only appears in {:?} to {:?} chests.",
+                            selected_item_data.lowest_tier_chest_type,
+                            selected_item_data.highest_tier_chest_type
+                        ));
                     }
                     add_switch_to_lowest_chest_button = true;
                 } else if selected_item_data.lowest_tier_chest_type != chest.chest_type {
                     if percent >= 100.0 {
-                        text_to_add = Some(format!("This entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                        text_to_add = Some(format!(
+                            "This entry is guaranteed to appear in the {:?} chest.",
+                            selected_item_data.lowest_tier_chest_type
+                        ));
                     } else {
-                        text_to_add = Some(format!("At 100%, this entry is guaranteed to appear in the {:?} chest.", selected_item_data.lowest_tier_chest_type));
+                        text_to_add = Some(format!(
+                            "At 100%, this entry is guaranteed to appear in the {:?} chest.",
+                            selected_item_data.lowest_tier_chest_type
+                        ));
                     }
                     add_switch_to_lowest_chest_button = true;
                 } else if percent >= 100.0 {
-                    text_to_add = Some("This entry is guaranteed to appear in this chest.".to_string());
+                    text_to_add =
+                        Some("This entry is guaranteed to appear in this chest.".to_string());
                 } else {
-                    text_to_add = Some("At 100%, this entry is guaranteed to appear in this chest.".to_string());
+                    text_to_add = Some(
+                        "At 100%, this entry is guaranteed to appear in this chest.".to_string(),
+                    );
                 }
             }
 
@@ -290,9 +356,12 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
                 ui.add(Label::new(text_to_add).wrap_mode(TextWrapMode::Wrap));
 
                 if add_switch_to_lowest_chest_button {
-                    let button_text = format!("Switch to {:?}", selected_item_data.lowest_tier_chest_type);
+                    let button_text =
+                        format!("Switch to {:?}", selected_item_data.lowest_tier_chest_type);
                     if ui.button(button_text).clicked() {
-                        let lowest_tier_chest = calc.loot.get(floor)
+                        let lowest_tier_chest = calc
+                            .loot
+                            .get(floor)
                             .unwrap()
                             .iter()
                             .find(|c| c.chest_type == selected_item_data.lowest_tier_chest_type)
@@ -301,10 +370,45 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
                         calc.chest = Some(Rc::clone(lowest_tier_chest));
                     }
                 }
-            }   
+            }
         }
     }
 
+    ui.end_row();
+}
+
+pub fn add_rng_meter_simulation_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+    if calc.floor.is_none() {
+        return;
+    }
+
+    ui.heading("Simulation Options");
+    ui.end_row();
+
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "redstone_torch.png");
+        ui.label("Dungeon Runs: ");
+    });
+    ui.add(egui::DragValue::new(&mut calc.rng_meter_calculation_runs));
+    ui.end_row();
+
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "redstone_repeater.png");
+        ui.label("Iterations for Averages: ");
+    });
+    ui.add(egui::DragValue::new(
+        &mut calc.rng_meter_calculation_iterations,
+    ));
+    ui.end_row();
+
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "enchanted_feather.png");
+        ui.label("Use Kismets:");
+    });
+    ui.checkbox(
+        &mut calc.rng_meter_calculation_use_kismet_feathers,
+        "Click to toggle",
+    );
     ui.end_row();
 }
 
@@ -325,14 +429,17 @@ fn parse_rng_meter_xp_input(text: &str, required_xp: i32) -> Option<f64> {
                 percentage = percentage.clamp(0.0, 100.0);
                 Some((percentage / 100.0) * (required_xp as f64))
             }
-            Err(_) => None
+            Err(_) => None,
         };
     }
 
     text.parse().ok()
 }
 
-fn match_chest_type_or_none(chest: &Rc<LootChest>, others: &Vec<Rc<LootChest>>) -> Option<Rc<LootChest>> {
+fn match_chest_type_or_none(
+    chest: &Rc<LootChest>,
+    others: &Vec<Rc<LootChest>>,
+) -> Option<Rc<LootChest>> {
     for other_chest in others {
         if chest.chest_type == other_chest.chest_type {
             return Some(Rc::clone(other_chest));
@@ -342,7 +449,10 @@ fn match_chest_type_or_none(chest: &Rc<LootChest>, others: &Vec<Rc<LootChest>>) 
     None
 }
 
-fn find_matching_item_from_lowest_chest<'a>(selected_item: &'a Rc<LootEntry>, floor_chests: &'a [Rc<LootChest>]) -> Option<(&'a Rc<LootChest>, &'a Rc<LootEntry>)> {
+fn find_matching_item_from_lowest_chest<'a>(
+    selected_item: &'a Rc<LootEntry>,
+    floor_chests: &'a [Rc<LootChest>],
+) -> Option<(&'a Rc<LootChest>, &'a Rc<LootEntry>)> {
     let identifier = selected_item.to_string();
     // auto-sorted from lowest to highest
     for chest in floor_chests.iter() {

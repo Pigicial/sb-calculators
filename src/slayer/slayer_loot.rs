@@ -1,10 +1,10 @@
+use crate::slayer::slayer_loot_calculator::SelectedRngMeterItem;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
 use std::rc::Rc;
-use crate::slayer::slayer_loot_calculator::SelectedRngMeterItem;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
 pub struct LootTable {
@@ -56,7 +56,7 @@ pub enum LootEntry {
 pub enum DropType {
     Token,
     Main,
-    Extra
+    Extra,
 }
 
 impl LootEntry {
@@ -76,25 +76,33 @@ impl LootEntry {
 
     pub fn get_slayer_level_requirement(&self) -> u8 {
         match self {
-            LootEntry::Item { level_requirement, .. } => *level_requirement,
-            LootEntry::Enchantment { level_requirement, .. } => *level_requirement,
+            LootEntry::Item {
+                level_requirement, ..
+            } => *level_requirement,
+            LootEntry::Enchantment {
+                level_requirement, ..
+            } => *level_requirement,
         }
     }
 
     pub fn get_wiki_page_name(&self) -> String {
-        format!("https://wiki.hypixel.net/{}", match self {
-            LootEntry::Item { item, ..} => item.clone(),
-            LootEntry::Enchantment { enchantment, .. } => format!("{} Enchantment", enchantment.to_case(Case::Title)),
-        })
+        format!(
+            "https://wiki.hypixel.net/{}",
+            match self {
+                LootEntry::Item { item, .. } => item.clone(),
+                LootEntry::Enchantment { enchantment, .. } =>
+                    format!("{} Enchantment", enchantment.to_case(Case::Title)),
+            }
+        )
     }
 
     pub fn get_possible_file_names(&self) -> Vec<String> {
         match self {
             LootEntry::Item { item, .. } => {
                 let id = item.clone().to_lowercase().to_string();
-                vec!(format!("{}.png", id), format!("{}.gif", id))
-            },
-            LootEntry::Enchantment { .. } => vec!("enchanted_book.gif".to_string()),
+                vec![format!("{}.png", id), format!("{}.gif", id)]
+            }
+            LootEntry::Enchantment { .. } => vec!["enchanted_book.gif".to_string()],
         }
     }
 }
@@ -102,21 +110,47 @@ impl LootEntry {
 impl Display for LootEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            LootEntry::Item { item, item_name, quantity_range, ..} => {
+            LootEntry::Item {
+                item,
+                item_name,
+                quantity_range,
+                ..
+            } => {
                 let default = item.to_case(Case::Title);
                 if quantity_range == "1" {
                     write!(f, "{}", item_name.as_ref().unwrap_or(&default))
                 } else {
-                    write!(f, "{} ({})", item_name.as_ref().unwrap_or(&default), quantity_range)
+                    write!(
+                        f,
+                        "{} ({})",
+                        item_name.as_ref().unwrap_or(&default),
+                        quantity_range
+                    )
                 }
-            },
-            LootEntry::Enchantment { enchantment, enchantment_level, quantity_range, .. } => {
+            }
+            LootEntry::Enchantment {
+                enchantment,
+                enchantment_level,
+                quantity_range,
+                ..
+            } => {
                 if quantity_range == "1" {
-                    write!(f, "{} {} Book", enchantment.to_case(Case::Title), roman::to(*enchantment_level as i32).unwrap())
+                    write!(
+                        f,
+                        "{} {} Book",
+                        enchantment.to_case(Case::Title),
+                        roman::to(*enchantment_level as i32).unwrap()
+                    )
                 } else {
-                    write!(f, "{} {} Book ({})", enchantment.to_case(Case::Title), roman::to(*enchantment_level as i32).unwrap(), quantity_range)
+                    write!(
+                        f,
+                        "{} {} Book ({})",
+                        enchantment.to_case(Case::Title),
+                        roman::to(*enchantment_level as i32).unwrap(),
+                        quantity_range
+                    )
                 }
-            },
+            }
         }
     }
 }

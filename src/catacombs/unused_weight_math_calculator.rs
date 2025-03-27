@@ -1,5 +1,5 @@
 /*
-    // todo IDEA: 
+    // todo IDEA:
     // - save every chance combination to obtain an entry in the form of its weight / totalWeight and iterationRollChance
     // with those, the weight can be increased, and then the iterationRollChance can be increased by newWeight - weight (difference)
     // then those chances can be recalculated and added together
@@ -19,7 +19,7 @@
     // TODO: just realized a thing
     // this might not work because the iteration chance multipliers are based on the previous weight/totalWeight values, but if the whole point is changing all of those
     // then the iteration chance multipliers need to be changed too
-    
+
 use std::cell::RefCell;
 use std::rc::Rc;
 use crate::catacombs::catacombs_loot::LootChest;

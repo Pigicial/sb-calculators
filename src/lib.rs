@@ -1,8 +1,8 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
 mod app;
-mod slayer;
-mod images;
 mod catacombs;
+mod images;
+mod slayer;
 
 pub use app::CalculatorApp;
