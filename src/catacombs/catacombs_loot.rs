@@ -3,6 +3,7 @@ use include_dir::Dir;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
+use std::process::id;
 use std::rc::Rc;
 use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 
@@ -20,12 +21,23 @@ pub struct LootChest {
 }
 
 impl LootChest {
-    pub fn has_matching_entry_type(&self, entry: &Rc<LootEntry>) -> bool {
+    pub fn has_matching_entry(&self, entry: &Rc<LootEntry>) -> bool {
         self.loot_strings.contains(&entry.to_string())
+    }
+    pub fn has_matching_entry_identifier(&self, entry_identifier: &String) -> bool {
+        self.loot_strings.contains(entry_identifier)
     }
 
     pub fn has_rng_entry(&self, entry: &SelectedRngMeterItem) -> bool {
         self.loot_strings.contains(&entry.identifier)
+    }
+
+    pub fn require_s_plus(&self) -> bool {
+        self.chest_type == ChestType::Bedrock && (self.floor == 5 || self.floor == 6 || (self.floor == 7 && !self.master_mode))
+    }
+    
+    pub fn get_matching_entry_quality(&self, identifier: &String) -> Option<i16> {
+        self.loot.iter().find(|i| &i.to_string() == identifier).map(|i| i.get_quality())
     }
 }
 

@@ -1,10 +1,15 @@
 use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
-use std::cell::RefCell;
-use std::rc::Rc;
-use num_format::Locale::{en, es, qu};
+use crate::catacombs::catacombs_loot_calculator::SuccessfulRollReason::RandomRoll;
+use crate::catacombs::catacombs_page::CatacombsLootApp;
 use rand::distr::weighted::Error;
 use rand::prelude::Distribution;
-use rand_distr::weighted::WeightedIndex;
+use rand::rngs::ThreadRng;
+use rand::Rng;
+use rand_distr::weighted::{WeightedAliasIndex, WeightedIndex};
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::rc::Rc;
+use num_format::Locale::rn;
 
 pub fn calculate_quality(chest: &LootChest, treasure_talisman_multiplier: f64, boss_luck_increase: u8, s_plus: bool) -> i16 {
     let base_quality = chest.base_quality as f64;
@@ -16,7 +21,7 @@ pub fn calculate_quality(chest: &LootChest, treasure_talisman_multiplier: f64, b
     final_rounded_quality
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LootChanceEntry {
     pub entry: Rc<LootEntry>,
     pub used_weight: f64,
@@ -45,7 +50,7 @@ pub struct RngMeterData {
     pub selected_xp: i32,
 }
 
-#[derive(Hash, PartialEq)]
+#[derive(Hash, PartialEq, Clone)]
 pub struct SelectedRngMeterItem {
     pub identifier: String,
     pub required_xp: i32,
@@ -69,7 +74,7 @@ struct RecursiveData {
 }
 
 pub struct AveragesCalculationResult {
-    pub chances: Vec<LootChanceEntry>,
+    pub entries: Vec<LootChanceEntry>,
     pub total_weight: f64,
 }
 
@@ -166,11 +171,11 @@ pub fn calculate_average_chances(chest: &LootChest, mut starting_quality: i16, r
             sort_entries(&mut results, rng_meter_data.selected_item.as_ref());
 
             let total_weight = results.iter().map(|e| e.used_weight).sum();
-            AveragesCalculationResult { chances: results, total_weight }
+            AveragesCalculationResult { entries: results, total_weight }
         }
         Err(..) => {
             // panic!("Something went wrong");
-            AveragesCalculationResult { chances: Vec::new(), total_weight: 0.0 }
+            AveragesCalculationResult { entries: Vec::new(), total_weight: 0.0 }
         }
     }
 }
@@ -279,7 +284,7 @@ pub struct RandomlySelectedLootEntry {
 pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data: &RngMeterData) -> Vec<RandomlySelectedLootEntry> {
     let mut rolled_entries: Vec<RandomlySelectedLootEntry> = Vec::new();
     let mut guaranteed_essence_entries = Vec::new();
-    
+
     let mut weighted_entries: Vec<(Rc<LootEntry>, f64)> = Vec::new();
 
     for entry in &chest.loot {
@@ -329,9 +334,8 @@ pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data
     weighted_entries.retain(|(e, _)| quality >= e.get_quality());
 
     let mut rng = rand::rng();
-    let mut index = 0;
     let mut overall_chance_so_far = 1.0;
-    
+
     while quality > 0 && !weighted_entries.is_empty() {
         let table_result = WeightedIndex::new(weighted_entries.iter().map(|item| item.1));
         let (random_index, total_weight) = match table_result {
@@ -343,8 +347,7 @@ pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data
         let weight = random_entry.1;
         let iteration_chance = if total_weight == 0.0 { 1.0 } else { weight / total_weight };
         overall_chance_so_far *= iteration_chance;
-        index += 1;
-        
+
         let data = RandomlySelectedLootEntry {
             entry: Rc::clone(&random_entry.0),
             used_weight: weight,
@@ -353,10 +356,10 @@ pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data
             roll_chance: iteration_chance,
             overall_chance: overall_chance_so_far,
         };
-        
+
         rolled_entries.push(data);
         quality -= random_entry.0.get_quality();
-        
+
         if !random_entry.0.is_essence_and_can_roll_multiple_times() {
             weighted_entries.remove(random_index);
         }
@@ -368,4 +371,248 @@ pub fn generate_random_table(chest: &LootChest, mut quality: i16, rng_meter_data
     }
 
     rolled_entries
+}
+
+#[derive(Default, Debug)]
+pub struct RngMeterCalculation {
+    pub total_rolls: i32,
+    pub total_rolls_from_maxed_rng_meter: i32,
+    pub total_rolls_from_random_rolls: i32,
+}
+
+pub enum SuccessfulRollReason {
+    RandomRoll,
+    MaxedRngMeter,
+}
+
+pub struct RngMeterFlaggedChest {
+    chest_type: ChestType,
+    weighted_entries: Vec<LootChanceEntry>,
+    rng_meter_entry_index: usize,
+    starting_quality: i16,
+}
+
+impl RngMeterFlaggedChest {
+    fn get_rng_meter_entry(&mut self) -> &mut LootChanceEntry {
+        &mut self.weighted_entries[self.rng_meter_entry_index]
+    }
+}
+
+pub fn calculate_amount_of_times_rolled_for_entry(chest_data: &Vec<(&Rc<LootChest>, HashMap<i32, f64>)>, calc: &CatacombsLootApp, runs: i32, average_score: i32, meter_deselection_threshold: f32) -> Result<RngMeterCalculation, String> {
+    let mut result: RngMeterCalculation = Default::default();
+    if calc.rng_meter_data.selected_item.is_none() {
+        return Err("No selected item for the RNG meter".to_string());
+    }
+
+    println!("Calculating threshold {}", meter_deselection_threshold);
+
+    let mut rng = rand::rng();
+    let mut meter_xp = calc.rng_meter_data.selected_xp;
+    let meter_data = calc.rng_meter_data.selected_item.as_ref().unwrap();
+
+    let per_run_score_increase = match average_score {
+        s if s >= 300 => s,
+        s if s >= 270 => (s as f64 * 0.7) as i32,
+        _ => 0,
+    };
+
+    let mut chest_data: Vec<(&Rc<LootChest>, HashMap<i32, f64>)> = Vec::with_capacity(chests.len());
+
+    for chest in chests {
+        let chest_quality = calculate_quality(chest, calc.treasure_accessory_multiplier, calc.boss_luck_increase, calc.s_plus || chest.require_s_plus());
+
+        let rng_meter_cached_chances = cache_chances_per_rng_meter_value(chest, chest_quality, meter_xp, per_run_score_increase, meter_data);
+        chest_data.push((chest, rng_meter_cached_chances));
+        /*
+        let weighted_entries = chest.loot
+            .iter()
+            .map(|e| {
+                LootChanceEntry {
+                    entry: Rc::clone(e),
+                    used_weight: e.get_weight() as f64,
+                    chance: 0.0, // not used
+                    disabled: false,
+                }
+            })
+            .collect::<Vec<LootChanceEntry>>();
+
+        let rng_meter_entry_index = weighted_entries
+            .iter()
+            .position(|e| e.entry.to_string() == meter_data.identifier)
+            .ok_or("RNG Meter entry not found")?;
+
+        let data = RngMeterFlaggedChest {
+            chest_type: chest.chest_type.clone(),
+            weighted_entries,
+            rng_meter_entry_index,
+            starting_quality: chest_quality,
+        };
+        chest_data.push(data);
+         */
+    }
+
+    for r in 0..runs {
+        meter_xp += per_run_score_increase;
+        let mut new_meter_xp = None;
+        let use_meter = (meter_xp as f32 / meter_data.required_xp as f32) < meter_deselection_threshold;
+
+        for data in chest_data.iter_mut() {
+            let chest = data.0;
+            let chances = &data.1;
+            
+            let roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
+            match roll {
+                Some(SuccessfulRollReason::RandomRoll) => {
+                    println!("Found randomly on {}", r);
+                    result.total_rolls += 1;
+                    result.total_rolls_from_random_rolls += 1;
+                    if new_meter_xp.is_none() { // is none check so the version below (maxed rng meter) can override it
+                        new_meter_xp = Some(0);
+                    }
+                }
+                Some(SuccessfulRollReason::MaxedRngMeter) => {
+                    println!("Found guaranteed on {}", r);
+                    result.total_rolls += 1;
+                    result.total_rolls_from_maxed_rng_meter += 1;
+                    new_meter_xp = Some(meter_xp - meter_data.required_xp)
+                }
+                None => continue
+            }
+        }
+
+        if let Some(new_meter_xp) = new_meter_xp {
+            meter_xp = new_meter_xp;
+        }
+    }
+
+    Ok(result)
+}
+
+fn roll_item(chest: &Rc<LootChest>, chances: &HashMap<i32, f64>, meter_xp: i32, meter_data: &SelectedRngMeterItem, use_meter: bool, rng: &mut ThreadRng) -> Option<SuccessfulRollReason> {
+    /*
+    if true {
+        let f7handle_weight = 18.0;
+        let f7handle_total_weight = 13893.0;
+        let mut chance = f7handle_weight / f7handle_total_weight;
+
+        if meter_xp >= meter_data.required_xp && meter_data.lowest_tier_chest_type == chest.chest_type {
+            return Some(SuccessfulRollReason::MaxedRngMeter);
+        } else if use_meter {
+            let multiplier = 1.0 + (2.0 * meter_xp as f32 / meter_data.required_xp as f32).min(2.0) as f64;
+            let new_weight = f7handle_weight * multiplier;
+            let new_total = f7handle_total_weight + (new_weight - f7handle_weight);
+            chance = new_weight / new_total;
+        }
+
+        return if rng.random_bool(chance) {
+            Some(RandomRoll)
+        } else {
+            None
+        };
+    }
+     */
+
+    if meter_xp >= meter_data.required_xp && meter_data.lowest_tier_chest_type == chest.chest_type {
+        return Some(SuccessfulRollReason::MaxedRngMeter);
+    } else if use_meter {
+        let chance = chances.get(&meter_xp).unwrap();
+        return if rng.random_bool(*chance) {
+            Some(RandomRoll)
+        } else {
+            None
+        };
+        
+        // let multiplier = 1.0 + (2.0 * meter_xp as f32 / meter_data.required_xp as f32).min(2.0) as f64;
+        // let rng_meter_entry = chest.get_rng_meter_entry();
+        // rng_meter_entry.used_weight = rng_meter_entry.entry.get_weight() as f64 * multiplier;
+    } else {
+        let chance = chances.get(&0).unwrap();
+        return if rng.random_bool(*chance) {
+            Some(RandomRoll)
+        } else {
+            None
+        };
+        // let rng_meter_entry = chest.get_rng_meter_entry();
+        // rng_meter_entry.used_weight = rng_meter_entry.entry.get_weight() as f64;
+    }
+
+    /*
+    let mut quality = chest.starting_quality;
+    let mut used_entries_so_far = Vec::new();
+
+    while quality >= chest.get_rng_meter_entry().entry.get_quality() {
+        let table_result = WeightedAliasIndex::new(chest.weighted_entries.iter().map(|e| {
+            if quality >= e.entry.get_quality() && !used_entries_so_far.contains(&e.entry.to_string()) {
+                e.used_weight
+            } else {
+                0.0
+            }
+        }).collect());
+        match table_result {
+            Ok(table) => {
+                
+                let index = table.sample(rng);
+                let random_entry = &mut chest.weighted_entries[index];
+                if random_entry.entry.to_string() == meter_data.identifier {
+                    return Some(RandomRoll);
+                    // todo: figure out if boosted rates caused this
+                }
+
+                quality -= random_entry.entry.get_quality();
+                if !random_entry.entry.is_essence_and_can_roll_multiple_times() {
+                    random_entry.disabled = true; // no longer can roll
+                    used_entries_so_far.push(random_entry.entry.to_string());
+                }
+            }
+            Err(Error::InvalidWeight) => break, // 0 weight leftover
+            _ => break // something else
+        };
+    }
+     */
+    None
+}
+
+pub fn cache_chances_per_rng_meter_value(
+    chest: &LootChest, 
+    quality: i16,
+    starting_meter_score: i32,
+    score_increase: i32,
+    meter_data: &SelectedRngMeterItem
+) -> HashMap<i32, f64> {
+    let scores_to_cache = generate_possible_rng_meter_scores(starting_meter_score, score_increase, meter_data.required_xp);
+    let mut cached_chances = HashMap::new();
+
+    for meter_score in scores_to_cache {
+        let chances = calculate_average_chances(chest, quality, &RngMeterData {
+            selected_item: Some(meter_data.clone()),
+            selected_xp: meter_score,
+        });
+
+        let entry = chances.entries.iter().find(|e| e.entry.to_string() == meter_data.identifier).unwrap();
+        cached_chances.insert(meter_score, entry.chance);
+    }
+    
+    cached_chances
+}
+
+fn generate_possible_rng_meter_scores(starting_score: i32, per_run_increase: i32, max_value: i32) -> Vec<i32> {
+    let mut values = Vec::new();
+
+    // Generate increasing values
+    let mut value = starting_score;
+    while value <= max_value {
+        values.push(value);
+        value += per_run_increase;
+    }
+
+    // Generate decreasing values
+    value = starting_score;
+    while value >= 0 {
+        values.push(value);
+        value -= per_run_increase;
+    }
+
+    values.sort();
+    values.dedup(); // Remove duplicates in case starting_value is min or max
+    values
 }
