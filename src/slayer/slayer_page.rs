@@ -1,5 +1,8 @@
+use crate::slayer::slayer_loot;
 use crate::slayer::slayer_loot::{DropType, LootEntry, LootTable};
-use crate::slayer::slayer_loot_calculator::{calculate_chances, LootChanceEntry, RngMeterData, SelectedRngMeterItem};
+use crate::slayer::slayer_loot_calculator::{
+    calculate_chances, LootChanceEntry, RngMeterData, SelectedRngMeterItem,
+};
 use crate::{app, images};
 use eframe::epaint::{Color32, TextureHandle};
 use egui::{Context, Grid, Label, RichText, ScrollArea, TextStyle, TextWrapMode, Ui};
@@ -8,7 +11,6 @@ use num_format::{Locale, ToFormattedString};
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
-use crate::slayer::slayer_loot;
 
 pub struct SlayerLootApp {
     boss_type: Option<String>,
@@ -51,7 +53,12 @@ impl eframe::App for SlayerLootApp {
 
                                 if chances.is_none() {
                                     let chest = self.loot_table.as_ref().unwrap();
-                                    let new_chances = calculate_chances(chest, self.magic_find, self.slayer_level, &self.rng_meter_data);
+                                    let new_chances = calculate_chances(
+                                        chest,
+                                        self.magic_find,
+                                        self.slayer_level,
+                                        &self.rng_meter_data,
+                                    );
                                     self.hashed_chances.insert(hash, new_chances);
                                 }
 
@@ -85,7 +92,7 @@ impl SlayerLootApp {
                 .into_iter()
                 .map(|(k, v)| (k, v.into_iter().map(Rc::new).collect()))
                 .collect(),
-            images
+            images,
         }
     }
 
@@ -116,9 +123,11 @@ impl SlayerLootApp {
             ui.label("Magic Find: ");
         });
 
-        ui.add(egui::DragValue::new(&mut self.magic_find)
-            .speed(0.5)
-            .range(0.0..=900.0));
+        ui.add(
+            egui::DragValue::new(&mut self.magic_find)
+                .speed(0.5)
+                .range(0.0..=900.0),
+        );
     }
 
     fn add_boss_type_options(&mut self, ui: &mut Ui) {
@@ -131,13 +140,17 @@ impl SlayerLootApp {
             .selected_text(self.boss_type.as_ref().unwrap_or(&default))
             .show_ui(ui, |ui| {
                 for boss_type in self.loot.keys() {
-                    let boss_label = egui::SelectableLabel::new(self.boss_type == Some(boss_type.clone()), boss_type.clone());
+                    let boss_label = egui::SelectableLabel::new(
+                        self.boss_type == Some(boss_type.clone()),
+                        boss_type.clone(),
+                    );
                     if ui.add(boss_label).clicked() {
                         self.boss_type = Some(boss_type.clone());
 
                         if let Some(current_chest) = self.loot_table.as_ref() {
                             if let Some(new_floor_chests) = self.loot.get(boss_type) {
-                                self.loot_table = match_loot_type_or_none(current_chest, new_floor_chests);
+                                self.loot_table =
+                                    match_loot_type_or_none(current_chest, new_floor_chests);
                             }
                         }
 
@@ -146,26 +159,41 @@ impl SlayerLootApp {
                             continue;
                         }
 
-                        let selected_item_data = self.rng_meter_data.selected_item.as_mut().unwrap();
+                        let selected_item_data =
+                            self.rng_meter_data.selected_item.as_mut().unwrap();
                         let selected_xp = self.rng_meter_data.selected_xp;
 
-                        let highest_tier_chest = self.loot.get(boss_type).and_then(|v| v.last()).unwrap();
-                        let highest_tier_chest_total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
+                        let highest_tier_chest =
+                            self.loot.get(boss_type).and_then(|v| v.last()).unwrap();
+                        let highest_tier_chest_total_weight: i32 = highest_tier_chest
+                            .loot
+                            .iter()
+                            .map(|e| e.get_weight() as i32)
+                            .sum();
 
                         let mut reset_selected = true;
                         for replacement_entry in highest_tier_chest.loot.iter() {
                             if replacement_entry.to_string() == selected_item_data.identifier {
                                 let item_weight = replacement_entry.get_weight();
-                                let required_xp: i32 = (300.0 * (highest_tier_chest_total_weight as f32 / item_weight as f32)).round() as i32;
+                                let required_xp: i32 = (300.0
+                                    * (highest_tier_chest_total_weight as f32 / item_weight as f32))
+                                    .round()
+                                    as i32;
 
-                                let lowest_match = find_matching_item_from_lowest_chest(replacement_entry, self.loot.get(boss_type).unwrap())
-                                    .unwrap();
+                                let lowest_match = find_matching_item_from_lowest_chest(
+                                    replacement_entry,
+                                    self.loot.get(boss_type).unwrap(),
+                                )
+                                .unwrap();
 
-                                selected_item_data.lowest_boss_level = lowest_match.0.boss_tier.clone();
-                                selected_item_data.lowest_tier_chest_entry = Rc::clone(lowest_match.1);
+                                selected_item_data.lowest_boss_level =
+                                    lowest_match.0.boss_tier.clone();
+                                selected_item_data.lowest_tier_chest_entry =
+                                    Rc::clone(lowest_match.1);
 
                                 selected_item_data.required_xp = required_xp;
-                                selected_item_data.highest_tier_chest_entry = Rc::clone(replacement_entry);
+                                selected_item_data.highest_tier_chest_entry =
+                                    Rc::clone(replacement_entry);
                                 self.rng_meter_data.selected_xp = selected_xp.min(required_xp);
 
                                 reset_selected = false;
@@ -187,14 +215,15 @@ impl SlayerLootApp {
             ui.label("Tier: ");
         });
 
-        let selected_text = self.loot_table
+        let selected_text = self
+            .loot_table
             .as_ref()
             .map(|c| format!("Tier {:?}", &c.boss_tier))
             .unwrap_or_else(|| "None".to_string());
 
         egui::ComboBox::from_label("Select the boss tier")
             .height(400.0)
-            .selected_text(selected_text, )
+            .selected_text(selected_text)
             .show_ui(ui, move |ui| {
                 let default = String::new();
                 let floor = self.boss_type.as_ref().unwrap_or(&default);
@@ -202,7 +231,10 @@ impl SlayerLootApp {
                 let default = Vec::new();
                 for loot_table in self.loot.get(floor).unwrap_or(&default).iter() {
                     // ui.selectable_value(&mut self.loot_table, Some(chest.clone()), format!("{:?}", chest.boss_tier));
-                    let label = egui::SelectableLabel::new(self.loot_table == Some(loot_table.clone()), format!("Tier {:?}", loot_table.boss_tier));
+                    let label = egui::SelectableLabel::new(
+                        self.loot_table == Some(loot_table.clone()),
+                        format!("Tier {:?}", loot_table.boss_tier),
+                    );
                     if ui.add(label).clicked() {
                         self.loot_table = Some(loot_table.clone());
                     }
@@ -226,7 +258,11 @@ impl SlayerLootApp {
         }
         let floor = self.boss_type.as_ref().unwrap();
         let highest_tier_chest = self.loot.get(floor).unwrap().last().unwrap();
-        let total_weight: i32 = highest_tier_chest.loot.iter().map(|e| e.get_weight() as i32).sum();
+        let total_weight: i32 = highest_tier_chest
+            .loot
+            .iter()
+            .map(|e| e.get_weight() as i32)
+            .sum();
 
         ui.heading("RNG Meter");
         ui.end_row();
@@ -236,14 +272,24 @@ impl SlayerLootApp {
             ui.label("Item: ");
         });
 
-        let selected_item_string = self.rng_meter_data.selected_item
+        let selected_item_string = self
+            .rng_meter_data
+            .selected_item
             .as_ref()
             .map(|entry| {
                 // todo fix required xp logic
-                let required_xp: i32 = (300.0 * (total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32)).round() as i32;
-                let mut text = RichText::new(format!("{} ({} XP)", entry.highest_tier_chest_entry, required_xp.to_formatted_string(&Locale::en)));
+                let required_xp: i32 = (300.0
+                    * (total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32))
+                    .round() as i32;
+                let mut text = RichText::new(format!(
+                    "{} ({} XP)",
+                    entry.highest_tier_chest_entry,
+                    required_xp.to_formatted_string(&Locale::en)
+                ));
 
-                if self.loot_table.is_some() && !self.loot_table.as_ref().unwrap().has_rng_entry(entry) {
+                if self.loot_table.is_some()
+                    && !self.loot_table.as_ref().unwrap().has_rng_entry(entry)
+                {
                     text = text.strikethrough();
                 }
 
@@ -256,27 +302,42 @@ impl SlayerLootApp {
             .show_ui(ui, |ui| {
                 ui.selectable_value(&mut self.rng_meter_data.selected_item, None, "None");
 
-                let mut sorted_loot = highest_tier_chest.loot.iter().map(|e| {
-                    if let Some(chest) = &self.loot_table {
-                        (e, chest.has_matching_entry_type(e))
-                    } else {
-                        (e, true)
-                    }
-                }).collect::<Vec<(&Rc<LootEntry>, bool)>>();
+                let mut sorted_loot = highest_tier_chest
+                    .loot
+                    .iter()
+                    .map(|e| {
+                        if let Some(chest) = &self.loot_table {
+                            (e, chest.has_matching_entry_type(e))
+                        } else {
+                            (e, true)
+                        }
+                    })
+                    .collect::<Vec<(&Rc<LootEntry>, bool)>>();
                 sorted_loot.sort_by(|a, b| b.1.cmp(&a.1));
 
                 for entry in sorted_loot {
                     let in_loot = entry.1;
                     let entry = entry.0;
 
-                    if entry.get_drop_type() == &DropType::Token { // essence doesn't show in rng meter
+                    if entry.get_drop_type() == &DropType::Token {
+                        // essence doesn't show in rng meter
                         continue;
                     }
                     let item_weight = entry.get_weight();
-                    let required_xp: i32 = (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
+                    let required_xp: i32 =
+                        (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
 
-                    let selected = self.rng_meter_data.selected_item.as_ref().map_or("", |e| &e.identifier) == entry.to_string();
-                    let mut text = RichText::new(format!("{} ({} XP)", entry, required_xp.to_formatted_string(&Locale::en)));
+                    let selected = self
+                        .rng_meter_data
+                        .selected_item
+                        .as_ref()
+                        .map_or("", |e| &e.identifier)
+                        == entry.to_string();
+                    let mut text = RichText::new(format!(
+                        "{} ({} XP)",
+                        entry,
+                        required_xp.to_formatted_string(&Locale::en)
+                    ));
 
                     if !in_loot {
                         text = text.strikethrough(); // easier way to distinguish entries that don't apply
@@ -286,8 +347,11 @@ impl SlayerLootApp {
                     if ui.add(label).clicked() {
                         let rng_meter_data = &mut self.rng_meter_data;
 
-                        let lowest_match = find_matching_item_from_lowest_chest(entry, self.loot.get(floor).unwrap())
-                            .unwrap();
+                        let lowest_match = find_matching_item_from_lowest_chest(
+                            entry,
+                            self.loot.get(floor).unwrap(),
+                        )
+                        .unwrap();
 
                         let new_selected_item_data = SelectedRngMeterItem {
                             identifier: entry.to_string(),
@@ -308,32 +372,47 @@ impl SlayerLootApp {
         if let Some(selected_item_data) = self.rng_meter_data.selected_item.as_ref() {
             let selected_item = &selected_item_data.lowest_tier_chest_entry;
             ui.horizontal(|ui| {
-                images::add_first_valid_image(&self.images, ui, selected_item.get_possible_file_names());
+                images::add_first_valid_image(
+                    &self.images,
+                    ui,
+                    selected_item.get_possible_file_names(),
+                );
                 ui.label("XP: ");
             });
 
             let required_xp = selected_item_data.required_xp;
             let percent = 100.0 * self.rng_meter_data.selected_xp as f32 / required_xp as f32;
 
-            ui.add(egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
-                .suffix(format!(" XP ({:.2}%)", percent)));
-            
+            ui.add(
+                egui::Slider::new(&mut self.rng_meter_data.selected_xp, 0..=required_xp)
+                    .suffix(format!(" XP ({:.2}%)", percent)),
+            );
+
             let mut add_switch_to_lowest_chest_button = false;
             let mut text_to_add: Option<String> = None;
             if let Some(chest) = &self.loot_table {
                 if !chest.has_rng_entry(selected_item_data) {
-                    if selected_item_data.lowest_boss_level == selected_item_data.highest_boss_level {
-                        text_to_add = Some(format!("This entry only drops from tier {:?} loot.", selected_item_data.lowest_boss_level));
+                    if selected_item_data.lowest_boss_level == selected_item_data.highest_boss_level
+                    {
+                        text_to_add = Some(format!(
+                            "This entry only drops from tier {:?} loot.",
+                            selected_item_data.lowest_boss_level
+                        ));
                     } else {
-                        text_to_add = Some(format!("This entry only drops from the tier {:?} to {:?} loot.",
-                                                   selected_item_data.lowest_boss_level,
-                                                   selected_item_data.highest_boss_level));
+                        text_to_add = Some(format!(
+                            "This entry only drops from the tier {:?} to {:?} loot.",
+                            selected_item_data.lowest_boss_level,
+                            selected_item_data.highest_boss_level
+                        ));
                     }
                     add_switch_to_lowest_chest_button = true;
                 } else if percent >= 100.0 {
-                    text_to_add = Some("This entry is guaranteed to appear from this loot.".to_string());
+                    text_to_add =
+                        Some("This entry is guaranteed to appear from this loot.".to_string());
                 } else {
-                    text_to_add = Some("At 100%, this entry is guaranteed to appear from this loot.".to_string());
+                    text_to_add = Some(
+                        "At 100%, this entry is guaranteed to appear from this loot.".to_string(),
+                    );
                 }
             }
 
@@ -343,9 +422,12 @@ impl SlayerLootApp {
                 ui.add(Label::new(text_to_add).wrap_mode(TextWrapMode::Wrap));
 
                 if add_switch_to_lowest_chest_button {
-                    let button_text = format!("Switch to {:?}", selected_item_data.lowest_boss_level);
+                    let button_text =
+                        format!("Switch to {:?}", selected_item_data.lowest_boss_level);
                     if ui.button(button_text).clicked() {
-                        let lowest_tier_chest = self.loot.get(floor)
+                        let lowest_tier_chest = self
+                            .loot
+                            .get(floor)
                             .unwrap()
                             .iter()
                             .find(|c| c.boss_tier == selected_item_data.lowest_boss_level)
@@ -386,58 +468,81 @@ impl SlayerLootApp {
             .min_scrolled_height(0.0)
             .max_scroll_height(available_height);
 
-        table.header(20.0, |mut header| {
-            header.col(|ui| { ui.strong("Entry"); });
-            header.col(|ui| { ui.strong("Loot Table"); });
-            header.col(|ui| { ui.strong("Requirement"); });
-            header.col(|ui| { ui.strong("Weight"); });
-            header.col(|ui| { ui.strong("Average Chance"); });
-        }).body(|mut body| {
-            for entry in chances.iter() {
-                let weight = entry.used_weight * entry.magic_find_multiplier;
-                let chance = entry.chance;
-                let entry = &entry.entry;
-
-                if chance == 0.0 {
-                    continue;
-                }
-
-                body.row(text_height, |mut row| {
-                    row.col(|ui| {
-                        images::add_first_valid_image(&self.images, ui, entry.get_possible_file_names());
-
-                        let text = entry.to_string();
-                        let page_url = entry.get_wiki_page_name();
-                        ui.hyperlink_to(text, page_url);
-                    });
-
-                    row.col(|ui| {
-                        ui.label(format!("{:?}", entry.get_drop_type()));
-                    });
-                    row.col(|ui| {
-                        if entry.get_slayer_level_requirement() == 0 {
-                            ui.label("None");
-                        } else {
-                            ui.label(format!("{} Slayer {}", self.boss_type.as_ref().unwrap(), roman::to(entry.get_slayer_level_requirement() as i32).unwrap()));
-                        }
-                    });
-                    row.col(|ui| {
-                        let text = RichText::new(format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.'));
-                        ui.label(text.color(Color32::from_rgb(85, 255, 255))).on_hover_text(format!("More Decimals: {}", weight));
-                    });
-
-                    row.col(|ui| {
-                        fill_in_chance_column(ui, chance);
-                    });
+        table
+            .header(20.0, |mut header| {
+                header.col(|ui| {
+                    ui.strong("Entry");
                 });
-            }
+                header.col(|ui| {
+                    ui.strong("Loot Table");
+                });
+                header.col(|ui| {
+                    ui.strong("Requirement");
+                });
+                header.col(|ui| {
+                    ui.strong("Weight");
+                });
+                header.col(|ui| {
+                    ui.strong("Average Chance");
+                });
+            })
+            .body(|mut body| {
+                for entry in chances.iter() {
+                    let weight = entry.used_weight * entry.magic_find_multiplier;
+                    let chance = entry.chance;
+                    let entry = &entry.entry;
 
-            for entry in &self.loot_table.as_ref().unwrap().loot {
-                if self.slayer_level < entry.get_slayer_level_requirement() {
+                    if chance == 0.0 {
+                        continue;
+                    }
 
+                    body.row(text_height, |mut row| {
+                        row.col(|ui| {
+                            images::add_first_valid_image(
+                                &self.images,
+                                ui,
+                                entry.get_possible_file_names(),
+                            );
+
+                            let text = entry.to_string();
+                            let page_url = entry.get_wiki_page_name();
+                            ui.hyperlink_to(text, page_url);
+                        });
+
+                        row.col(|ui| {
+                            ui.label(format!("{:?}", entry.get_drop_type()));
+                        });
+                        row.col(|ui| {
+                            if entry.get_slayer_level_requirement() == 0 {
+                                ui.label("None");
+                            } else {
+                                ui.label(format!(
+                                    "{} Slayer {}",
+                                    self.boss_type.as_ref().unwrap(),
+                                    roman::to(entry.get_slayer_level_requirement() as i32).unwrap()
+                                ));
+                            }
+                        });
+                        row.col(|ui| {
+                            let text = RichText::new(
+                                format!("{:.3}", weight)
+                                    .trim_end_matches('0')
+                                    .trim_end_matches('.'),
+                            );
+                            ui.label(text.color(Color32::from_rgb(85, 255, 255)))
+                                .on_hover_text(format!("More Decimals: {}", weight));
+                        });
+
+                        row.col(|ui| {
+                            fill_in_chance_column(ui, chance);
+                        });
+                    });
                 }
-            }
-        });
+
+                for entry in &self.loot_table.as_ref().unwrap().loot {
+                    if self.slayer_level < entry.get_slayer_level_requirement() {}
+                }
+            });
     }
 
     fn generate_hash(&self) -> u64 {
@@ -461,7 +566,9 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
     let width = ui.fonts(|f| f.glyph_width(&TextStyle::Body.resolve(ui.style()), ' '));
     ui.spacing_mut().item_spacing.x = width;
 
-    ui.label(RichText::new(format!("{:.4}%", chance * 100.0)).color(Color32::from_rgb(85, 255, 85)));
+    ui.label(
+        RichText::new(format!("{:.4}%", chance * 100.0)).color(Color32::from_rgb(85, 255, 85)),
+    );
     ui.label(" (");
     ui.label(RichText::new("1").color(Color32::from_rgb(85, 255, 85)));
     ui.label(" in ");
@@ -469,7 +576,10 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
     ui.label(" runs)");
 }
 
-fn match_loot_type_or_none(chest: &Rc<LootTable>, others: &Vec<Rc<LootTable>>) -> Option<Rc<LootTable>> {
+fn match_loot_type_or_none(
+    chest: &Rc<LootTable>,
+    others: &Vec<Rc<LootTable>>,
+) -> Option<Rc<LootTable>> {
     for other_chest in others {
         if chest.boss_tier == other_chest.boss_tier {
             return Some(Rc::clone(other_chest));
@@ -479,7 +589,10 @@ fn match_loot_type_or_none(chest: &Rc<LootTable>, others: &Vec<Rc<LootTable>>) -
     None
 }
 
-fn find_matching_item_from_lowest_chest<'a>(selected_item: &'a Rc<LootEntry>, loot_tables: &'a [Rc<LootTable>]) -> Option<(&'a Rc<LootTable>, &'a Rc<LootEntry>)> {
+fn find_matching_item_from_lowest_chest<'a>(
+    selected_item: &'a Rc<LootEntry>,
+    loot_tables: &'a [Rc<LootTable>],
+) -> Option<(&'a Rc<LootTable>, &'a Rc<LootEntry>)> {
     let identifier = selected_item.to_string();
     // auto-sorted from lowest to highest
     for loot in loot_tables.iter() {
