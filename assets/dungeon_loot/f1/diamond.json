@@ -7,28 +7,31 @@
   "loot": [
     {
       "item": "BONZO_MASK",
+      "item_name": "Bonzo\u0027s Mask",
       "extra_chest_cost": 1000000,
       "quality": 200,
       "weight": 1
     },
     {
       "item": "RED_NOSE",
+      "item_name": "Red Nose",
       "extra_chest_cost": 0,
       "quality": 180,
       "weight": 2
     },
     {
+      "item": "BALLOON_SNAKE",
+      "item_name": "Balloon Snake",
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 2
+    },
+    {
       "item": "HOT_POTATO_BOOK",
+      "item_name": "Hot Potato Book",
       "extra_chest_cost": 0,
       "quality": 160,
       "weight": 6
-    },
-    {
-      "enchantment": "NO_PAIN_NO_GAIN",
-      "enchantment_level": 1,
-      "extra_chest_cost": 0,
-      "quality": 120,
-      "weight": 20
     },
     {
       "enchantment": "COMBO",
@@ -38,13 +41,21 @@
       "weight": 20
     },
     {
+      "enchantment": "NO_PAIN_NO_GAIN",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 120,
+      "weight": 20
+    },
+    {
       "item": "NECROMANCER_BROOCH",
+      "item_name": "Necromancer\u0027s Brooch",
       "extra_chest_cost": 0,
       "quality": 110,
       "weight": 12
     },
     {
-      "enchantment": "ULTIMATE_BANK",
+      "enchantment": "BANK",
       "enchantment_level": 1,
       "extra_chest_cost": 0,
       "quality": 100,
@@ -56,13 +67,6 @@
       "extra_chest_cost": 0,
       "quality": 100,
       "weight": 1
-    },
-    {
-      "enchantment": "REJUVENATE",
-      "enchantment_level": 1,
-      "extra_chest_cost": 0,
-      "quality": 80,
-      "weight": 40
     },
     {
       "enchantment": "INFINITE_QUIVER",
@@ -77,6 +81,13 @@
       "extra_chest_cost": 0,
       "quality": 80,
       "weight": 30
+    },
+    {
+      "enchantment": "REJUVENATE",
+      "enchantment_level": 1,
+      "extra_chest_cost": 0,
+      "quality": 80,
+      "weight": 40
     },
     {
       "essence_type": "WITHER",
