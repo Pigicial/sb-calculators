@@ -13,7 +13,7 @@ use eframe::epaint::{Color32, TextureHandle};
 use egui::{Context, Grid, Label, RichText, ScrollArea, SidePanel, TextStyle, TextWrapMode, Ui};
 use egui_extras::{Column, TableBuilder};
 use egui_plot::LineStyle::Solid;
-use egui_plot::{Legend, Line, LineStyle, Plot, PlotPoints};
+use egui_plot::{Legend, Line, Plot, PlotPoints};
 use include_dir::{include_dir, Dir};
 use num_format::Locale::en;
 use num_format::ToFormattedString;
@@ -310,6 +310,15 @@ impl eframe::App for CatacombsLootApp {
                                         .style(Solid));
                                 }
                                  */
+                            });
+
+                        Plot::new("chances")
+                            .legend(Legend::default())
+                            .allow_zoom([false, true])
+                            .allow_scroll([false, true])
+                            .auto_bounds([true, false])
+                            .show(ui, |ui| {
+
                             });
                     }
                 }

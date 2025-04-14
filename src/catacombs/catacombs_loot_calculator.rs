@@ -10,8 +10,10 @@ use rand::Rng;
 use rand_distr::weighted::WeightedIndex;
 use std::cell::RefCell;
 use std::collections::HashMap;
+use std::fs::File;
 use std::ops::{AddAssign, DivAssign};
 use std::rc::Rc;
+use csv::Writer;
 
 pub fn calculate_quality(
     chest: &LootChest,
@@ -480,6 +482,7 @@ pub struct RngMeterCalculation {
     pub total_rolls_from_maxed_rng_meter: f64,
     pub total_rolls_from_random_rolls_boosted: f64,
     pub total_rolls_from_random_rolls_unboosted: f64,
+    pub chance_to_roll_before_max_meter: f64,
 }
 
 impl AddAssign for RngMeterCalculation {
@@ -492,6 +495,9 @@ impl AddAssign for RngMeterCalculation {
                 + other.total_rolls_from_random_rolls_boosted,
             total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted
                 + other.total_rolls_from_random_rolls_unboosted,
+
+            // separate param
+            chance_to_roll_before_max_meter: self.chance_to_roll_before_max_meter
         };
     }
 }
@@ -500,12 +506,10 @@ impl DivAssign<i32> for RngMeterCalculation {
     fn div_assign(&mut self, divider: i32) {
         *self = Self {
             total_rolls: self.total_rolls / divider as f64,
-            total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter
-                / divider as f64,
-            total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted
-                / divider as f64,
-            total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted
-                / divider as f64,
+            total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter / divider as f64,
+            total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted / divider as f64,
+            total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted / divider as f64,
+            chance_to_roll_before_max_meter: self.chance_to_roll_before_max_meter
         };
     }
 }
@@ -515,6 +519,8 @@ pub enum SuccessfulRollReason {
     RandomRollBoosted,
     MaxedRngMeter,
 }
+
+pub fn calculate_chances
 
 pub fn calculate_amount_of_times_rolled_for_entry(
     chest_data: &[(Rc<LootChest>, HashMap<i32, f64>)],
@@ -547,7 +553,7 @@ pub fn calculate_amount_of_times_rolled_for_entry(
             let chest = &data.0;
             let chances = &data.1;
 
-            let mut roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
+            let (chance, mut roll) = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
             if roll.is_none() && use_kismets && chest.chest_type == meter_data.highest_tier_chest_type {
                 roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng); 
             }
@@ -596,9 +602,9 @@ fn roll_item(
     meter_data: &SelectedRngMeterItem,
     use_meter: bool,
     rng: &mut ThreadRng,
-) -> Option<SuccessfulRollReason> {
+) -> (f64, Option<SuccessfulRollReason>) {
     if meter_xp >= meter_data.required_xp && meter_data.lowest_tier_chest_type == chest.chest_type {
-        Some(SuccessfulRollReason::MaxedRngMeter)
+        (1.0, Some(SuccessfulRollReason::MaxedRngMeter))
     } else {
         let random_number: f64 = rng.random();
 
@@ -606,20 +612,20 @@ fn roll_item(
             let boosted_chance = chances.get(&meter_xp).unwrap();
             let unboosted_chance = chances.get(&0).unwrap();
             if random_number <= *boosted_chance {
-                if random_number < *unboosted_chance {
-                    Some(RandomRollNotBoosted)
+                if random_number <= *unboosted_chance {
+                    (*boosted_chance, Some(RandomRollNotBoosted))
                 } else {
-                    Some(RandomRollBoosted)
+                    (*boosted_chance, Some(RandomRollBoosted))
                 }
             } else {
-                None
+                (*boosted_chance, None)
             }
         } else {
             let chance = chances.get(&0).unwrap();
             if random_number <= *chance {
-                Some(RandomRollNotBoosted)
+                (*chance, Some(RandomRollNotBoosted))
             } else {
-                None
+                (*chance, None)
             }
         }
     }
@@ -658,6 +664,13 @@ pub fn cache_chances_per_rng_meter_value(
             .unwrap();
         cached_chances.insert(meter_score, entry.chance);
     }
+
+    /*
+    if let Ok(file) = File::create("page_timestamps.csv") {
+        let mut writer = Writer::from_writer(file);
+    }
+     */
+
 
     cached_chances
 }
