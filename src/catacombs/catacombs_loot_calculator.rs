@@ -482,22 +482,19 @@ pub struct RngMeterCalculation {
     pub total_rolls_from_maxed_rng_meter: f64,
     pub total_rolls_from_random_rolls_boosted: f64,
     pub total_rolls_from_random_rolls_unboosted: f64,
-    pub chance_to_roll_before_max_meter: f64,
+    pub average_entry_roll_weight: f64,
+    pub average_entry_roll_chance: f64,
 }
 
 impl AddAssign for RngMeterCalculation {
     fn add_assign(&mut self, other: Self) {
         *self = Self {
             total_rolls: self.total_rolls + other.total_rolls,
-            total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter
-                + other.total_rolls_from_maxed_rng_meter,
-            total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted
-                + other.total_rolls_from_random_rolls_boosted,
-            total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted
-                + other.total_rolls_from_random_rolls_unboosted,
-
-            // separate param
-            chance_to_roll_before_max_meter: self.chance_to_roll_before_max_meter
+            total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter + other.total_rolls_from_maxed_rng_meter,
+            total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted + other.total_rolls_from_random_rolls_boosted,
+            total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted + other.total_rolls_from_random_rolls_unboosted,
+            average_entry_roll_weight: self.average_entry_roll_weight + other.average_entry_roll_weight,
+            average_entry_roll_chance: self.average_entry_roll_chance + other.average_entry_roll_chance,
         };
     }
 }
@@ -509,31 +506,31 @@ impl DivAssign<i32> for RngMeterCalculation {
             total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter / divider as f64,
             total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted / divider as f64,
             total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted / divider as f64,
-            chance_to_roll_before_max_meter: self.chance_to_roll_before_max_meter
+            average_entry_roll_weight: self.average_entry_roll_weight / divider as f64,
+            average_entry_roll_chance: self.average_entry_roll_weight / divider as f64,
         };
     }
 }
 
 pub enum SuccessfulRollReason {
-    RandomRollNotBoosted,
-    RandomRollBoosted,
+    RandomRollNotBoosted(ChanceAndWeight),
+    RandomRollBoosted(ChanceAndWeight),
     MaxedRngMeter,
 }
 
-pub fn calculate_chances
-
-pub fn calculate_amount_of_times_rolled_for_entry(
+/*
+pub fn calculate_meter_item_random_roll_chance(
     chest_data: &[(Rc<LootChest>, HashMap<i32, f64>)],
     calc: &CatacombsLootApp,
     runs: i32,
     average_score: i32,
     meter_deselection_threshold: f32,
-) -> Result<RngMeterCalculation, String> {
+)-> Result<f64, String> {
     let mut result: RngMeterCalculation = Default::default();
     if calc.rng_meter_data.selected_item.is_none() {
         return Err("No selected item for the RNG meter".to_string());
     }
-    
+
     let mut rng = rand::rng();
     let mut meter_xp = calc.rng_meter_data.selected_xp;
     let meter_data = calc.rng_meter_data.selected_item.as_ref().unwrap();
@@ -545,6 +542,21 @@ pub fn calculate_amount_of_times_rolled_for_entry(
         _ => 0,
     };
 
+    let meter_xp_amounts = chest_data.first().unwrap().1.keys().clone();
+    let mut chance_to_not_roll = 1;
+    for meter_xp in meter_xp_amounts {
+        let use_meter = (*meter_xp as f32 / meter_data.required_xp as f32) < meter_deselection_threshold;
+
+        for (chest, chances) in chest_data.iter() {
+            let chance = if use_meter {
+                chances.get(&meter_xp).unwrap();
+            } else {
+                chances.get(&0).unwrap();
+            };
+        }
+
+    }
+
     for _ in 0..runs {
         let mut new_meter_xp = None;
         let use_meter = (meter_xp as f32 / meter_data.required_xp as f32) < meter_deselection_threshold;
@@ -553,9 +565,9 @@ pub fn calculate_amount_of_times_rolled_for_entry(
             let chest = &data.0;
             let chances = &data.1;
 
-            let (chance, mut roll) = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
+            let mut roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
             if roll.is_none() && use_kismets && chest.chest_type == meter_data.highest_tier_chest_type {
-                roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng); 
+                roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
             }
             match roll {
                 Some(any) => {
@@ -594,41 +606,135 @@ pub fn calculate_amount_of_times_rolled_for_entry(
 
     Ok(result)
 }
+ */
+
+pub fn calculate_amount_of_times_rolled_for_entry(
+    chest_data: &[(Rc<LootChest>, HashMap<i32, ChanceAndWeight>)],
+    calc: &CatacombsLootApp,
+    runs: i32,
+    average_score: i32,
+    meter_deselection_threshold: f32,
+) -> Result<RngMeterCalculation, String> {
+    let mut result: RngMeterCalculation = Default::default();
+    if calc.rng_meter_data.selected_item.is_none() {
+        return Err("No selected item for the RNG meter".to_string());
+    }
+
+    let mut added_up_roll_chances = 0.0;
+    let mut added_up_roll_weights = 0.0;
+    
+    let mut rng = rand::rng();
+    let mut meter_xp = calc.rng_meter_data.selected_xp;
+    let meter_data = calc.rng_meter_data.selected_item.as_ref().unwrap();
+    let use_kismets = calc.rng_meter_calculation_use_kismet_feathers;
+
+    let per_run_score_increase = match average_score {
+        s if s >= 300 => s,
+        s if s >= 270 => (s as f64 * 0.7) as i32,
+        _ => 0,
+    };
+
+    for _ in 0..runs {
+        let mut new_meter_xp = None;
+        let use_meter = (meter_xp as f32 / meter_data.required_xp as f32) < meter_deselection_threshold;
+
+        for data in chest_data.iter() {
+            let chest = &data.0;
+            let chances = &data.1;
+
+            let mut roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
+            if roll.is_none() && use_kismets && chest.chest_type == meter_data.highest_tier_chest_type {
+                roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng); 
+            }
+            match roll {
+                Some(any) => {
+                    result.total_rolls += 1.0;
+                    match any {
+                        RandomRollNotBoosted(data) => {
+                            result.total_rolls_from_random_rolls_unboosted += 1.0;
+                            if use_meter && new_meter_xp.is_none() {
+                                // is none check so the version below (maxed rng meter) can override it
+                                new_meter_xp = Some(0);
+                            }
+
+                            added_up_roll_chances += data.chance;
+                            added_up_roll_weights += data.weight;
+                        }
+                        RandomRollBoosted(data) => {
+                            result.total_rolls_from_random_rolls_boosted += 1.0;
+                            if use_meter && new_meter_xp.is_none() {
+                                // is none check so the version below (maxed rng meter) can override it
+                                new_meter_xp = Some(0);
+                            }
+
+                            added_up_roll_chances += data.chance;
+                            added_up_roll_weights += data.weight;
+                        }
+                        SuccessfulRollReason::MaxedRngMeter => {
+                            result.total_rolls_from_maxed_rng_meter += 1.0;
+                            new_meter_xp = Some(0); // todo: change to Some(meter_xp - meter_data.required_xp)
+                        }
+                    }
+                }
+                None => continue,
+            }
+        }
+
+        if let Some(new_meter_xp) = new_meter_xp {
+            meter_xp = new_meter_xp;
+        }
+        // xp is added after rolling :shrug:
+        meter_xp += per_run_score_increase;
+    }
+
+    result.average_entry_roll_weight = added_up_roll_weights / result.total_rolls;
+    result.average_entry_roll_chance = added_up_roll_chances / result.total_rolls;
+
+    Ok(result)
+}
 
 fn roll_item(
     chest: &Rc<LootChest>,
-    chances: &HashMap<i32, f64>,
+    chances: &HashMap<i32, ChanceAndWeight>,
     meter_xp: i32,
     meter_data: &SelectedRngMeterItem,
     use_meter: bool,
     rng: &mut ThreadRng,
-) -> (f64, Option<SuccessfulRollReason>) {
+) -> Option<SuccessfulRollReason> {
     if meter_xp >= meter_data.required_xp && meter_data.lowest_tier_chest_type == chest.chest_type {
-        (1.0, Some(SuccessfulRollReason::MaxedRngMeter))
+        Some(SuccessfulRollReason::MaxedRngMeter)
     } else {
         let random_number: f64 = rng.random();
 
         if use_meter {
-            let boosted_chance = chances.get(&meter_xp).unwrap();
-            let unboosted_chance = chances.get(&0).unwrap();
-            if random_number <= *boosted_chance {
-                if random_number <= *unboosted_chance {
-                    (*boosted_chance, Some(RandomRollNotBoosted))
+            let boosted_chance_data = chances.get(&meter_xp).unwrap();
+
+            let boosted_chance = boosted_chance_data.chance;
+            let unboosted_chance = chances.get(&0).unwrap().chance;
+            if random_number <= boosted_chance {
+                if random_number <= unboosted_chance {
+                    Some(RandomRollNotBoosted(boosted_chance_data.clone()))
                 } else {
-                    (*boosted_chance, Some(RandomRollBoosted))
+                    Some(RandomRollBoosted(boosted_chance_data.clone()))
                 }
             } else {
-                (*boosted_chance, None)
+                None
             }
         } else {
-            let chance = chances.get(&0).unwrap();
-            if random_number <= *chance {
-                (*chance, Some(RandomRollNotBoosted))
+            let chance_and_weight = chances.get(&0).unwrap();
+            if random_number <= chance_and_weight.chance {
+                Some(RandomRollNotBoosted(chance_and_weight.clone()))
             } else {
-                (*chance, None)
+                None
             }
         }
     }
+}
+
+#[derive(Clone)]
+pub struct ChanceAndWeight {
+    chance: f64,
+    weight: f64,
 }
 
 pub fn cache_chances_per_rng_meter_value(
@@ -637,7 +743,7 @@ pub fn cache_chances_per_rng_meter_value(
     starting_meter_score: i32,
     score_increase: i32,
     meter_data: &SelectedRngMeterItem,
-) -> HashMap<i32, f64> {
+) -> HashMap<i32, ChanceAndWeight> {
     let scores_to_cache = generate_possible_rng_meter_scores(
         starting_meter_score,
         score_increase,
@@ -662,7 +768,10 @@ pub fn cache_chances_per_rng_meter_value(
             .iter()
             .find(|e| e.entry.to_string() == meter_data.identifier)
             .unwrap();
-        cached_chances.insert(meter_score, entry.chance);
+        cached_chances.insert(meter_score, ChanceAndWeight {
+            chance: entry.chance,
+            weight: entry.used_weight
+        });
     }
 
     /*
