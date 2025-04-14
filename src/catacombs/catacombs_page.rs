@@ -1,9 +1,5 @@
 use crate::catacombs::catacombs_loot::LootChest;
-use crate::catacombs::catacombs_loot_calculator::{
-    cache_chances_per_rng_meter_value, calculate_amount_of_times_rolled_for_entry,
-    calculate_average_chances, calculate_quality, generate_random_table, AveragesCalculationResult,
-    RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData,
-};
+use crate::catacombs::catacombs_loot_calculator::{cache_chances_per_rng_meter_value, calculate_amount_of_times_rolled_for_entry, calculate_average_chances, calculate_quality, generate_random_table, AveragesCalculationResult, ChanceAndWeight, RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData};
 use crate::catacombs::catacombs_page::CalculatorType::{
     AveragesLootTable, RandomLootTable, RngMeterDeselection,
 };
@@ -40,7 +36,7 @@ pub struct CatacombsLootApp {
     random_table_source_options_hash: Option<u64>,
 
     rng_meter_calculations: HashMap<u64, Vec<(f64, RngMeterCalculation)>>, // hash -> map of rng deactivate % -> calc
-    rng_meter_calculation_cached_chances: HashMap<u64, Vec<(Rc<LootChest>, HashMap<i32, f64>)>>,
+    rng_meter_calculation_cached_chances: HashMap<u64, Vec<(Rc<LootChest>, HashMap<i32, ChanceAndWeight>)>>,
     rng_meter_calculation_hash: Option<u64>,
     pub rng_meter_calculation_runs: i32,
     pub rng_meter_calculation_iterations: i32,
@@ -202,7 +198,7 @@ impl eframe::App for CatacombsLootApp {
                     if button_clicked {
                         let chest_data_hash = self.generate_rng_meter_calculation_chests_and_item_hash();
                         if let Entry::Vacant(e) = self.rng_meter_calculation_cached_chances.entry(chest_data_hash) {
-                            let mut chest_data: Vec<(Rc<LootChest>, HashMap<i32, f64>)> = Vec::with_capacity(chests.len());
+                            let mut chest_data: Vec<(Rc<LootChest>, HashMap<i32, ChanceAndWeight>)> = Vec::with_capacity(chests.len());
 
                             for chest in chests {
                                 let chest_quality = calculate_quality(
