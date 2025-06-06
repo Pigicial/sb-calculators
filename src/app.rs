@@ -89,7 +89,6 @@ impl eframe::App for CalculatorApp {
                     }
                     self.selected_page = selected_page;
 
-                    let is_web = cfg!(target_arch = "wasm32");
                     if !is_web {
                         ui.add_space(30.0);
                         egui::gui_zoom::zoom_menu_buttons(ui);

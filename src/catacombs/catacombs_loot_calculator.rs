@@ -1,35 +1,31 @@
 use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
-use crate::catacombs::catacombs_loot_calculator::SuccessfulRollReason::{
-    RandomRollBoosted, RandomRollNotBoosted,
+#[cfg(not(target_arch = "wasm32"))]
+use {
+    crate::catacombs::catacombs_loot_calculator::SuccessfulRollReason::{
+        RandomRollBoosted, RandomRollNotBoosted,
+    },
+    crate::catacombs::catacombs_page::CatacombsLootApp,
+    rand::{distr::weighted::Error, prelude::Distribution, rngs::ThreadRng, Rng},
+    rand_distr::weighted::WeightedIndex,
 };
-use crate::catacombs::catacombs_page::CatacombsLootApp;
-use rand::distr::weighted::Error;
-use rand::prelude::Distribution;
-use rand::rngs::ThreadRng;
-use rand::Rng;
-use rand_distr::weighted::WeightedIndex;
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::fs::File;
 use std::ops::{AddAssign, DivAssign};
 use std::rc::Rc;
-use csv::Writer;
 
 pub fn calculate_quality(
     chest: &LootChest,
     treasure_talisman_multiplier: f64,
     boss_luck_increase: u8,
+    catacombs_box_attribute_increase: u8,
     s_plus: bool,
 ) -> i16 {
     let base_quality = chest.base_quality as f64;
 
     let s_plus_multiplier = if s_plus { 1.05 } else { 1.0 };
     let floor_quality: f64 = (base_quality * s_plus_multiplier).floor();
-    let modified_quality: f64 =
-        ((floor_quality * treasure_talisman_multiplier) + (boss_luck_increase as f64)).round();
-    let final_rounded_quality: i16 = ((modified_quality * treasure_talisman_multiplier)
-        + (boss_luck_increase as f64))
-        .round() as i16;
+    let modified_quality: f64 = ((floor_quality * treasure_talisman_multiplier) + (boss_luck_increase as f64) + (catacombs_box_attribute_increase as f64)).round();
+    let final_rounded_quality: i16 = ((modified_quality * treasure_talisman_multiplier) + (boss_luck_increase as f64) + (catacombs_box_attribute_increase as f64)).round() as i16;
     final_rounded_quality
 }
 
@@ -145,8 +141,8 @@ pub fn calculate_average_chances(
                     if selected_item_data.identifier.eq(&entry.to_string()) {
                         let multiplier = 1.0
                             + (2.0 * rng_meter_data.selected_xp as f32
-                                / selected_item_data.required_xp as f32)
-                                .min(2.0) as f64;
+                            / selected_item_data.required_xp as f32)
+                            .min(2.0) as f64;
                         chance_entry.used_weight *= multiplier;
 
                         // only guarantee the drop in the lowest tier chest
@@ -370,6 +366,7 @@ pub struct RandomlySelectedLootEntry {
     pub overall_chance: f64,
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn generate_random_table(
     chest: &LootChest,
     mut quality: i16,
@@ -404,8 +401,8 @@ pub fn generate_random_table(
                     if selected_item_data.identifier.eq(&entry.to_string()) {
                         let multiplier = 1.0
                             + (2.0 * rng_meter_data.selected_xp as f32
-                                / selected_item_data.required_xp as f32)
-                                .min(2.0) as f64;
+                            / selected_item_data.required_xp as f32)
+                            .min(2.0) as f64;
                         weight *= multiplier;
 
                         // only guarantee the drop in the lowest tier chest
@@ -482,8 +479,11 @@ pub struct RngMeterCalculation {
     pub total_rolls_from_maxed_rng_meter: f64,
     pub total_rolls_from_random_rolls_boosted: f64,
     pub total_rolls_from_random_rolls_unboosted: f64,
-    pub average_entry_roll_weight: f64,
-    pub average_entry_roll_chance: f64,
+
+    pub average_regular_entry_roll_weight: f64,
+    pub average_regular_entry_roll_chance: f64,
+    pub average_boosted_entry_roll_weight: f64,
+    pub average_boosted_entry_roll_chance: f64,
 }
 
 impl AddAssign for RngMeterCalculation {
@@ -493,8 +493,11 @@ impl AddAssign for RngMeterCalculation {
             total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter + other.total_rolls_from_maxed_rng_meter,
             total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted + other.total_rolls_from_random_rolls_boosted,
             total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted + other.total_rolls_from_random_rolls_unboosted,
-            average_entry_roll_weight: self.average_entry_roll_weight + other.average_entry_roll_weight,
-            average_entry_roll_chance: self.average_entry_roll_chance + other.average_entry_roll_chance,
+
+            average_regular_entry_roll_weight: self.average_regular_entry_roll_weight + other.average_regular_entry_roll_weight,
+            average_regular_entry_roll_chance: self.average_regular_entry_roll_chance + other.average_regular_entry_roll_chance,
+            average_boosted_entry_roll_weight: self.average_boosted_entry_roll_weight + other.average_boosted_entry_roll_weight,
+            average_boosted_entry_roll_chance: self.average_boosted_entry_roll_chance + other.average_boosted_entry_roll_chance,
         };
     }
 }
@@ -506,8 +509,10 @@ impl DivAssign<i32> for RngMeterCalculation {
             total_rolls_from_maxed_rng_meter: self.total_rolls_from_maxed_rng_meter / divider as f64,
             total_rolls_from_random_rolls_boosted: self.total_rolls_from_random_rolls_boosted / divider as f64,
             total_rolls_from_random_rolls_unboosted: self.total_rolls_from_random_rolls_unboosted / divider as f64,
-            average_entry_roll_weight: self.average_entry_roll_weight / divider as f64,
-            average_entry_roll_chance: self.average_entry_roll_weight / divider as f64,
+            average_regular_entry_roll_weight: self.average_regular_entry_roll_weight / divider as f64,
+            average_regular_entry_roll_chance: self.average_regular_entry_roll_chance / divider as f64,
+            average_boosted_entry_roll_weight: self.average_boosted_entry_roll_weight / divider as f64,
+            average_boosted_entry_roll_chance: self.average_boosted_entry_roll_chance / divider as f64,
         };
     }
 }
@@ -608,6 +613,8 @@ pub fn calculate_meter_item_random_roll_chance(
 }
  */
 
+
+#[cfg(not(target_arch = "wasm32"))]
 pub fn calculate_amount_of_times_rolled_for_entry(
     chest_data: &[(Rc<LootChest>, HashMap<i32, ChanceAndWeight>)],
     calc: &CatacombsLootApp,
@@ -620,9 +627,10 @@ pub fn calculate_amount_of_times_rolled_for_entry(
         return Err("No selected item for the RNG meter".to_string());
     }
 
+    let mut total_random_rolls = 0;
     let mut added_up_roll_chances = 0.0;
     let mut added_up_roll_weights = 0.0;
-    
+
     let mut rng = rand::rng();
     let mut meter_xp = calc.rng_meter_data.selected_xp;
     let meter_data = calc.rng_meter_data.selected_item.as_ref().unwrap();
@@ -644,7 +652,7 @@ pub fn calculate_amount_of_times_rolled_for_entry(
 
             let mut roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
             if roll.is_none() && use_kismets && chest.chest_type == meter_data.highest_tier_chest_type {
-                roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng); 
+                roll = roll_item(chest, chances, meter_xp, meter_data, use_meter, &mut rng);
             }
             match roll {
                 Some(any) => {
@@ -657,6 +665,7 @@ pub fn calculate_amount_of_times_rolled_for_entry(
                                 new_meter_xp = Some(0);
                             }
 
+                            total_random_rolls += 1;
                             added_up_roll_chances += data.chance;
                             added_up_roll_weights += data.weight;
                         }
@@ -667,6 +676,7 @@ pub fn calculate_amount_of_times_rolled_for_entry(
                                 new_meter_xp = Some(0);
                             }
 
+                            total_random_rolls += 1;
                             added_up_roll_chances += data.chance;
                             added_up_roll_weights += data.weight;
                         }
@@ -687,12 +697,13 @@ pub fn calculate_amount_of_times_rolled_for_entry(
         meter_xp += per_run_score_increase;
     }
 
-    result.average_entry_roll_weight = added_up_roll_weights / result.total_rolls;
-    result.average_entry_roll_chance = added_up_roll_chances / result.total_rolls;
+    result.average_regular_entry_roll_weight = added_up_roll_weights / total_random_rolls as f64;
+    result.average_regular_entry_roll_chance = added_up_roll_chances / total_random_rolls as f64;
 
     Ok(result)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 fn roll_item(
     chest: &Rc<LootChest>,
     chances: &HashMap<i32, ChanceAndWeight>,
@@ -770,7 +781,7 @@ pub fn cache_chances_per_rng_meter_value(
             .unwrap();
         cached_chances.insert(meter_score, ChanceAndWeight {
             chance: entry.chance,
-            weight: entry.used_weight
+            weight: entry.used_weight,
         });
     }
 
