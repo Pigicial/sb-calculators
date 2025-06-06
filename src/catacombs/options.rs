@@ -1,9 +1,9 @@
 use crate::catacombs::catacombs_loot::{LootChest, LootEntry};
-use crate::catacombs::catacombs_loot_calculator::{RngMeterCalculation, SelectedRngMeterItem};
+use crate::catacombs::catacombs_loot_calculator::{SelectedRngMeterItem};
 use crate::catacombs::catacombs_page::CalculatorType::AveragesLootTable;
 use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootApp};
 use crate::images;
-use egui::{Checkbox, Label, RichText, TextWrapMode, Ui};
+use egui::{Checkbox, Label, RichText, Slider, TextWrapMode, Ui};
 use num_format::{Locale, ToFormattedString};
 use std::rc::Rc;
 
@@ -42,6 +42,16 @@ pub fn add_boss_luck_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     });
 }
 
+pub fn add_catacombs_box_attribute_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "catacombs_box.png");
+        ui.label("Catacombs Box: ");
+    });
+    ui.horizontal(|ui| {
+        ui.add(Slider::new(&mut calc.catacombs_box_attribute_increase, 0..=10));
+    });
+}
+
 pub fn add_s_plus_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "s_plus.png");
@@ -63,7 +73,7 @@ pub fn add_floor_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         images::add_image(&calc.images, ui, "catacombs.png");
         ui.label("Floor: ");
     });
-    egui::ComboBox::from_label("Select a floor")
+    egui::ComboBox::from_id_salt("select_floor")
         .selected_text(floor_to_text(
             calc.floor.as_deref().unwrap_or("None").to_string(),
         ))
@@ -139,7 +149,7 @@ pub fn add_chest_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         ui.label("Chest: ");
     });
 
-    egui::ComboBox::from_label("Select a chest")
+    egui::ComboBox::from_id_salt("select_chest")
         .height(400.0)
         .selected_text(
             calc.chest
@@ -208,7 +218,7 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         })
         .unwrap_or(RichText::new(String::from("None")));
 
-    egui::ComboBox::from_label("Select an item")
+    egui::ComboBox::from_id_salt("select_item")
         .selected_text(selected_item_string)
         .show_ui(ui, |ui| {
             ui.selectable_value(&mut calc.rng_meter_data.selected_item, None, "None");
@@ -394,7 +404,7 @@ pub fn add_rng_meter_simulation_options(calc: &mut CatacombsLootApp, ui: &mut Ui
 
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "redstone_repeater.png");
-        ui.label("Iterations for Averages: ");
+        ui.label("Iterations (Averaged): ");
     });
     ui.add(egui::DragValue::new(
         &mut calc.rng_meter_calculation_iterations,

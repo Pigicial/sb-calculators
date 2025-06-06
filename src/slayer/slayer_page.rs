@@ -136,7 +136,7 @@ impl SlayerLootApp {
             ui.label("Boss: ");
         });
         let default = String::from("None");
-        egui::ComboBox::from_label("Select the boss")
+        egui::ComboBox::from_id_salt("select_boss")
             .selected_text(self.boss_type.as_ref().unwrap_or(&default))
             .show_ui(ui, |ui| {
                 for boss_type in self.loot.keys() {
@@ -221,7 +221,7 @@ impl SlayerLootApp {
             .map(|c| format!("Tier {:?}", &c.boss_tier))
             .unwrap_or_else(|| "None".to_string());
 
-        egui::ComboBox::from_label("Select the boss tier")
+        egui::ComboBox::from_id_salt("select_boss_tier")
             .height(400.0)
             .selected_text(selected_text)
             .show_ui(ui, move |ui| {
@@ -297,7 +297,7 @@ impl SlayerLootApp {
             })
             .unwrap_or(RichText::new(String::from("None")));
 
-        egui::ComboBox::from_label("Select an item")
+        egui::ComboBox::from_id_salt("select_item")
             .selected_text(selected_item_string)
             .show_ui(ui, |ui| {
                 ui.selectable_value(&mut self.rng_meter_data.selected_item, None, "None");

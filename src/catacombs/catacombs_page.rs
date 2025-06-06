@@ -1,9 +1,9 @@
 use crate::catacombs::catacombs_loot::LootChest;
-use crate::catacombs::catacombs_loot_calculator::{cache_chances_per_rng_meter_value, calculate_amount_of_times_rolled_for_entry, calculate_average_chances, calculate_quality, generate_random_table, AveragesCalculationResult, ChanceAndWeight, RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData};
+use crate::catacombs::catacombs_loot_calculator::{cache_chances_per_rng_meter_value, calculate_average_chances, calculate_quality, AveragesCalculationResult, ChanceAndWeight, RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData};
 use crate::catacombs::catacombs_page::CalculatorType::{
     AveragesLootTable, RandomLootTable, RngMeterDeselection,
 };
-use crate::catacombs::{catacombs_loot, options};
+use crate::catacombs::{catacombs_loot, catacombs_loot_calculator, options};
 use crate::images;
 use eframe::epaint::{Color32, TextureHandle};
 use egui::{Context, Grid, Label, RichText, ScrollArea, SidePanel, TextStyle, TextWrapMode, Ui};
@@ -26,6 +26,7 @@ pub struct CatacombsLootApp {
 
     pub treasure_accessory_multiplier: f64,
     pub boss_luck_increase: u8,
+    pub catacombs_box_attribute_increase: u8,
     pub s_plus: bool,
     pub forced_s_plus_const: bool,
     pub rng_meter_data: RngMeterData,
@@ -54,8 +55,14 @@ pub enum CalculatorType {
 }
 
 impl CalculatorType {
-    pub(crate) fn should_display_rng_meter_section(&self) -> bool {
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn should_display_rng_meter_section(&self) -> bool {
         self == &AveragesLootTable || self == &RandomLootTable
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    pub fn should_display_rng_meter_section(&self) -> bool {
+        self == &AveragesLootTable
     }
 }
 
@@ -63,9 +70,9 @@ impl eframe::App for CatacombsLootApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
         SidePanel::left("cata_loot_config")
-            .resizable(true)
-            .default_width(500.0)
-            .max_width(500.0)
+            .resizable(false)
+            .min_width(468.0)
+            .default_width(468.0)
             .show(ctx, |ui| {
                 ScrollArea::horizontal().id_salt("cata_loot_config").show(ui, |ui| {
                     ui.heading("Options");
@@ -77,6 +84,8 @@ impl eframe::App for CatacombsLootApp {
                             options::add_treasure_talisman_options(self, ui);
                             ui.end_row();
                             options::add_boss_luck_options(self, ui);
+                            ui.end_row();
+                            options::add_catacombs_box_attribute_options(self, ui);
                             ui.end_row();
                             options::add_s_plus_options(self, ui);
                             ui.end_row();
@@ -93,14 +102,16 @@ impl eframe::App for CatacombsLootApp {
                         });
                 });
             });
-        
+
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.horizontal_wrapped(|ui| {
-                ui.selectable_value(&mut self.calculator_type, AveragesLootTable, "Loot Tables");
-                ui.selectable_value(&mut self.calculator_type, RandomLootTable, "Casino");
-                ui.selectable_value(&mut self.calculator_type, RngMeterDeselection, "RNG Meter Deselection Calculator");
-            });
-            ui.separator();
+            if cfg!(not(target_arch = "wasm32")) {
+                ui.horizontal_wrapped(|ui| {
+                    ui.selectable_value(&mut self.calculator_type, AveragesLootTable, "Loot Tables");
+                    ui.selectable_value(&mut self.calculator_type, RandomLootTable, "Casino");
+                    ui.selectable_value(&mut self.calculator_type, RngMeterDeselection, "RNG Meter Deselection Calculator");
+                });
+                ui.separator();
+            }
 
             if self.floor.is_none() || self.chest.is_none() {
                 ui.label("Select a floor and chest to see its loot.");
@@ -118,6 +129,7 @@ impl eframe::App for CatacombsLootApp {
                             chest,
                             self.treasure_accessory_multiplier,
                             self.boss_luck_increase,
+                            self.catacombs_box_attribute_increase,
                             self.s_plus || chest.require_s_plus(),
                         );
 
@@ -131,6 +143,7 @@ impl eframe::App for CatacombsLootApp {
                         self.add_loot_section(ui);
                     });
                 }
+                #[cfg(not(target_arch = "wasm32"))]
                 RandomLootTable => {
                     let hash = self.generate_loot_table_hash();
                     let current_hash = self.random_table_source_options_hash.unwrap_or(0);
@@ -151,10 +164,11 @@ impl eframe::App for CatacombsLootApp {
                             chest,
                             self.treasure_accessory_multiplier,
                             self.boss_luck_increase,
+                            self.catacombs_box_attribute_increase,
                             self.s_plus || chest.require_s_plus(),
                         );
 
-                        self.random_table = Some(generate_random_table(chest, starting_quality, &self.rng_meter_data));
+                        self.random_table = Some(catacombs_loot_calculator::generate_random_table(chest, starting_quality, &self.rng_meter_data));
                         self.random_table_source_options_hash = Some(hash);
                     }
 
@@ -164,6 +178,7 @@ impl eframe::App for CatacombsLootApp {
                         self.add_random_loot_section(ui);
                     });
                 }
+                #[cfg(not(target_arch = "wasm32"))]
                 RngMeterDeselection => {
                     let selected_item_data = &self.rng_meter_data.selected_item;
                     if selected_item_data.is_none() {
@@ -205,6 +220,7 @@ impl eframe::App for CatacombsLootApp {
                                     chest,
                                     self.treasure_accessory_multiplier,
                                     self.boss_luck_increase,
+                                    self.catacombs_box_attribute_increase,
                                     self.s_plus || chest.require_s_plus(),
                                 );
 
@@ -222,12 +238,12 @@ impl eframe::App for CatacombsLootApp {
                             let mut combined_calculations: RngMeterCalculation = Default::default();
 
                             for _ in 0..self.rng_meter_calculation_iterations {
-                                let result = calculate_amount_of_times_rolled_for_entry(
+                                let result = catacombs_loot_calculator::calculate_amount_of_times_rolled_for_entry(
                                     chest_data,
                                     self,
                                     self.rng_meter_calculation_runs,
                                     300,
-                                    meter_deselection_threshold
+                                    meter_deselection_threshold,
                                 );
                                 match result {
                                     Ok(calculation) => {
@@ -265,7 +281,17 @@ impl eframe::App for CatacombsLootApp {
                             .iter()
                             .map(|(rng_meter_trigger_threshold, result)| [*rng_meter_trigger_threshold, result.total_rolls_from_maxed_rng_meter])
                             .collect();
-                        
+
+
+                        let average_random_roll_chances_plot_points: PlotPoints<'_> = data
+                            .iter()
+                            .map(|(rng_meter_trigger_threshold, result)| [*rng_meter_trigger_threshold, result.average_regular_entry_roll_chance])
+                            .collect();
+                        let average_random_roll_weights_plot_points: PlotPoints<'_> = data
+                            .iter()
+                            .map(|(rng_meter_trigger_threshold, result)| [*rng_meter_trigger_threshold, result.average_regular_entry_roll_weight])
+                            .collect();
+
                         let highest_possible_score_reachable = meter_xp + (per_run_score_increase * self.rng_meter_calculation_runs);
 
                         Plot::new("lines_demo")
@@ -290,7 +316,16 @@ impl eframe::App for CatacombsLootApp {
                                     .color(Color32::from_rgb(100, 100, 200))
                                     .name("From Guaranteed Rolls")
                                     .style(Solid));
-                                
+
+                                ui.line(Line::new(average_random_roll_chances_plot_points)
+                                    .color(Color32::from_rgb(200, 100, 100))
+                                    .name("Averages Chances from Random Rolls")
+                                    .style(Solid));
+                                ui.line(Line::new(average_random_roll_weights_plot_points)
+                                    .color(Color32::from_rgb(100, 100, 200))
+                                    .name("Average Weights from Random Rolls")
+                                    .style(Solid));
+
                                 /*
                                 if highest_possible_score_reachable < meter_data.required_xp {
                                     let percentage_of_max = highest_possible_score_reachable as f64 / meter_data.required_xp as f64;
@@ -307,17 +342,9 @@ impl eframe::App for CatacombsLootApp {
                                 }
                                  */
                             });
-
-                        Plot::new("chances")
-                            .legend(Legend::default())
-                            .allow_zoom([false, true])
-                            .allow_scroll([false, true])
-                            .auto_bounds([true, false])
-                            .show(ui, |ui| {
-
-                            });
                     }
                 }
+                _ => {}
             }
         });
     }
@@ -334,6 +361,7 @@ impl CatacombsLootApp {
 
             treasure_accessory_multiplier: 1.0,
             boss_luck_increase: 0,
+            catacombs_box_attribute_increase: 0,
             s_plus: false,
             forced_s_plus_const: true,
             rng_meter_data: Default::default(),
@@ -374,6 +402,7 @@ impl CatacombsLootApp {
             chest,
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
+            self.catacombs_box_attribute_increase,
             self.s_plus || chest.require_s_plus(),
         );
 
@@ -460,7 +489,7 @@ impl CatacombsLootApp {
                                     (chest.base_cost + entry.get_added_chest_price())
                                         .to_formatted_string(&en),
                                 )
-                                .color(Color32::from_rgb(255, 170, 0)),
+                                    .color(Color32::from_rgb(255, 170, 0)),
                             );
                         });
                         row.col(|ui| {
@@ -516,6 +545,7 @@ impl CatacombsLootApp {
             chest,
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
+            self.catacombs_box_attribute_increase,
             self.s_plus || chest.require_s_plus(),
         );
 
@@ -582,7 +612,7 @@ impl CatacombsLootApp {
                                 RichText::new(
                                     entry.get_added_chest_price().to_formatted_string(&en),
                                 )
-                                .color(Color32::from_rgb(255, 170, 0)),
+                                    .color(Color32::from_rgb(255, 170, 0)),
                             );
                         });
                         row.col(|ui| {
@@ -642,6 +672,7 @@ impl CatacombsLootApp {
             .to_string()
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
+        self.catacombs_box_attribute_increase.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.chest.hash(&mut hasher);
         self.rng_meter_data.selected_xp.hash(&mut hasher);
@@ -656,6 +687,7 @@ impl CatacombsLootApp {
             .to_string()
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
+        self.catacombs_box_attribute_increase.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.rng_meter_data.selected_item.hash(&mut hasher);
         hasher.finish()
@@ -668,6 +700,7 @@ impl CatacombsLootApp {
             .to_string()
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
+        self.catacombs_box_attribute_increase.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.chest.hash(&mut hasher);
         self.rng_meter_data.selected_item.hash(&mut hasher);
@@ -706,7 +739,7 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
                 .trim_end_matches('0')
                 .trim_end_matches('.')
         ))
-        .color(Color32::from_rgb(85, 255, 85)),
+            .color(Color32::from_rgb(85, 255, 85)),
     );
 
     if chance == 1.0 {
@@ -723,7 +756,7 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
                     .trim_end_matches('0')
                     .trim_end_matches('.'),
             )
-            .color(Color32::from_rgb(255, 255, 85)),
+                .color(Color32::from_rgb(255, 255, 85)),
         );
         ui.label(" runs)");
     }
