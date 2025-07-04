@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 use eframe::epaint::text::TextFormat;
 use egui::text::LayoutJob;
+use num_format::Locale::is;
 
 pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -17,7 +18,7 @@ pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 pub enum Page {
     Catacombs,
     Slayer,
-    Shards
+    Shards,
 }
 
 impl Page {
@@ -59,6 +60,10 @@ impl eframe::App for CalculatorApp {
             self.selected_page = page;
         }
 
+        let is_web = cfg!(target_arch = "wasm32");
+        let screen_size = ctx.screen_rect().size();
+        let is_mobile = screen_size.x < 550.0 && is_web;
+
         ctx.set_theme(ThemePreference::Dark);
 
         egui::TopBottomPanel::top("top_panel")
@@ -66,8 +71,15 @@ impl eframe::App for CalculatorApp {
             .show(ctx, |ui| {
                 // The top panel is often a good place for a menu bar:
 
+                if is_mobile {
+                    egui::menu::bar(ui, |ui| {
+                        ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
+                            ui.label(code_pig_text());
+                        });
+                    });
+                }
+
                 egui::menu::bar(ui, |ui| {
-                    let is_web = cfg!(target_arch = "wasm32");
                     if !is_web {
                         ui.menu_button("File", |ui| {
                             if ui.button("Quit").clicked() {
@@ -84,7 +96,8 @@ impl eframe::App for CalculatorApp {
                             if frame.is_web() {
                                 ui.ctx().open_url(egui::OpenUrl::same_tab(format!("#{page}")));
                             }
-                        } }
+                        }
+                    }
                     self.selected_page = selected_page;
 
                     if !is_web {
@@ -92,9 +105,11 @@ impl eframe::App for CalculatorApp {
                         egui::gui_zoom::zoom_menu_buttons(ui);
                     }
 
-                    ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
-                        ui.label(code_pig_text());
-                    });
+                    if !is_mobile {
+                        ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
+                            ui.label(code_pig_text());
+                        });
+                    }
                 });
             });
 
@@ -126,7 +141,7 @@ impl CalculatorApp {
         }
     }
 
-    pub fn apps_iter_mut(&mut self) -> impl Iterator<Item = (&'static str, Page, &mut dyn eframe::App)> {
+    pub fn apps_iter_mut(&mut self) -> impl Iterator<Item=(&'static str, Page, &mut dyn eframe::App)> {
         let vec = vec![
             (
                 "☠ Catacombs",
