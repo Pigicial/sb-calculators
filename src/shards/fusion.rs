@@ -39,6 +39,20 @@ impl Hash for FusionResults {
 }
 
 impl FusionResults {
+    pub fn has_both_input_costs_above_zero(&self, buy_type: BuyType, shards: &Shards) -> bool {
+        let first_shard = shards.get(&self.first_input_shard_name).unwrap();
+        let second_shard = shards.get(&self.second_input_shard_name).unwrap();
+        let first_shard_data = first_shard.cached_bazaar_data.as_ref();
+        let second_shard_data = second_shard.cached_bazaar_data.as_ref();
+
+        if first_shard_data.is_none() || second_shard_data.is_none() {
+            false
+        } else {
+            let first_shards_price = first_shard_data.unwrap().get_buy_price(buy_type);
+            let second_shards_price = second_shard_data.unwrap().get_buy_price(buy_type);
+            first_shards_price > 0.0 && second_shards_price > 0.0
+        }
+    }
     pub fn get_total_cost(&self, buy_type: BuyType, shards: &Shards) -> Result<u64, String> {
         let first_shard = shards.get(&self.first_input_shard_name).unwrap();
         let second_shard = shards.get(&self.second_input_shard_name).unwrap();
