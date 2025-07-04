@@ -151,17 +151,18 @@ impl CalculatorApp {
     pub fn apps_iter_mut(&mut self) -> impl Iterator<Item=(&'static str, Page, &mut dyn eframe::App)> {
         let vec = vec![
             (
+                "★ Shards",
+                Page::Shards,
+                &mut self.shards_page as &mut dyn eframe::App,
+            ),
+            (
                 "☠ Catacombs",
                 Page::Catacombs,
                 &mut self.catacombs_page as &mut dyn eframe::App,
             ),
             //("⚔ Slayer", Page::Slayer, &mut self.slayer_page as &mut dyn eframe::App),
             // todo: enable slayer page
-            (
-                "★ Shards",
-                Page::Shards,
-                &mut self.shards_page as &mut dyn eframe::App,
-            )
+            
         ];
 
         vec.into_iter()
