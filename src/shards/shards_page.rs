@@ -310,6 +310,7 @@ impl ShardsPage {
                 .as_ref()
                 .unwrap()
                 .iter()
+                .filter(|(_, results)| results.has_both_input_costs_above_zero(self.buy_type, &self.shards))
                 .filter(|(a, _)| a == shard_output_filter)
                 .collect::<Vec<_>>()
         } else {
@@ -317,6 +318,7 @@ impl ShardsPage {
                 .as_ref()
                 .unwrap()
                 .iter()
+                .filter(|(_, results)| results.has_both_input_costs_above_zero(self.buy_type, &self.shards))
                 .collect::<Vec<_>>()
         };
 
