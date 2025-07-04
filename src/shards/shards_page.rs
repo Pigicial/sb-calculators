@@ -216,8 +216,16 @@ impl eframe::App for ShardsPage {
             ui.separator();
             match self.calculator_type {
                 FusionOutputs => self.add_fusion_data(ui),
-                AllFusionOutputs => self.add_all_fusion_combinations(ui),
-                FusionProfits => self.add_most_profitable_shard_combinations(ui),
+                AllFusionOutputs => {
+                    ScrollArea::horizontal().id_salt("all_fusion_outputs").show(ui, |ui| {
+                        self.add_all_fusion_combinations(ui)
+                    });
+                },
+                FusionProfits => {
+                    ScrollArea::horizontal().id_salt("fusion_profits").show(ui, |ui| {
+                        self.add_most_profitable_shard_combinations(ui)
+                    });
+                },
             }
         });
     }
