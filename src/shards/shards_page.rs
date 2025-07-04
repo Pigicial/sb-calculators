@@ -35,7 +35,7 @@ pub struct ShardsPage {
     bazaar_tax_percent: f64,
     bazaar_request_triggered: bool,
     last_bazaar_request_ms: Option<Instant>,
-    
+
     combinations_shard_name: Option<String>,
     buy_type: BuyType,
     profit_type: ProfitType,
@@ -90,7 +90,7 @@ impl AllFusionsSortType {
 impl eframe::App for ShardsPage {
     fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
         let system_time = Instant::now();
-        
+
         if let Ok(data) = self.bazaar_data_receiver.try_recv() {
             self.bazaar_data = data;
             self.last_bazaar_request_ms = Some(system_time);
@@ -190,7 +190,7 @@ impl eframe::App for ShardsPage {
                             });
                             add_shard_option(ui, "output_filter", &mut self.combinations_shard_name, &self.shards, &self.search_query, &self.images);
                             ui.end_row();
-                            
+
                             ui.label(""); // to force button into row two
                             if self.bazaar_request_triggered && self.looking_up_bazaar_data {
                                 ui.add_enabled(false, Button::new("Refreshing data..."));
@@ -603,7 +603,7 @@ fn add_shard_option(ui: &mut Ui, id: &str, selected_shard_name: &mut Option<Stri
         } else {
             combo_box = combo_box.selected_text("None");
         }
-        
+
         combo_box.show_ui(ui, |ui| {
             if ui.selectable_label(selected_shard_name.is_none(), "None").clicked() {
                 *selected_shard_name = None;
