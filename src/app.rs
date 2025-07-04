@@ -2,12 +2,12 @@ use crate::catacombs::catacombs_page::CatacombsLootPage;
 use crate::slayer::slayer_page::SlayerLootPage;
 use crate::shards::shards_page::ShardsPage;
 use eframe::epaint::{Color32, FontId, TextureHandle};
-use egui::{vec2, Context, Direction, Image, ThemePreference, Ui, Widget};
+use egui::{vec2, Context, Direction, Image, Label, ThemePreference, Ui, Widget};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use std::collections::HashMap;
 use std::rc::Rc;
-use eframe::epaint::text::TextFormat;
+use eframe::epaint::text::{TextFormat, TextWrapMode};
 use egui::text::LayoutJob;
 use num_format::Locale::is;
 
@@ -73,9 +73,7 @@ impl eframe::App for CalculatorApp {
 
                 if is_mobile {
                     egui::menu::bar(ui, |ui| {
-                        ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
-                            ui.label(code_pig_text());
-                        });
+                        add_code_pig_text(ui);
                     });
                 }
 
@@ -106,9 +104,7 @@ impl eframe::App for CalculatorApp {
                     }
 
                     if !is_mobile {
-                        ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
-                            ui.label(code_pig_text());
-                        });
+                        add_code_pig_text(ui);
                     }
                 });
             });
@@ -177,43 +173,45 @@ fn load_images(ctx: &Context) -> HashMap<String, TextureHandle> {
     images
 }
 
-fn code_pig_text() -> LayoutJob {
-    let mut job = LayoutJob::default();
-    job.append("Use code \"", 0.0, TextFormat {
+fn add_code_pig_text(ui: &mut Ui) {
+    let mut text = LayoutJob::default();
+    text.append("Use code \"", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::GRAY,
         ..Default::default()
     });
-    job.append("Pig", 0.0, TextFormat {
+    text.append("Pig", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::from_rgb(255, 85, 255),
         ..Default::default()
     });
-    job.append("\" on the ", 0.0, TextFormat {
+    text.append("\" on the ", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::GRAY,
         ..Default::default()
     });
-    job.append("Hypixel Store", 0.0, TextFormat {
+    text.append("Hypixel Store", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::from_rgb(85, 255, 255),
         ..Default::default()
     });
-    job.append(" for ", 0.0, TextFormat {
+    text.append(" for ", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::GRAY,
         ..Default::default()
     });
-    job.append("5% off", 0.0, TextFormat {
+    text.append("5% off", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::from_rgb(85, 255, 85),
         ..Default::default()
     });
-    job.append(" your entire order!", 0.0, TextFormat {
+    text.append(" your entire order!", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::GRAY,
         ..Default::default()
     });
 
-    job
+    ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
+        ui.add(Label::new(text).wrap_mode(TextWrapMode::Wrap));
+    });
 }
