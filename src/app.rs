@@ -1,11 +1,14 @@
-use crate::catacombs::catacombs_page::CatacombsLootApp;
-use crate::slayer::slayer_page::SlayerLootApp;
-use eframe::epaint::TextureHandle;
-use egui::{vec2, Context, Image, ThemePreference, Ui, Widget};
+use crate::catacombs::catacombs_page::CatacombsLootPage;
+use crate::slayer::slayer_page::SlayerLootPage;
+use crate::shards::shards_page::ShardsPage;
+use eframe::epaint::{Color32, FontId, TextureHandle};
+use egui::{vec2, Context, Direction, Image, ThemePreference, Ui, Widget};
 use egui_extras::image::load_image_bytes;
 use include_dir::{include_dir, Dir};
 use std::collections::HashMap;
 use std::rc::Rc;
+use eframe::epaint::text::TextFormat;
+use egui::text::LayoutJob;
 
 pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -14,6 +17,7 @@ pub(crate) static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 pub enum Page {
     Catacombs,
     Slayer,
+    Shards
 }
 
 impl Page {
@@ -23,6 +27,8 @@ impl Page {
             Some(Page::Catacombs)
         } else if page.to_lowercase() == "slayer" {
             Some(Page::Slayer)
+        } else if page.to_lowercase() == "shards" {
+            Some(Page::Shards)
         } else {
             None
         }
@@ -39,8 +45,9 @@ impl std::fmt::Display for Page {
 
 pub struct CalculatorApp {
     selected_page: Page,
-    catacombs_page: CatacombsLootApp,
-    slayer_page: SlayerLootApp,
+    catacombs_page: CatacombsLootPage,
+    slayer_page: SlayerLootPage,
+    shards_page: ShardsPage,
 
     images: Rc<HashMap<String, TextureHandle>>,
 }
@@ -48,14 +55,7 @@ pub struct CalculatorApp {
 impl eframe::App for CalculatorApp {
     fn update(&mut self, ctx: &Context, frame: &mut eframe::Frame) {
         #[cfg(target_arch = "wasm32")]
-        if let Some(page) = frame
-            .info()
-            .web_info
-            .location
-            .hash
-            .strip_prefix('#')
-            .and_then(Page::from_str_case_insensitive)
-        {
+        if let Some(page) = frame.info().web_info.location.hash.strip_prefix('#').and_then(Page::from_str_case_insensitive) {
             self.selected_page = page;
         }
 
@@ -82,17 +82,19 @@ impl eframe::App for CalculatorApp {
                         if ui.selectable_label(selected_page == page, name).clicked() {
                             selected_page = page;
                             if frame.is_web() {
-                                ui.ctx()
-                                    .open_url(egui::OpenUrl::same_tab(format!("#{page}")));
+                                ui.ctx().open_url(egui::OpenUrl::same_tab(format!("#{page}")));
                             }
-                        }
-                    }
+                        } }
                     self.selected_page = selected_page;
 
                     if !is_web {
                         ui.add_space(30.0);
                         egui::gui_zoom::zoom_menu_buttons(ui);
                     }
+
+                    ui.with_layout(egui::Layout::centered_and_justified(Direction::RightToLeft), |ui| {
+                        ui.label(code_pig_text());
+                    });
                 });
             });
 
@@ -107,9 +109,10 @@ impl CalculatorApp {
     pub fn new(context: &Context) -> Self {
         let images = Rc::new(load_images(context));
         Self {
-            selected_page: Page::Catacombs,
-            catacombs_page: CatacombsLootApp::new(Rc::clone(&images)),
-            slayer_page: SlayerLootApp::new(Rc::clone(&images)),
+            selected_page: Page::Shards,
+            catacombs_page: CatacombsLootPage::new(Rc::clone(&images)),
+            slayer_page: SlayerLootPage::new(Rc::clone(&images)),
+            shards_page: ShardsPage::new(Rc::clone(&images)),
             images,
         }
     }
@@ -123,9 +126,7 @@ impl CalculatorApp {
         }
     }
 
-    pub fn apps_iter_mut(
-        &mut self,
-    ) -> impl Iterator<Item = (&'static str, Page, &mut dyn eframe::App)> {
+    pub fn apps_iter_mut(&mut self) -> impl Iterator<Item = (&'static str, Page, &mut dyn eframe::App)> {
         let vec = vec![
             (
                 "☠ Catacombs",
@@ -134,6 +135,11 @@ impl CalculatorApp {
             ),
             //("⚔ Slayer", Page::Slayer, &mut self.slayer_page as &mut dyn eframe::App),
             // todo: enable slayer page
+            (
+                "★ Shards",
+                Page::Shards,
+                &mut self.shards_page as &mut dyn eframe::App,
+            )
         ];
 
         vec.into_iter()
@@ -142,21 +148,57 @@ impl CalculatorApp {
 
 fn load_images(ctx: &Context) -> HashMap<String, TextureHandle> {
     let mut images = HashMap::new();
-    for file in ASSETS_DIR
-        .find("**/*.png")
-        .unwrap()
-        .chain(ASSETS_DIR.find("**/*.gif").unwrap())
-    {
+    for file in ASSETS_DIR.find("**/*.png").unwrap().chain(ASSETS_DIR.find("**/*.gif").unwrap()) {
         let file_name = file.path().file_name().and_then(|n| n.to_str()).unwrap();
         println!("Loading {}", file_name);
         let bytes = file.as_file().unwrap().contents();
 
         if let Ok(dynamic_image) = load_image_bytes(bytes) {
-            let texture =
-                ctx.load_texture(file_name, dynamic_image, egui::TextureOptions::default());
+            let texture = ctx.load_texture(file_name, dynamic_image, egui::TextureOptions::default());
             images.insert(file_name.to_string(), texture);
         }
     }
 
     images
+}
+
+fn code_pig_text() -> LayoutJob {
+    let mut job = LayoutJob::default();
+    job.append("Use code \"", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::GRAY,
+        ..Default::default()
+    });
+    job.append("Pig", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::from_rgb(255, 85, 255),
+        ..Default::default()
+    });
+    job.append("\" on the ", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::GRAY,
+        ..Default::default()
+    });
+    job.append("Hypixel Store", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::from_rgb(85, 255, 255),
+        ..Default::default()
+    });
+    job.append(" for ", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::GRAY,
+        ..Default::default()
+    });
+    job.append("5% off", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::from_rgb(85, 255, 85),
+        ..Default::default()
+    });
+    job.append(" your entire order!", 0.0, TextFormat {
+        font_id: FontId::proportional(14.0),
+        color: Color32::GRAY,
+        ..Default::default()
+    });
+
+    job
 }

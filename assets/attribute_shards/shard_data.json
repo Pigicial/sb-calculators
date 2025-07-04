@@ -1,0 +1,3829 @@
+[
+  {
+    "shard_name": "Grove",
+    "attribute_name": "Nature Elemental",
+    "description": "Grants %%red%%+%s Health%%reset%%.",
+    "id": 1,
+    "scaling": 2,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Forest",
+          "rarity": "Common"
+        },
+        "second": {
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Mist",
+    "attribute_name": "Fog Elemental",
+    "description": "Grants %%aqua%%+%s Intelligence%%reset%%.",
+    "id": 2,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Water",
+          "rarity": "Common"
+        },
+        "second": {
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Flash",
+    "attribute_name": "Light Elemental",
+    "description": "Grants %%red%%+%s Strength%%reset%%.",
+    "id": 3,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Combat",
+          "rarity": "Common"
+        },
+        "second": {
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Phanpyre",
+    "attribute_name": "Nocturnal Animal",
+    "description": "Grants %%dark_green%%+%s Sweep %%reset%%during the night.",
+    "id": 4,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Phantom"
+    ],
+    "sources": {
+      "mobs": {
+        "lasso": true
+      },
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Cod",
+    "attribute_name": "Cheapstake",
+    "description": "Grants %%green%%+%s% %%reset%%more %%gold%%Coins %%reset%%from fishing treasures.",
+    "id": 5,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Tropical Fish"
+    ],
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "fishing_loot": {
+        "location": "Tomb Floodway"
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Phanflare",
+    "attribute_name": "Moonglade Mastery",
+    "description": "Grants %%gold%%+%s Fig Fortune %%reset%%and %%gold%%+%s Mangrove Fortune%%reset%%.",
+    "id": 7,
+    "scaling": [
+      10,
+      10
+    ],
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Phantom"
+    ],
+    "sources": {
+      "mobs": {
+        "lasso": true
+      },
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Night Squid",
+    "attribute_name": "Fisherman",
+    "description": "Has a %%green%%+%s% %%reset%%chance not to consume any bait.",
+    "id": 8,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Squid"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Lapis Zombie",
+    "attribute_name": "Experience",
+    "description": "Grants a %%green%%+%s% %%reset%%more experience orbs from killing mobs.",
+    "id": 9,
+    "scaling": 10,
+    "rarity": "Common",
+    "category": "Combat",
+    "families": [
+      "Lapis"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Lapis Quarry",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Hideonleaf",
+    "attribute_name": "Mossy Box",
+    "description": "Grants %%gold%%+%s Block Fortune%%reset%%.",
+    "id": 10,
+    "scaling": 5,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "mobs": {
+        "location": "Galatea"
+      }
+    }
+  },
+  {
+    "shard_name": "Verdant",
+    "attribute_name": "Forest Fishing",
+    "description": "Grants %%aqua%%+%s Fishing Speed %%reset%%while on %%dark_green%%Foraging IsLands%%reset%%.",
+    "id": 11,
+    "scaling": 3,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Tropical Fish"
+    ],
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "fishing_loot": {
+        "location": "Tomb Floodway"
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Chill",
+    "attribute_name": "Skeletal Ruler",
+    "description": "Increases damage to Skeletal creatures by %%green%%+%s%%%reset%%.",
+    "id": 12,
+    "scaling": 3,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Chillshot",
+          "Chillblade"
+        ],
+        "salts": true,
+        "black_hole": true
+      },
+      "traps": {
+        "location": "Wyrmgrove Tomb",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Sea Archer",
+    "attribute_name": "Monster Bait",
+    "id_override": "hunter",
+    "description": "Grants %%dark_aqua%%+%s Sea Creature Chance%%reset%%.",
+    "id": 14,
+    "scaling": 0.5,
+    "rarity": "Common",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      }
+    }
+  },
+  {
+    "shard_name": "Voracious Spider",
+    "attribute_name": "Arthropod Resistance",
+    "id_override": "arachno_resistance",
+    "description": "Grants %%green%%+%s Defense %%reset%%against %%red%%Spiders%%reset%%.",
+    "id": 15,
+    "scaling": 4,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      },
+      "traps": {
+        "location": "Spider's Den",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Hideongift",
+    "attribute_name": "Happy Box",
+    "description": "Grants a %%green%%+%s% %%reset%%chance to obtain an extra %%white%%Winter Gift %%reset%%when finding one.",
+    "id": 16,
+    "scaling": 2,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker"
+        },
+        "second": {
+          "rarity": "Common",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Birries",
+    "attribute_name": "Yummy",
+    "description": "Grants a %%green%%+%s% %%reset%%chance to drop Berries and Sea Lumies.",
+    "id": 17,
+    "scaling": 10,
+    "rarity": "Common",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "fishing_net": true,
+        "lasso": true
+      },
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Tank Zombie",
+    "attribute_name": "Undead Resistance",
+    "description": "Grants %%green%%+%s Defense %%reset%%against %%green%%Undead Monsters%%reset%%.",
+    "id": 17,
+    "scaling": 10,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Super Tank Zombie",
+          "Crypt Tank Zombie"
+        ],
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Crow",
+    "attribute_name": "Fig Sharpening",
+    "description": "Grants +%s Sweep towards Fig Trees.",
+    "id": 19,
+    "scaling": 5,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Agatha"
+      }
+    }
+  },
+  {
+    "shard_name": "Tadgang",
+    "attribute_name": "Unity is Strength",
+    "description": "Grants +%s Sweep for each unique Common Attribute you own.",
+    "id": 20,
+    "scaling": 0.02,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Zealot",
+    "attribute_name": "Ender Resistance",
+    "description": "Grants +%s Defense against mobs in The End.",
+    "id": 21,
+    "scaling": 4,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Coralot",
+    "attribute_name": "Bucket Lover",
+    "description": "You have a +%s% chance to gain extra Chums.",
+    "id": 23,
+    "scaling": 5,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Axolotl"
+    ],
+    "sources": {
+      "mobs": {
+        "fishing_net": true,
+        "lasso": true
+      },
+      "traps": {
+        "location": "Murkwater Depths",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Harpy",
+    "attribute_name": "Tree Lurker",
+    "description": "Increases the odds of finding monsters from Tree Gifts by +%s%.",
+    "id": 24,
+    "scaling": 5,
+    "rarity": "Common",
+    "category": "Combat",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "category": "Combat"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Mudworm",
+    "attribute_name": "Visitor Bait",
+    "description": "Garden Visitors arrive +%s% faster.",
+    "id": 25,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Forest",
+    "sources": {
+      "grass": true,
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Golden Ghoul",
+    "attribute_name": "Midas Touch",
+    "description": "Grants +%s Coins per kill.",
+    "id": 27,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Crypts",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Azure",
+    "attribute_name": "Forest Strength",
+    "description": "Grants +%s Strength while on Foraging IsLands.",
+    "id": 29,
+    "scaling": 5,
+    "rarity": "Common",
+    "category": "Combat",
+    "families": [
+      "Tropical Fish"
+    ],
+    "sources": {
+      "fishing_loot": {
+        "location": "Tomb Floodway"
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Bezal",
+    "attribute_name": "Blazing Resistance",
+    "description": "Grants +%s Defense against mobs while in the Crimson Isle.",
+    "id": 30,
+    "scaling": 4,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "traps": {
+        "location": "Stronghold",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Yog",
+    "attribute_name": "Yog Membrane",
+    "description": "Grants +%s Heat Resistance.",
+    "id": 33,
+    "scaling": 1,
+    "rarity": "Common",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Magma Fields",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Boreal Owl",
+    "attribute_name": "Owl Friend",
+    "description": "Your pets gain +%s% more Pet EXP from Fann.",
+    "id": 34,
+    "scaling": 2,
+    "rarity": "Common",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "rarity": "Common",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Newt",
+    "attribute_name": "Decent Karma",
+    "description": "Grants +%s Hunter Fortune towards Common Attributes.",
+    "id": 35,
+    "scaling": 2,
+    "rarity": "Common",
+    "category": "Water",
+    "families": [
+      "Lizard",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Axolotl"
+        },
+        "second": {
+          "category": "Water"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Miner Zombie",
+    "attribute_name": "Rotten Pickaxe",
+    "description": "Grants +%s Mining Speed.",
+    "id": 36,
+    "scaling": 2,
+    "rarity": "Common",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": [
+        {
+          "location": "Diamond Reserve",
+          "placement_type": "Land"
+        },
+        {
+          "location": "Obsidian Sanctuary",
+          "placement_type": "Land"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Bramble",
+    "attribute_name": "Wood Elemental",
+    "description": "Grants +%s Health.",
+    "id": 1,
+    "scaling": 2,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Forest",
+          "rarity": "Uncommon"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Tide",
+    "attribute_name": "Water Elemental",
+    "description": "Grants +%s Intelligence.",
+    "id": 2,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Water",
+          "rarity": "Uncommon"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Quake",
+    "attribute_name": "Stone Elemental",
+    "description": "Grants +%s Strength.",
+    "id": 3,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Combat",
+          "rarity": "Uncommon"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Sparrow",
+    "attribute_name": "Fig Collector",
+    "description": "Grants +%s Fig Fortune for each digit in your Fig Log collection. (Max 10M collection)",
+    "id": 4,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "crafting": {
+        "collection": "Fig Collection VII"
+      }
+    }
+  },
+  {
+    "shard_name": "Goldfin",
+    "attribute_name": "Gold Bait",
+    "description": "The collection of Golden Fish is reduced by %ss.",
+    "id": 5,
+    "scaling": 30,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Golden Ghoul"
+        },
+        "second": {
+          "category": "Water"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Troglobyte",
+    "attribute_name": "Mountain Climber",
+    "description": "Commissions grants +%s% more HOTM Exp.",
+    "id": 6,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Cave Dweller"
+        },
+        "second": {
+          "category": "Combat"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Hideoncave",
+    "attribute_name": "Bigger Box",
+    "description": "Grants a +%s% chance to find an extra item in Treasure Chests and the Crystal Nucleus.",
+    "id": 7,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker"
+        },
+        "second": {
+          "family": "Cave Dweller"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Salamander",
+    "attribute_name": "Good Karma",
+    "description": "Grants a +%s Hunter Fortune towards Uncommon Attributes.",
+    "id": 8,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "families": [
+      "Lizard",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Lizard"
+        },
+        "second": {
+          "category": "Water"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Cuboa",
+    "attribute_name": "Echo of Boxes",
+    "description": "Your \"Box\" Attributes are +%s% stronger.",
+    "id": 9,
+    "scaling": 2,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "families": [
+      "Reptile",
+      "Serpent"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker"
+        },
+        "second": {
+          "family": "Reptile"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Pest",
+    "attribute_name": "Pest Luck",
+    "description": "Gain a +%s% chance to obtain Rare loot from Pest.",
+    "id": 10,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "lasso": true
+      }
+    }
+  },
+  {
+    "shard_name": "Mossybit",
+    "attribute_name": "Forest Trap",
+    "description": "Forest Shards get caught by Traps +%s% faster.",
+    "id": 11,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Frog"
+        ],
+        "location": "Galatea"
+      },
+      "special_fusion": {
+        "first": {
+          "shards": "Tadgang"
+        },
+        "second": {
+          "category": "Forest"
+        },
+        "amount_override": 1
+      },
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Rain Slime",
+    "attribute_name": "Mana Steal",
+    "description": "Regain +%s of your maximum Mana every time you hit a monster.",
+    "id": 12,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Rain Slime",
+          "Toxic Rain Slime"
+        ],
+        "salts": true,
+        "black_hole": true
+      }
+    }
+  },
+  {
+    "shard_name": "Seer",
+    "attribute_name": "Dragon Shortbow Improvement",
+    "description": "Your Dragon Shortbow gains +%s% more Damage while in The End.",
+    "id": 15,
+    "scaling": 2,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      }
+    }
+  },
+  {
+    "shard_name": "Heron",
+    "attribute_name": "Mangrove Sharpening",
+    "description": "Grants +%s Sweep towards Mangrove Trees.",
+    "id": 16,
+    "scaling": 10,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Agatha"
+      }
+    }
+  },
+  {
+    "shard_name": "Obsidian Defender",
+    "attribute_name": "Speed",
+    "description": "Grants +%s Speed.",
+    "id": 18,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Salmon",
+    "attribute_name": "Lost and Found",
+    "description": "Grants a +%s% chance to find a Wet Book when fishing a Treasure.",
+    "id": 20,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "fishing_loot": {
+        "location": "Tomb Floodway"
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "UnderWater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "UnderWater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Viper",
+    "attribute_name": "Hunter's Fang",
+    "id_override": "hunters_fangs",
+    "description": "Your Hunting Axes gain +%s% more stats from the weapon they hold.",
+    "id": 21,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "families": [
+      "Reptile",
+      "Serpent"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Kiara"
+      },
+      "special_fusion": {
+        "first": {
+          "shards": "Cuboa"
+        },
+        "second": {
+          "category": "Combat"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Praying Mantis",
+    "attribute_name": "Insect Power",
+    "description": "Your Vacuum deals +%s% extra Damage.",
+    "id": 22,
+    "scaling": 5,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Pest"
+        },
+        "second": {
+          "shards": "Pest"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Zombie Soldier",
+    "attribute_name": "Undead Ruler",
+    "id_override": "undead",
+    "description": "Grants +%s% more Damage against Undead Monsters.",
+    "id": 24,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Zombie Knight",
+          "Zombie Soldier",
+          "Zombie Commander",
+          "Zombie Lord"
+        ],
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Bambuleaf",
+    "attribute_name": "Strong Arms",
+    "description": "Your Axe gains +%s Sweep on throws.",
+    "id": 25,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Panda"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Panda"
+        ],
+        "location": "Galatea"
+      },
+      "traps": {
+        "location": "Tranquility Sanctum",
+        "placement_type": "Land",
+        "other_conditions": "Spring or Summer"
+      }
+    }
+  },
+  {
+    "shard_name": "Sycophant",
+    "attribute_name": "Life Recovery",
+    "description": "Heals for +%s% of your max health each time you kill a mob.",
+    "id": 27,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Revenant Sycophant"
+        ],
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Seagull",
+    "attribute_name": "Mangrove Collector",
+    "description": "Grants +%s Mangrove Fortune for each digit in your Mangrove Log collection. (Max 10m collection)",
+    "id": 28,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "crafting": {
+        "collection": "Mangrove Collection VI"
+      }
+    }
+  },
+  {
+    "shard_name": "Ent",
+    "attribute_name": "Spirit Axe",
+    "description": "Your Axes deal +%s% extra Damage to creatures on Galatea.",
+    "id": 29,
+    "scaling": 2,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwatear Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Soul of the Alpha",
+    "attribute_name": "Combo",
+    "description": "Deal +%s% more Damage per Grandma Wolf pet combo. (Max 50 combo)",
+    "id": 30,
+    "scaling": 0.5,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      },
+      "traps": {
+        "location": "Howling Cave",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Mochibear",
+    "attribute_name": "Strong Legs",
+    "description": "Your Axe gains +%s Sweep on melee.",
+    "id": 31,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Panda"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Panda"
+        ],
+        "location": "Galatea"
+      },
+      "traps": {
+        "location": "Tranquility Sanctum",
+        "placement_type": "Land",
+        "other_conditions": "Autumn or Winter"
+      }
+    }
+  },
+  {
+    "shard_name": "Magma Slug",
+    "attribute_name": "Infection",
+    "description": "Increases the chances of catching corrupted Sea Creatures by +%s%.",
+    "id": 32,
+    "scaling": 0.2,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Flaming Spider",
+    "attribute_name": "Arthropod Ruler",
+    "id_override": "arachno",
+    "description": "Grants +%s% more Damage against Spiders.",
+    "id": 33,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Burning Desert",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Kiwi",
+    "attribute_name": "Kat's Favorite",
+    "id_override": "kat_favorite",
+    "description": "Kat takes +%s% less time to upgrade a Pet.",
+    "id": 34,
+    "scaling": 1,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Bruiser",
+    "attribute_name": "Ender Ruler",
+    "id_override": "ender",
+    "description": "Grants +%s% more Damage against Ender Creatures.",
+    "id": 36,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Zealot Bruiser"
+        ],
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Zealot Bruiser Hideout",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Stridesurfer",
+    "attribute_name": "Magmatic Ruler",
+    "description": "Grants +%s% more Damage against Lava Sea Creatures.",
+    "bazaar_id_override": "strider_surfer",
+    "id": 38,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Water",
+    "families": [
+      "Drowned"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Stride Surfer",
+          "Strider"
+        ],
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Stride-Ember Fissure"
+      }
+    }
+  },
+  {
+    "shard_name": "Rana",
+    "attribute_name": "Battle Frog",
+    "description": "Your Frog Pet gains +%s Strength.",
+    "id": 39,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Combat",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Frog"
+        },
+        "second": {
+          "category": "Combat"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Termite",
+    "attribute_name": "Infiltration",
+    "description": "Grants +%s Farming Fortune if your Garden Plot currently has a Pest in it.",
+    "id": 40,
+    "scaling": 3,
+    "rarity": "Uncommon",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bug"
+        },
+        "second": {
+          "shards": "Praying Mantis"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Sylvvan",
+    "attribute_name": "Forest Elemental",
+    "description": "Grants +%s Health.",
+    "bazaar_id_override": "sylvan",
+    "id": 1,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Forest",
+          "rarity": "Rare"
+        },
+        "second": {
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Cascade",
+    "attribute_name": "Torrent Elemental",
+    "description": "Grants +%s Intelligence.",
+    "id": 2,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Water",
+          "rarity": "Rare"
+        },
+        "second": {
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Bolt",
+    "attribute_name": "Lightning Elemental",
+    "description": "Grants +%s Strength.",
+    "id": 3,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Combat",
+          "rarity": "Rare"
+        },
+        "second": {
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Bambloom",
+    "attribute_name": "Animal Expertise",
+    "description": "Grants +%s Foraging Fortune.",
+    "id": 4,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Panda"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Panda"
+        },
+        "second": {
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Toad",
+    "attribute_name": "Frog Legs",
+    "description": "Frogs have a +%s% chance to jump 1 less time.",
+    "id": 5,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Frog"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Glacite Walker",
+    "attribute_name": "Essence of Ice",
+    "id_override": "ice_essence",
+    "description": "Gain +%s% more Ice Essence.",
+    "id": 6,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Great Ice Wall"
+      }
+    }
+  },
+  {
+    "shard_name": "Beaconmite",
+    "attribute_name": "Beacon Zealot",
+    "description": "The effects of beacons are +%s% stronger on you. Gain a +%s% chance to find Signal Enhancers in Tree Gifts.",
+    "id": 7,
+    "scaling": [
+      10,
+      0.1
+    ],
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "beacon": true
+    }
+  },
+  {
+    "shard_name": "Lizard King",
+    "attribute_name": "Great Karma",
+    "description": "Grants +%s Hunter Fortune towards RARE Attributes.",
+    "id": 8,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Lizard",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Lizard"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Python",
+    "attribute_name": "Hunter's Pressure",
+    "description": "Your Black Holes capture creatures +%s% faster.",
+    "id": 9,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Reptile",
+      "Serpent"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Viper"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Invisibug",
+    "attribute_name": "Fancy Visit",
+    "description": "RARE and above Garden Visitors have a +%s% higher chance to arrive.",
+    "id": 10,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "grass": true,
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Piranha",
+    "attribute_name": "Moonglade Serendipity",
+    "description": "Increases the odds of finding rare items in Tree Gifts at Moonglade Marsh by +%s%.",
+    "id": 11,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Treasure Fish"
+    ],
+    "sources": {
+      "fishing_loot": {
+        "location": "Moonglade Marsh"
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Murkwater Shallows",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Hideongeon",
+    "attribute_name": "Catacombs Box",
+    "id_override": "catacomb_box",
+    "description": "Increases the quality of boss rewards in The Catacombs by +%s.",
+    "id": 13,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker"
+        },
+        "second": {
+          "shards": "Wither"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Lapis Skeleton",
+    "attribute_name": "Bone Font",
+    "description": "Grants a +%s% extra chance of finding Level 6+ books or higher in Superpairs.",
+    "id": 15,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Lapis"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Lapis Zombie"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Cropeetle",
+    "attribute_name": "Crop Bug",
+    "description": "Increases the odds of finding a Cropie, Squash, or Fermento by +%s%.",
+    "id": 16,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": [
+            "Invisibug",
+            "Termite"
+          ]
+        },
+        "second": {
+          "category": "Forest"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Drowned",
+    "attribute_name": "Humanoid Ruler",
+    "description": "Grants a +%s% more Damage against Humanoid Creatures.",
+    "id": 18,
+    "scaling": 3,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Seacurse",
+          "Hydrospear",
+          "Tidetot"
+        ],
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Drowned Reliquary",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Star Sentry",
+    "attribute_name": "Atomized Mithril",
+    "description": "Gain +%s% extra Mithril Powder.",
+    "id": 21,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Hideondra",
+    "attribute_name": "Kuudra's Box",
+    "id_override": "kuudra_box",
+    "description": "Gives +%s% chance to have an extra Kuudra Teeth in the Paid Reward Chest.",
+    "id": 22,
+    "scaling": 5,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker"
+        },
+        "second": {
+          "family": "Demon"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Abyssal Lanternfish",
+    "attribute_name": "Dwarven Serendipity",
+    "description": "Increases the chance to find Golden and Diamond Goblins by +%s%.",
+    "bazaar_id_override": "abyssal_lantern",
+    "id": 23,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Treasure Fish"
+    ],
+    "sources": {
+      "fishing_loot": {
+        "location": "Dwarven Mines"
+      },
+      "traps": {
+        "location": "Dwarven Mines",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Arachne",
+    "attribute_name": "Essence of Arthropods",
+    "id_override": "spider_essence",
+    "description": "Gain +%s% more Spider Essence.",
+    "id": 24,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Spider"
+    ],
+    "sources": {
+      "mobs:": {
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Bitbug",
+    "attribute_name": "Cookie Eater",
+    "description": "Gain +%s% of your Booster Cookie Bits up front.",
+    "id": 25,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Elizabeth"
+      },
+      "blacklisted_from_regular_fusion": true
+    }
+  },
+  {
+    "shard_name": "Revenant",
+    "attribute_name": "Essence of Unliving",
+    "id_override": "undead_essence",
+    "description": "Gain +%s% more Undead Essence.",
+    "id": 27,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Revenant Horror"
+        ]
+      }
+    }
+  },
+  {
+    "shard_name": "Silentdepth",
+    "attribute_name": "Crystal Serendipity",
+    "description": "Grants a +%s% chance to double any loot from Crystal Hollows Treasure Chests.",
+    "id": 29,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Treasure Fish"
+    ],
+    "sources": {
+      "fishing_loot": {
+        "location": "Crystal Hollows"
+      },
+      "traps": {
+        "location": "Crystal Hollows",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Skeletor",
+    "attribute_name": "Deadeye",
+    "description": "Increases damage from ranged weapons by +%s%.",
+    "id": 30,
+    "scaling": 2.5,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true
+      },
+      "special_fusion": {
+        "first": {
+          "shards": "Lapis Skeleton"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Thyst",
+    "attribute_name": "Atomized Crystals",
+    "description": "Gain +%s% extra Gemstone Powder.",
+    "id": 31,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      },
+      "traps": {
+        "location": "Crystal Hollows"
+      }
+    }
+  },
+  {
+    "shard_name": "Quartzfang",
+    "attribute_name": "Quartz Speed",
+    "description": "Mining Speed from events is increased by +%s%.",
+    "id": 33,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Troglobyte"
+        },
+        "second": [
+          {
+            "family": "Cave Dweller"
+          },
+          {
+            "shards": "Lanternfish"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "shard_name": "Hideonring",
+    "attribute_name": "Accessory Size",
+    "description": "Grants +%s extra Accessory Bag slots.",
+    "id": 34,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Snowfin",
+    "attribute_name": "Winter's Serendipity",
+    "id_override": "winter_serendipity",
+    "description": "Increases the odds of finding rare items in Winter Gifts by +%s%.",
+    "id": 35,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Treasure Fish"
+    ],
+    "sources": {
+      "traps": {
+        "location": "Jerry's Workshop",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Kada Knight",
+    "attribute_name": "Lifeline",
+    "description": "When under 20% maximum HP, your Damage and Defense increase by %s%.",
+    "id": 36,
+    "scaling": 2.5,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Carrot King",
+    "attribute_name": "Rabbit Crew",
+    "description": "Your Chocolate Factory gains +%s more Chocolate per second.",
+    "id": 38,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Wither Specter",
+    "attribute_name": "Breeze",
+    "description": "When you haven't been damaged in the last 5s or more, your mana costs are decreased by +%s%.",
+    "id": 39,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Matcho",
+    "attribute_name": "Ignition",
+    "description": "Increases the duration of fire damage that you inflict on enemies by +%s%.",
+    "id": 42,
+    "scaling": 30,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Ladybug",
+    "attribute_name": "Pretty Clothes",
+    "description": "Gain +%s% more Copper from Garden Visitors.",
+    "id": 43,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Cropeetle"
+        },
+        "second": {
+          "family": "Bug"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Lumisquid",
+    "attribute_name": "Extreme Pressure",
+    "description": "Grants +%s Pressure Resistance.",
+    "id": 44,
+    "scaling": 5,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Squid"
+    ],
+    "sources": {
+      "mobs:": {
+        "fishing_net": true
+      },
+      "traps": {
+        "location": "Squid Cave",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Crocodile",
+    "attribute_name": "Pure Reptile",
+    "description": "Grants a +%s% chance to double shards from Reptile Fusion.",
+    "id": 45,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Croco",
+      "Reptile"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Kiara"
+      }
+    }
+  },
+  {
+    "shard_name": "Bullfrog",
+    "attribute_name": "Berry Enjoyer",
+    "description": "Berries have a +%s% chance to grant you double points in Starlyn Contests.",
+    "id": 46,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Frog"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Dreadwing",
+    "attribute_name": "Essence of the Forest",
+    "id_override": "forest_essence",
+    "description": "Gain +%s% more Forest Essence.",
+    "id": 49,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Phantom"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "lasso": true,
+        "salts": true
+      },
+      "special_fusion": {
+        "first": {
+          "shards": [
+            "Phanpyre",
+            "Phanflare"
+          ]
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      },
+      "traps": {
+        "location": "Galatea",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Joydive",
+    "attribute_name": "Deep Diving",
+    "description": "Grants +%s Respiration.",
+    "id": 50,
+    "scaling": 5,
+    "rarity": "Rare",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "traps": {
+        "location": "Murkwater Depths",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Stalagmight",
+    "attribute_name": "Atomized Glacite",
+    "description": "Gain +%s% extra Glacite Powder.",
+    "id": 51,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Quartzfang"
+        },
+        "second": [
+          {
+            "family": "Cave Dweller"
+          },
+          {
+            "shards": "Silentdepth"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "shard_name": "Fungloom",
+    "attribute_name": "Fungy Luck",
+    "description": "Gain a +%s% chance to gain an additional Chisel charge upon starting the Fossil Excavator.",
+    "id": 52,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Cave Dweller"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Eel",
+    "attribute_name": "Eelastic",
+    "description": "Increase Pull by +%s when using your Fishing Nets.",
+    "id": 53,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Eel"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Kiara"
+      },
+      "fishing_loot": {
+        "location": "Moonglade Marsh"
+      }
+    }
+  },
+  {
+    "shard_name": "King Cobra",
+    "attribute_name": "Hunter's Grasp",
+    "description": "Your Black Holes gain +%s% Hunter Fortune.",
+    "id": 54,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Reptile",
+      "Serpent"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Python"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Uncommon",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Lava Flame",
+    "attribute_name": "Blazing Fortune",
+    "description": "Grants +%s Magic Find on Lava Sea Creatures.",
+    "id": 56,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Under Lava"
+      }
+    }
+  },
+  {
+    "shard_name": "Draconic",
+    "attribute_name": "Essence of Dragons",
+    "id_override": "dragon_essence",
+    "description": "Gain +%s% more Dragon Essence.",
+    "id": 57,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "families": [
+      "Dragon"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Ender Dragon"
+        ],
+        "location": "The End"
+      }
+    }
+  },
+  {
+    "shard_name": "Falcon",
+    "attribute_name": "Battle Experience",
+    "description": "Pets gain +%s% more EXP from Combat.",
+    "id": 58,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Inferno Koi",
+    "attribute_name": "Crimson Serendipity",
+    "description": "Increase the odds of finding a Vanquisher by +%s%.",
+    "id": 58,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Water",
+    "families": [
+      "Treasure Fish"
+    ],
+    "sources": {
+      "fishing_loot": {
+        "location": "Crimson Isle"
+      },
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Under Lava"
+      }
+    }
+  },
+  {
+    "shard_name": "Wither",
+    "attribute_name": "Essence of Wither",
+    "id_override": "wither_essence",
+    "description": "Gain +%s% more Wither Essence.",
+    "id": 60,
+    "scaling": 1,
+    "rarity": "Rare",
+    "category": "Combat",
+    "sources": {
+      "dungeon_loot": {
+        "floor": 7
+      }
+    }
+  },
+  {
+    "shard_name": "Gecko",
+    "attribute_name": "Echo of Sharpening",
+    "description": "Your Sharpening Attributes are +%s% stronger.",
+    "id": 61,
+    "scaling": 2,
+    "rarity": "Rare",
+    "category": "Forest",
+    "families": [
+      "Reptile",
+      "Scaled"
+    ],
+    "sources": {
+      "shop_purchase": {
+        "npc_name": "Kiara"
+      },
+      "blacklisted_from_regular_fusion": true
+    }
+  },
+  {
+    "shard_name": "Terra",
+    "attribute_name": "Earth Elemental",
+    "description": "Grants +%s Health.",
+    "id": 1,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Forest",
+          "rarity": "Epic"
+        },
+        "second": {
+          "rarity": "Legendary",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Cryo",
+    "attribute_name": "Frost Elemental",
+    "description": "Grants +%s Intelligence.",
+    "id": 2,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Water",
+          "rarity": "Epic"
+        },
+        "second": {
+          "rarity": "Legendary",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Aero",
+    "attribute_name": "Wind Elemental",
+    "description": "Grants +%s Strength.",
+    "id": 3,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Combat",
+          "rarity": "Epic"
+        },
+        "second": {
+          "rarity": "Legendary",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Pandarai",
+    "attribute_name": "Foraging Wisdom",
+    "description": "Grants +%s Foraging Wisdom.",
+    "id": 4,
+    "scaling": 0.5,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Panda"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Panda"
+        },
+        "second": {
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Leviathan",
+    "attribute_name": "Excellent Karma",
+    "description": "Grants +%s Hunter Fortune towards EPIC Attributes.",
+    "id": 5,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Lizard",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Lizard"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Alligator",
+    "attribute_name": "Echo of Resistance",
+    "description": "Your Resistance Attributes are +%s% stronger.",
+    "id": 6,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Croco",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Crocodile"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Fenlord",
+    "attribute_name": "Berry Mogul",
+    "description": "Your Salts last +%s% longer.",
+    "id": 7,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Frog"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Bullfrog"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Basilisk",
+    "attribute_name": "Hunter's Suppress",
+    "description": "Lassos deplete Stamina +%s% faster.",
+    "id": 9,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Reptile",
+      "Serpent"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "King Cobra"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Iguana",
+    "attribute_name": "Echo of Atomized",
+    "description": "Your Atomized Attributes are +%s% stronger.",
+    "id": 10,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Reptile",
+      "Scaled"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Gecko"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Moray Eel",
+    "attribute_name": "Lucky Rod",
+    "description": "Fish Treasure Shards are +%s% easier to find.",
+    "id": 11,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Eel"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Eel"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Thorn",
+    "attribute_name": "Dominance",
+    "description": "Gain +%s% more Damage when at full health.",
+    "id": 12,
+    "scaling": 1.5,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "dungeon_loot": {
+        "floor": 4
+      }
+    }
+  },
+  {
+    "shard_name": "Lunar Moth",
+    "attribute_name": "Lunar Power",
+    "description": "Grants +%s Farming Fortune during the Night.",
+    "id": 13,
+    "scaling": 5,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Ladybug"
+        },
+        "second": {
+          "family": "Bug",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Fire Eel",
+    "attribute_name": "Trophy Hunter",
+    "description": "Grants +%s Trophy Fish Chance.",
+    "id": 14,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Eel"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "special_fusion": {
+        "first": {
+          "shards": [
+            "Eel",
+            "Firefly"
+          ]
+        },
+        "second": {
+          "shards": "Moray Eel"
+        }
+      },
+      "blacklisted_from_regular_fusion": true
+    }
+  },
+  {
+    "shard_name": "Bal",
+    "attribute_name": "Deep Technique",
+    "description": "Each block you mine has a +%s% chance to grant 1 extra Pristine for that block.",
+    "id": 15,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "mobs": {
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Hideonsack",
+    "attribute_name": "Sack Size",
+    "description": "Your sacks can hold +%s% more items.",
+    "id": 16,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Shulker",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        },
+        "second": {
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Water Hydra",
+    "attribute_name": "Fishing Speed",
+    "description": "Grants +%s Fishing Speed.",
+    "id": 17,
+    "scaling": 3,
+    "rarity": "Epic",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      }
+    }
+  },
+  {
+    "shard_name": "Flare",
+    "attribute_name": "Blazing",
+    "description": "Grants +%s% more Damage against mobs while in the Crimson Isle.",
+    "id": 18,
+    "scaling": 3,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true,
+        "black_hole": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Sea Emperor",
+    "attribute_name": "Sea Wisdom",
+    "id_override": "fishing_experience",
+    "description": "Grants +%s Fishing Wisdom.",
+    "id": 20,
+    "scaling": 3,
+    "rarity": "Epic",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "names": [
+          "The Loch Emperor"
+        ],
+        "salts": true,
+        "black_hole": true
+      }
+    }
+  },
+  {
+    "shard_name": "Prince",
+    "attribute_name": "Reborn",
+    "description": "Killing a Prince has a +%s chance to add 1 Bonus Score to your Dungeon Run.",
+    "id": 21,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Prince Bernhard",
+          "Prince Christian",
+          "Prince Pieter",
+          "Prince Nicholas",
+          "Prince Alexander",
+          "Prince Marius",
+          "Prince Valentin",
+          "Prince Friedrich"
+        ],
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Komodo Dragon",
+    "attribute_name": "Echo of Essence",
+    "description": "Your Essence Attributes are +%s% stronger.",
+    "id": 22,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Reptile",
+      "Scaled"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Iguana"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Mimic",
+    "attribute_name": "Faker",
+    "description": "Dungeon Blessings are +%s% stronger on you.",
+    "id": 24,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Shellwise",
+    "attribute_name": "Shell",
+    "description": "Gain +%s% Regular Knockback Resistance.",
+    "id": 26,
+    "scaling": 10,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Reptile",
+      "Turtle"
+    ],
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "traps": {
+        "location": "Murkwater Depths",
+        "placement_type": "Underwater"
+      }
+    }
+  },
+  {
+    "shard_name": "Barbarian Duke X",
+    "attribute_name": "Warrior",
+    "description": "Increases melee damage dealt by +%s%.",
+    "id": 27,
+    "scaling": 2.5,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Toucan",
+    "attribute_name": "Why Not More",
+    "description": "Your pet's EXP Share grants +%s% more EXP.",
+    "id": 28,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Hellwisp",
+    "attribute_name": "Matriarch Cubs",
+    "description": "Grants a +%s% chance to get a second Heavy Pearl.",
+    "id": 29,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Caiman",
+    "attribute_name": "Echo of Ruler",
+    "description": "Your Ruler Attributes are +%s% stronger.",
+    "id": 30,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Croco",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Alligator"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Firefly",
+    "attribute_name": "Solar Power",
+    "description": "Grants +%s Farming Fortune during the day.",
+    "id": 31,
+    "scaling": 5,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Lunar Moth"
+        },
+        "second": {
+          "shards": [
+            "Bezal",
+            "Cinderbat",
+            "Flare",
+            "Lava Flame",
+            "Fire Eel",
+            "Bal",
+            "Flaming Spider"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Sea Serpent",
+    "attribute_name": "Echo of Hunter",
+    "description": "Your Hunter Attributes are +%s% stronger.",
+    "id": 32,
+    "scaling": 2,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Eel",
+      "Serpent"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Moray Eel"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Ghost",
+    "attribute_name": "Veil",
+    "description": "Grants +%s True Defense",
+    "id": 33,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "The Mist",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "XYZ",
+    "attribute_name": "Mana Regeneration",
+    "description": "Increases your Mana regeneration by +%s%.",
+    "id": 34,
+    "scaling": 1,
+    "rarity": "Epic",
+    "category": "Forest",
+    "sources": {
+      "mobs": {
+        "names": [
+          "Exe",
+          "Wai",
+          "Zee"
+        ],
+        "lasso": true,
+        "salts": true
+      },
+      "kuudra": true,
+      "traps": {
+        "location": "Mystic Marsh",
+        "placement_type": "Land"
+      }
+    }
+  },
+  {
+    "shard_name": "Leatherback",
+    "attribute_name": "Hunt Wisdom",
+    "description": "Grants +%s Hunting Wisdom",
+    "id": 35,
+    "scaling": 0.5,
+    "rarity": "Epic",
+    "category": "Water",
+    "families": [
+      "Reptile",
+      "Turtle"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Shellwise"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Cavernshade",
+    "attribute_name": "Cavern Wisdom",
+    "description": "Grants +%s Mining Wisdom",
+    "id": 36,
+    "scaling": 0.5,
+    "rarity": "Epic",
+    "category": "Combat",
+    "families": [
+      "Cave Dweller"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Cave Dweller",
+          "rarity": "Rare",
+          "rarity_or_higher": true
+        },
+        "second": {
+          "family": "Cave Dweller",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Dragonfly",
+    "attribute_name": "Garden Wisdom",
+    "description": "Grants +%s Farming Wisdom",
+    "id": 37,
+    "scaling": 0.5,
+    "rarity": "Epic",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Firefly"
+        },
+        "second": {
+          "family": "Dragon"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Tenebris",
+    "attribute_name": "Shadow Elemental",
+    "description": "Grants +%s Health.",
+    "id": 1,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Forest",
+          "rarity": "Legendary"
+        },
+        "second": {
+          "family": "Elemental",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Blizzard",
+    "attribute_name": "Snow Elemental",
+    "description": "Grants +%s Intelligence.",
+    "id": 2,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Water",
+          "rarity": "Legendary"
+        },
+        "second": {
+          "family": "Elemental",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Tempest",
+    "attribute_name": "Storm Elemental",
+    "description": "Grants +%s Strength.",
+    "id": 3,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "category": "Combat",
+          "rarity": "Legendary"
+        },
+        "second": {
+          "family": "Elemental",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Chameleon",
+    "attribute_name": "Reptiloid",
+    "description": "Fusions with Chameleons grant the next 3 IDs as results.",
+    "id": 4,
+    "scaling": [],
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Reptile"
+    ],
+    "sources": {
+      "tree_gifts": true,
+      "blacklisted_from_regular_fusion": true
+    }
+  },
+  {
+    "shard_name": "Tiamat",
+    "attribute_name": "Echo of Echoes",
+    "description": "Your Echo Attributes are +%s% stronger.",
+    "id": 6,
+    "scaling": 5,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Croco",
+      "Reptile"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Caiman"
+        },
+        "second": {
+          "category": "Combat",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Wyvern",
+    "attribute_name": "Echo of Wisdom",
+    "description": "Your Wisdom Attributes are +%s% stronger.",
+    "id": 7,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Reptile",
+      "Scaled"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Komodo Dragon"
+        },
+        "second": {
+          "category": "Forest",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Tortoise",
+    "attribute_name": "Cloak Improvement",
+    "description": "Your David's Cloak gains +%s True Defense.",
+    "id": 8,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Reptile",
+      "Turtle"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Leatherback"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Endstone Protector",
+    "attribute_name": "Paramount Fortitude",
+    "id_override": "fortitude",
+    "description": "Your Defense is increased by +%s%.",
+    "id": 9,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "sources": {
+      "mobs": {
+        "location": "The End"
+      }
+    }
+  },
+  {
+    "shard_name": "Naga",
+    "attribute_name": "Charmed",
+    "description": "Grants a +%s% chance to charm the Shard of monsters you kill.",
+    "id": 11,
+    "scaling": 0.05,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Amphibian",
+      "Eel"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Sea Serpent"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Lapis Creeper",
+    "attribute_name": "Book Wisdom",
+    "description": "Grants +%s Enchanting Wisdom.",
+    "id": 12,
+    "scaling": 0.5,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Lapis Skeleton"
+        },
+        "second": [
+          {
+            "shards": "Ghost"
+          },
+          {
+            "rarity": "Legendary",
+            "rarity_or_higher": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "shard_name": "Wartybug",
+    "attribute_name": "Wart Eater",
+    "description": "Grants a +%s% chance to obtain a Warty when breaking Nether Warts.",
+    "id": 13,
+    "scaling": 0.01,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Bug"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Dragonfly"
+        },
+        "second": {
+          "rarity": "Legendary",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Spike",
+    "attribute_name": "Payback",
+    "description": "When hit, your next hit deals +%s% damage.",
+    "id": 14,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "fishing_net": true
+      },
+      "traps": [
+        {
+          "location": "Murkwater Depths",
+          "placement_type": "Underwater"
+        },
+        {
+          "location": "Kelpwoven Tunnels",
+          "placement_type": "Underwater"
+        }
+      ]
+    }
+  },
+  {
+    "shard_name": "Kraken",
+    "attribute_name": "Vitality",
+    "id_override": "mending",
+    "description": "Grants +%s Vitality.",
+    "id": 15,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Demon"
+    ],
+    "sources": {
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Taurus",
+    "attribute_name": "Maximal Torment",
+    "description": "Your Intelligence is increased by +%s%.",
+    "id": 17,
+    "scaling": 0.1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Daemon",
+    "attribute_name": "Pity",
+    "description": "Your RNG Meter fills +%s% faster.",
+    "id": 18,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Demon"
+    ],
+    "sources": {
+      "kuudra": true,
+      "special_fusion": {
+        "first": {
+          "shards": "Kraken"
+        },
+        "second": {
+          "shards": "Kraken"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Moltenfish",
+    "attribute_name": "Star Bait",
+    "description": "Grants a +%s% chance to fish a Shinyfish.",
+    "id": 20,
+    "scaling": 0.1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Demon"
+    ],
+    "sources": {
+      "kuudra": true,
+      "special_fusion": {
+        "first": {
+          "shards": "Kraken"
+        },
+        "second": {
+          "category": "Water"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Shinyfish",
+    "attribute_name": "Help From Above",
+    "id_override": "life_regeneration",
+    "description": "Grants +%s Health Regen.",
+    "id": 23,
+    "scaling": 1.25,
+    "rarity": "Legendary",
+    "category": "Water",
+    "sources": {
+      "fishing_loot": {
+        "location": "Star Bait Attribute"
+      }
+    }
+  },
+  {
+    "shard_name": "Ananke",
+    "attribute_name": "Wings of Destiny",
+    "description": "Increases the odds of finding Ananke Feathers by +%s%.",
+    "id": 24,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Bird",
+      "Demon"
+    ],
+    "sources": {
+      "kuudra": true,
+      "special_fusion": {
+        "first": {
+          "shards": "Kraken"
+        },
+        "second": {
+          "family": "Bird"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Hideonbox",
+    "attribute_name": "Tuning Box",
+    "description": "Grants +%s Tuning Points.",
+    "id": 25,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Shulker"
+    ],
+    "sources": {
+      "kuudra": true,
+      "special_fusion": {
+        "first": {
+          "family": "Shulker",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        },
+        "second": {
+          "rarity": "Legendary"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Lord Jawbus",
+    "attribute_name": "Crimson Hook",
+    "id_override": "double_hook",
+    "description": "Grants +%s Double Hook Chance while on the Crimson Isle.",
+    "id": 26,
+    "scaling": 0.5,
+    "rarity": "Legendary",
+    "category": "Water",
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Burningsoul",
+    "attribute_name": "Attack Speed",
+    "description": "Grants +%s Bonus Attack Speed.",
+    "id": 27,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Demon"
+    ],
+    "sources": {
+      "mobs": {
+        "names": [
+          "Burningsoul Demon"
+        ],
+        "black_hole": true,
+        "salts": true
+      },
+      "traps": {
+        "location": "Smoldering Tomb"
+      }
+    }
+  },
+  {
+    "shard_name": "Cinderbat",
+    "attribute_name": "Magic Find",
+    "description": "Grants +%s Magic Find.",
+    "bazaar_id_override": "cinder_bat",
+    "id": 28,
+    "scaling": 0.5,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "sources": {
+      "mobs": {
+        "lasso": true,
+        "black_hole": true,
+        "salts": true
+      },
+      "kuudra": true
+    }
+  },
+  {
+    "shard_name": "Megalith",
+    "attribute_name": "Hunter's Karma",
+    "id_override": "hunter_karma",
+    "description": "Grants +%s Hunter Fortune.",
+    "id": 29,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Reptile",
+      "Turtle"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Tortoise"
+        },
+        "second": {
+          "category": "Water",
+          "rarity": "Epic",
+          "rarity_or_higher": true
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Power Dragon",
+    "attribute_name": "Elite",
+    "description": "Grants +%s more Damage against bosses and mini-bosses.",
+    "id": 30,
+    "scaling": 3,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Dragon"
+    ],
+    "sources": {
+      "dungeon_loot": {
+        "floor": 7
+      }
+    }
+  },
+  {
+    "shard_name": "Condor",
+    "attribute_name": "Pet Wisdom",
+    "description": "Grants +%s Taming Wisdom.",
+    "id": 31,
+    "scaling": 0.5,
+    "rarity": "Legendary",
+    "category": "Forest",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Bird"
+        },
+        "second": {
+          "rarity": "Legendary"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Sun Fish",
+    "attribute_name": "Starborn",
+    "description": "The effects of Starborn Temples is +%s% stronger on you.",
+    "id": 32,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Elemental"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Shinyfish"
+        },
+        "second": {
+          "shards": "Shinyfish"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Apex Dragon",
+    "attribute_name": "Veteran",
+    "description": "Grants +%s Combat Wisdom.",
+    "id": 33,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Dragon"
+    ],
+    "sources": {
+      "dungeon_loot": {
+        "floor": 7
+      }
+    }
+  },
+  {
+    "shard_name": "Dodo",
+    "attribute_name": "Rare Bird",
+    "description": "Grants +%s Pet Luck.",
+    "id": 34,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Bird"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Condor"
+        },
+        "second": {
+          "rarity": "Legendary"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Jormung",
+    "attribute_name": "Unlimited Power",
+    "description": "Your Strength is increased by +%s%.",
+    "id": 36,
+    "scaling": 0.1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Demon",
+      "Dragon"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Power Dragon"
+        },
+        "second": {
+          "shards": "Kraken"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Etherdrake",
+    "attribute_name": "Unlimited Energy",
+    "description": "Your Crit Damage is increased by by +%s%.",
+    "id": 39,
+    "scaling": 0.1,
+    "rarity": "Legendary",
+    "category": "Water",
+    "families": [
+      "Demon",
+      "Dragon"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Apex Dragon"
+        },
+        "second": {
+          "shards": "Kraken"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Galaxy Fish",
+    "attribute_name": "Ultimate DNA",
+    "description": "Grants +%s Mining Fortune, Farming Fortune, and Foraging Fortune.",
+    "id": 41,
+    "scaling": 1,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Sun Fish"
+        },
+        "second": {
+          "shards": "Sun Fish"
+        },
+        "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Molthorn",
+    "attribute_name": "Almighty",
+    "description": "Your \"Unlimited\" Attributes are +%s% stronger.",
+    "id": 42,
+    "scaling": 5,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "families": [
+      "Demon",
+      "Dragon"
+    ],
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "shards": "Etherdrake"
+        },
+        "second": {
+          "shards": "Jormung"
+        }
+      }
+    }
+  },
+  {
+    "shard_name": "Starborn",
+    "attribute_name": "Echo of Elemental",
+    "description": "Buffs all other shards in the Elemental Family by +%s%.",
+    "id": 44,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "sources": {
+      "special_fusion": {
+        "first": {
+          "family": "Elemental",
+          "rarity": "Legendary"
+        },
+        "second": {
+          "shards": "Galaxy Fish"
+        },
+        "amount_override": 1
+      }
+    }
+  }
+]

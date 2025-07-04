@@ -12,7 +12,7 @@ use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 
-pub struct SlayerLootApp {
+pub struct SlayerLootPage {
     boss_type: Option<String>,
     loot_table: Option<Rc<LootTable>>,
 
@@ -27,7 +27,7 @@ pub struct SlayerLootApp {
     images: Rc<HashMap<String, TextureHandle>>,
 }
 
-impl eframe::App for SlayerLootApp {
+impl eframe::App for SlayerLootPage {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
@@ -76,7 +76,7 @@ impl eframe::App for SlayerLootApp {
     fn save(&mut self, _storage: &mut dyn eframe::Storage) {}
 }
 
-impl SlayerLootApp {
+impl SlayerLootPage {
     pub fn new(images: Rc<HashMap<String, TextureHandle>>) -> Self {
         Self {
             boss_type: None,
