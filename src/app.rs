@@ -205,7 +205,7 @@ fn add_code_pig_text(ui: &mut Ui) {
         color: Color32::from_rgb(85, 255, 85),
         ..Default::default()
     });
-    text.append(" your entire order!", 0.0, TextFormat {
+    text.append(" your order!", 0.0, TextFormat {
         font_id: FontId::proportional(14.0),
         color: Color32::GRAY,
         ..Default::default()
