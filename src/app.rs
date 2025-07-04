@@ -81,7 +81,7 @@ impl eframe::App for CalculatorApp {
                     });
                     egui::menu::bar(ui, |ui| {
                         ui.with_layout(egui::Layout::centered_and_justified(Direction::TopDown), |ui| {
-                            ui.add(Label::new("Note: A Catacombs loot calculator is also available on the desktop site.").wrap_mode(TextWrapMode::Wrap));
+                            ui.add(Label::new("(Note: A Catacombs loot calculator is also available on desktop!)").wrap_mode(TextWrapMode::Wrap));
                         });
                     });
                 } else {
