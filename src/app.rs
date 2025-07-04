@@ -79,6 +79,11 @@ impl eframe::App for CalculatorApp {
                     egui::menu::bar(ui, |ui| {
                         add_code_pig_text(ui);
                     });
+                    egui::menu::bar(ui, |ui| {
+                        ui.with_layout(egui::Layout::centered_and_justified(Direction::TopDown), |ui| {
+                            ui.add(Label::new("Note: A Catacombs loot calculator is also available on the desktop site.").wrap_mode(TextWrapMode::Wrap));
+                        });
+                    });
                 } else {
                     // none of the conditions in here support mobile
                     egui::menu::bar(ui, |ui| {
