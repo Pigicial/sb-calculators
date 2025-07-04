@@ -4,7 +4,7 @@ use egui::{Image, Ui, Widget};
 use std::collections::HashMap;
 use std::rc::Rc;
 
-pub(crate) fn add_image(images: &Rc<HashMap<String, TextureHandle>>, ui: &mut Ui, file_name: &str) {
+pub fn add_image(images: &Rc<HashMap<String, TextureHandle>>, ui: &mut Ui, file_name: &str) {
     let texture = images.get(file_name);
     if let Some(texture) = texture {
         Image::new(texture)
@@ -13,7 +13,7 @@ pub(crate) fn add_image(images: &Rc<HashMap<String, TextureHandle>>, ui: &mut Ui
     }
 }
 
-pub(crate) fn add_first_valid_image(
+pub fn add_first_valid_image(
     images: &Rc<HashMap<String, TextureHandle>>,
     ui: &mut Ui,
     possible_file_names: Vec<String>,

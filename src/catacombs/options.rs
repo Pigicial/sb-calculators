@@ -1,13 +1,13 @@
 use crate::catacombs::catacombs_loot::{LootChest, LootEntry};
-use crate::catacombs::catacombs_loot_calculator::{SelectedRngMeterItem};
+use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 use crate::catacombs::catacombs_page::CalculatorType::AveragesLootTable;
-use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootApp};
+use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootPage};
 use crate::images;
 use egui::{Checkbox, Label, RichText, Slider, TextWrapMode, Ui};
 use num_format::{Locale, ToFormattedString};
 use std::rc::Rc;
 
-pub fn add_treasure_talisman_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_treasure_talisman_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "treasure_talisman.png");
         ui.label("Treasure Accessory: ");
@@ -28,7 +28,7 @@ pub fn add_treasure_talisman_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     });
 }
 
-pub fn add_boss_luck_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_boss_luck_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "boss_luck.png");
         ui.label("Boss Luck: ");
@@ -42,17 +42,17 @@ pub fn add_boss_luck_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     });
 }
 
-pub fn add_catacombs_box_attribute_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_catacombs_box_attribute_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "catacombs_box.png");
         ui.label("Catacombs Box: ");
     });
     ui.horizontal(|ui| {
-        ui.add(Slider::new(&mut calc.catacombs_box_attribute_increase, 0..=10));
+        ui.add(Slider::new(&mut calc.catacombs_box_attribute_increase, 0..=13));
     });
 }
 
-pub fn add_s_plus_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_s_plus_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "s_plus.png");
         ui.label("S+: ");
@@ -68,7 +68,7 @@ pub fn add_s_plus_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     }
 }
 
-pub fn add_floor_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_floor_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "catacombs.png");
         ui.label("Floor: ");
@@ -143,7 +143,7 @@ pub fn add_floor_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         });
 }
 
-pub fn add_chest_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_chest_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.horizontal(|ui| {
         images::add_image(&calc.images, ui, "catacombs.png");
         ui.label("Chest: ");
@@ -176,7 +176,42 @@ pub fn add_chest_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
         });
 }
 
-pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_comparison_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
+    let chances = calc.get_loot_table_chances();
+    if chances.is_none() {
+        return;
+    }
+    
+    let hash = calc.generate_loot_table_hash();
+    ui.heading("Comparisons");
+    ui.horizontal(|ui| {
+        if ui.button("Mark Chances For Comparison").clicked() {
+            calc.comparison_hash = Some(hash);
+        }
+    });
+    ui.end_row();
+    if let Some(comparison_hash) = calc.comparison_hash {
+        ui.horizontal(|_| {});
+        ui.horizontal(|ui| {
+            if hash == comparison_hash {
+                ui.label("Now change your settings!");
+            } else {
+                ui.label("Comparison active!");
+            }
+        });
+    }
+    ui.end_row();
+    
+    if calc.comparison_hash.is_some() {
+        ui.horizontal(|_| {});
+        ui.horizontal(|ui| {
+            if ui.button("Clear Comparison").clicked() {
+                calc.comparison_hash = None;
+            } 
+        });
+    }
+}
+pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     if calc.floor.is_none() {
         return;
     }
@@ -387,7 +422,7 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
     ui.end_row();
 }
 
-pub fn add_rng_meter_simulation_options(calc: &mut CatacombsLootApp, ui: &mut Ui) {
+pub fn add_rng_meter_simulation_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     if calc.floor.is_none() {
         return;
     }

@@ -1,17 +1,17 @@
 use crate::catacombs::catacombs_loot::{ChestType, LootChest, LootEntry};
+use std::cell::RefCell;
+use std::collections::HashMap;
+use std::ops::{AddAssign, DivAssign};
+use std::rc::Rc;
 #[cfg(not(target_arch = "wasm32"))]
 use {
     crate::catacombs::catacombs_loot_calculator::SuccessfulRollReason::{
         RandomRollBoosted, RandomRollNotBoosted,
     },
-    crate::catacombs::catacombs_page::CatacombsLootApp,
+    crate::catacombs::catacombs_page::CatacombsLootPage,
     rand::{distr::weighted::Error, prelude::Distribution, rngs::ThreadRng, Rng},
     rand_distr::weighted::WeightedIndex,
 };
-use std::cell::RefCell;
-use std::collections::HashMap;
-use std::ops::{AddAssign, DivAssign};
-use std::rc::Rc;
 
 pub fn calculate_quality(
     chest: &LootChest,
@@ -34,6 +34,7 @@ pub struct LootChanceEntry {
     pub entry: Rc<LootEntry>,
     pub used_weight: f64,
     pub chance: f64,
+    pub roll_combinations: Vec<SlotCombinations>,
     disabled: bool,
 }
 
@@ -43,6 +44,7 @@ impl LootChanceEntry {
             entry: Rc::clone(&entry),
             used_weight: entry.get_weight() as f64,
             chance: 0.0,
+            roll_combinations: Vec::new(),
             disabled: false,
         }
     }
@@ -81,8 +83,30 @@ struct RecursiveData {
     highest_depth: i32,
 }
 
+#[derive(Debug)]
+pub struct SlotCombinations {
+    pub entries: Vec<Rc<RefCell<LootChanceEntry>>>,
+    pub total_chance: f64,
+}
+
+impl SlotCombinations {
+    pub fn add_entry(&mut self, entry: Rc<RefCell<LootChanceEntry>>, iteration_chance: f64) {
+        self.total_chance *= iteration_chance;
+        self.entries.push(entry);
+    }
+}
+
+impl Clone for SlotCombinations {
+    fn clone(&self) -> Self {
+        Self {
+            entries: Vec::clone(&self.entries),
+            total_chance: self.total_chance,
+        }
+    }
+}
+
 pub struct AveragesCalculationResult {
-    pub entries: Vec<LootChanceEntry>,
+    pub entries: Vec<Rc<RefCell<LootChanceEntry>>>,
     pub total_weight: f64,
 }
 
@@ -105,9 +129,7 @@ pub fn calculate_average_chances(
         let mut chance_entry = LootChanceEntry::new(Rc::clone(entry));
 
         match entry.as_ref() {
-            LootEntry::Essence {
-                weight, quality, ..
-            } => {
+            LootEntry::Essence { weight, quality, .. } => {
                 if weight > &0 && quality > &0 {
                     let pointer = Rc::new(RefCell::new(chance_entry));
                     weighted_entries.push(Rc::clone(&pointer));
@@ -177,33 +199,16 @@ pub fn calculate_average_chances(
 
     match Rc::try_unwrap(entry_data).map(|refcell| refcell.into_inner()) {
         Ok(data) => {
-            let mut results = data
-                .weighted_entries
-                .into_iter()
-                .filter_map(|rc| Rc::try_unwrap(rc).ok().map(|refcell| refcell.into_inner()))
-                .collect::<Vec<LootChanceEntry>>();
-
-            if let Some(leftover) = Rc::try_unwrap(data.weighted_essence_entry)
-                .ok()
-                .map(|rc| rc.into_inner())
-            {
-                results.push(leftover);
-            }
-
-            if let Some(leftover) = Rc::try_unwrap(data.leftover_essence_entry)
-                .ok()
-                .map(|rc| rc.into_inner())
-            {
-                results.push(leftover);
-            }
+            let mut results = data.weighted_entries;
+            results.push(data.leftover_essence_entry);
 
             for guaranteed_entry in guaranteed_essence_entries {
-                results.push(guaranteed_entry);
+                results.push(Rc::new(RefCell::new(guaranteed_entry)));
             }
 
             sort_entries(&mut results, rng_meter_data.selected_item.as_ref());
 
-            let total_weight = results.iter().map(|e| e.used_weight).sum();
+            let total_weight = results.iter().map(|e| e.borrow().used_weight).sum();
             AveragesCalculationResult {
                 entries: results,
                 total_weight,
@@ -219,23 +224,23 @@ pub fn calculate_average_chances(
     }
 }
 
-fn sort_entries(entries: &mut [LootChanceEntry], rng_meter_item: Option<&SelectedRngMeterItem>) {
+fn sort_entries(entries: &mut [Rc<RefCell<LootChanceEntry>>], rng_meter_item: Option<&SelectedRngMeterItem>) {
     let rng_meter_string = rng_meter_item.map_or(String::new(), |e| e.identifier.clone());
 
     entries.sort_by(|a, b| {
-        b.entry
+        b.borrow().entry
             .to_string()
             .eq(&rng_meter_string)
-            .cmp(&a.entry.to_string().eq(&rng_meter_string))
-            .then((a.chance == 0.0).cmp(&(b.chance == 0.0)))
+            .cmp(&a.borrow().entry.to_string().eq(&rng_meter_string))
+            .then((a.borrow().chance == 0.0).cmp(&(b.borrow().chance == 0.0)))
             .then(
-                a.entry
+                a.borrow().entry
                     .is_essence_and_can_roll_multiple_times()
-                    .cmp(&b.entry.is_essence_and_can_roll_multiple_times()),
+                    .cmp(&b.borrow().entry.is_essence_and_can_roll_multiple_times()),
             )
-            .then(b.entry.get_quality().cmp(&a.entry.get_quality()))
-            .then((b.used_weight.ceil() as i64).cmp(&(a.used_weight.ceil() as i64)))
-            .then(a.entry.to_string().cmp(&b.entry.to_string()))
+            .then(b.borrow().entry.get_quality().cmp(&a.borrow().entry.get_quality()))
+            .then((b.borrow().used_weight.ceil() as i64).cmp(&(a.borrow().used_weight.ceil() as i64)))
+            .then(a.borrow().entry.to_string().cmp(&b.borrow().entry.to_string()))
     });
 }
 
@@ -274,20 +279,34 @@ fn process_random_entries(
         } else {
             0
         };
-        // println!("entry quality: {}, remaining quality: {}, chance: {} ({}/{})", entry_quality, remaining_quality, weight_roll_chance, entry_weight, total_weight);
+        
+        /*
+        let mut combination = if let Some(last_combination) = &last_combination {
+            last_combination.clone() 
+        } else {
+            SlotCombinations {
+                entries: Vec::new(),
+                total_chance: 1.0,
+            }
+        };
+
+        if entry.borrow().entry.to_string().contains("Handle") {
+            println!("Test {} {} {}", entry_quality, new_remaining_quality, weight_roll_chance);
+        }
+        
+        combination.add_entry(Rc::clone(entry), weight_roll_chance);
+        if !entry.borrow().entry.is_essence_and_can_roll_multiple_times() {
+            entry.borrow_mut().roll_combinations.push(combination.clone());
+        }
+        */
 
         recursion_data.iterations += 1;
         if depth > recursion_data.highest_depth {
             recursion_data.highest_depth = depth;
         }
 
-        if new_remaining_quality > 0
-            && new_remaining_quality < entry_data.borrow().lowest_non_essence_quality
-        {
-            let is_essence_entry = entry
-                .borrow()
-                .entry
-                .is_essence_and_can_roll_multiple_times();
+        if new_remaining_quality > 0 && new_remaining_quality < entry_data.borrow().lowest_non_essence_quality {
+            let is_essence_entry = entry.borrow().entry.is_essence_and_can_roll_multiple_times();
             if !is_essence_entry {
                 // essence entry is handled below
                 let chance_increase = weight_roll_chance * overall_chance;
@@ -303,21 +322,12 @@ fn process_random_entries(
             };
             let quality_multiplier = (leftover_quality_for_essence as f64 / 10.0).floor();
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
-            entry_data
-                .borrow()
-                .weighted_essence_entry
-                .borrow_mut()
-                .increase_chance(chance_increase);
-            // println!("Quality multiplier from {}: {} (new: {})", leftover_quality_for_essence, quality_multiplier, new_remaining_quality);
+            entry_data.borrow().weighted_essence_entry.borrow_mut().increase_chance(chance_increase);
 
             // handle final "leftover essence" entry with 1 quality and 0 weight
             let quality_multiplier = ((remaining_quality % 10) as f64).min(10.0);
             let chance_increase = weight_roll_chance * overall_chance * quality_multiplier;
-            entry_data
-                .borrow()
-                .leftover_essence_entry
-                .borrow_mut()
-                .increase_chance(chance_increase);
+            entry_data.borrow().leftover_essence_entry.borrow_mut().increase_chance(chance_increase);
 
             continue;
         } else {
@@ -329,28 +339,13 @@ fn process_random_entries(
                 continue;
             }
 
-            let roll_once = !entry
-                .borrow()
-                .entry
-                .is_essence_and_can_roll_multiple_times();
+            let roll_once = !entry.borrow().entry.is_essence_and_can_roll_multiple_times();
             if roll_once {
                 entry.borrow_mut().disabled = true;
-                process_random_entries(
-                    Rc::clone(&entry_data),
-                    recursion_data,
-                    chance_increase,
-                    new_remaining_quality,
-                    depth + 1,
-                );
+                process_random_entries(Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
                 entry.borrow_mut().disabled = false;
             } else {
-                process_random_entries(
-                    Rc::clone(&entry_data),
-                    recursion_data,
-                    chance_increase,
-                    new_remaining_quality,
-                    depth + 1,
-                );
+                process_random_entries(Rc::clone(&entry_data), recursion_data, chance_increase, new_remaining_quality, depth + 1);
             }
         }
     }
@@ -617,7 +612,7 @@ pub fn calculate_meter_item_random_roll_chance(
 #[cfg(not(target_arch = "wasm32"))]
 pub fn calculate_amount_of_times_rolled_for_entry(
     chest_data: &[(Rc<LootChest>, HashMap<i32, ChanceAndWeight>)],
-    calc: &CatacombsLootApp,
+    calc: &CatacombsLootPage,
     runs: i32,
     average_score: i32,
     meter_deselection_threshold: f32,
@@ -777,11 +772,11 @@ pub fn cache_chances_per_rng_meter_value(
         let entry = chances
             .entries
             .iter()
-            .find(|e| e.entry.to_string() == meter_data.identifier)
+            .find(|e| e.borrow().entry.to_string() == meter_data.identifier)
             .unwrap();
         cached_chances.insert(meter_score, ChanceAndWeight {
-            chance: entry.chance,
-            weight: entry.used_weight,
+            chance: entry.borrow().chance,
+            weight: entry.borrow().used_weight,
         });
     }
 
