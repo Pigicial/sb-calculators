@@ -87,16 +87,20 @@ impl eframe::App for CalculatorApp {
                         ui.add_space(16.0);
                     }
 
-                    let mut selected_page = self.selected_page;
-                    for (name, page, _app) in self.apps_iter_mut() {
-                        if ui.selectable_label(selected_page == page, name).clicked() {
-                            selected_page = page;
-                            if frame.is_web() {
-                                ui.ctx().open_url(egui::OpenUrl::same_tab(format!("#{page}")));
+                    // todo: this is temporary as cata loot is broken on mobile
+                    if !is_mobile {
+                        let mut selected_page = self.selected_page;
+                        for (name, page, _app) in self.apps_iter_mut() {
+                            if ui.selectable_label(selected_page == page, name).clicked() {
+                                selected_page = page;
+                                if frame.is_web() {
+                                    ui.ctx().open_url(egui::OpenUrl::same_tab(format!("#{page}")));
+                                }
                             }
                         }
+                        self.selected_page = selected_page;
                     }
-                    self.selected_page = selected_page;
+
 
                     if !is_web {
                         ui.add_space(30.0);
