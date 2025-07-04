@@ -522,7 +522,11 @@ impl ShardsPage {
     ) {
         let amount = match amount_type {
             ConsumedInFusion => shard.get_amount_consumed_in_fusion(),
-            MadeInFusion => shard.get_default_amount_made_in_fusion(),
+            MadeInFusion => if combination.was_chameleon {
+                1 
+            } else { 
+                shard.get_default_amount_made_in_fusion() 
+            },
         };
         ui.horizontal(|ui| {
             if amount_type == MadeInFusion && combination.is_reptile_fusion && self.pure_reptile_attribute_level > 0 {
