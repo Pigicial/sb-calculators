@@ -55,14 +55,18 @@ pub struct CalculatorApp {
 
 impl eframe::App for CalculatorApp {
     fn update(&mut self, ctx: &Context, frame: &mut eframe::Frame) {
-        #[cfg(target_arch = "wasm32")]
-        if let Some(page) = frame.info().web_info.location.hash.strip_prefix('#').and_then(Page::from_str_case_insensitive) {
-            self.selected_page = page;
-        }
-
         let is_web = cfg!(target_arch = "wasm32");
         let screen_size = ctx.screen_rect().size();
         let is_mobile = screen_size.x < 550.0 && is_web;
+        
+        // todo: mobile only since cata loot is disabled on mobile
+        if !is_mobile {
+            #[cfg(target_arch = "wasm32")]
+            if let Some(page) = frame.info().web_info.location.hash.strip_prefix('#').and_then(Page::from_str_case_insensitive) {
+                self.selected_page = page;
+            }
+        }
+
 
         ctx.set_theme(ThemePreference::Dark);
 
@@ -75,20 +79,19 @@ impl eframe::App for CalculatorApp {
                     egui::menu::bar(ui, |ui| {
                         add_code_pig_text(ui);
                     });
-                }
+                } else {
+                    // none of the conditions in here support mobile
+                    egui::menu::bar(ui, |ui| {
+                        if !is_web {
+                            ui.menu_button("File", |ui| {
+                                if ui.button("Quit").clicked() {
+                                    ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                                }
+                            });
+                            ui.add_space(16.0);
+                        }
 
-                egui::menu::bar(ui, |ui| {
-                    if !is_web {
-                        ui.menu_button("File", |ui| {
-                            if ui.button("Quit").clicked() {
-                                ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                            }
-                        });
-                        ui.add_space(16.0);
-                    }
-
-                    // todo: this is temporary as cata loot is broken on mobile
-                    if !is_mobile {
+                        // todo: this is temporary in the non-mobile-only section as cata loot is broken on mobile
                         let mut selected_page = self.selected_page;
                         for (name, page, _app) in self.apps_iter_mut() {
                             if ui.selectable_label(selected_page == page, name).clicked() {
@@ -99,18 +102,17 @@ impl eframe::App for CalculatorApp {
                             }
                         }
                         self.selected_page = selected_page;
-                    }
 
+                        if !is_web {
+                            ui.add_space(30.0);
+                            egui::gui_zoom::zoom_menu_buttons(ui);
+                        }
 
-                    if !is_web {
-                        ui.add_space(30.0);
-                        egui::gui_zoom::zoom_menu_buttons(ui);
-                    }
-
-                    if !is_mobile {
-                        add_code_pig_text(ui);
-                    }
-                });
+                        if !is_mobile {
+                            add_code_pig_text(ui);
+                        }
+                    });
+                }
             });
 
         self.show_selected_page(ctx, frame);
