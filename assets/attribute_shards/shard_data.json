@@ -2190,7 +2190,8 @@
           "rarity": "Epic",
           "rarity_or_higher": true
         }
-      }
+      },
+      "blacklisted_from_regular_fusion": false
     }
   },
   {
