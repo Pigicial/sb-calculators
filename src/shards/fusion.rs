@@ -76,7 +76,7 @@ impl FusionResults {
     pub fn get_result_profit(&self, resulting_shard_name: &String, buy_type: BuyType, profit_type: ProfitType, pure_reptile_attribute_level: u8, bazaar_tax_rate: f64, shards: &Shards) -> f64 {
         let shard = shards.get(resulting_shard_name).unwrap();
         let bazaar_quick_status = shard.cached_bazaar_data.as_ref().unwrap();
-        
+
         let mut amount_created = if self.was_chameleon { 1 } else { shard.get_default_amount_made_in_fusion() } as f64;
         if self.is_reptile_fusion {
             amount_created *= 1.0 + (pure_reptile_attribute_level as f64 * 0.02);
@@ -94,7 +94,7 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
     if !is_reptile_fusion {
         is_reptile_fusion = second_shard.families.as_ref().is_some_and(|f| f.contains(&"Reptile".to_string()));
     }
-    
+
     if first_shard.shard_name.eq("Chameleon") || second_shard.shard_name.eq("Chameleon") {
         let opposing_shard = if first_shard.shard_name.eq("Chameleon") {
             second_shard
@@ -123,7 +123,7 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
                 }
             }
         }
-        
+
         return FusionResults {
             first_input_shard_name: first_shard.shard_name.clone(),
             second_input_shard_name: second_shard.shard_name.clone(),
@@ -132,7 +132,7 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
             special_fusions: vec![],
             listed_fusions: found_outputs,
             was_chameleon: true,
-            is_reptile_fusion
+            is_reptile_fusion,
         };
     }
 
@@ -185,7 +185,7 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
         special_fusions: special_fusions.iter().map(|s| s.shard_name.clone()).collect(),
         listed_fusions,
         was_chameleon: false,
-        is_reptile_fusion
+        is_reptile_fusion,
     }
 }
 
@@ -264,6 +264,6 @@ pub fn generate_all_possible_combinations(shards: &Shards) -> Vec<FusionResults>
         let second_cmp = a_shard_second_input.rarity.cmp(&b_shard_second_input.rarity).then(a_shard_second_input.id.cmp(&b_shard_second_input.id));
         first_cmp.then(second_cmp)
     });
-    
+
     combinations
 }

@@ -3662,9 +3662,6 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Water",
-    "families": [
-      "Elemental"
-    ],
     "sources": {
       "special_fusion": {
         "first": {
@@ -3814,6 +3811,9 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Combat",
+    "families": [
+      "Elemental"
+    ],
     "sources": {
       "special_fusion": {
         "first": {
