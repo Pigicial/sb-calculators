@@ -5,7 +5,7 @@ use crate::shards::shard_data::{ShardData, Shards};
 use crate::shards::shards_page::AmountType::{ConsumedInFusion, MadeInFusion};
 use crate::shards::shards_page::BuyType::{BuyOrder, InstaBuy};
 use crate::shards::shards_page::ProfitType::{InstaSell, SellOffer};
-use crate::shards::shards_page::ShardCalculatorType::{AllFusionOutputs, FusionOutputs, FusionProfits};
+use crate::shards::shards_page::ShardCalculatorType::{AllFusionOutputs, BestTrapPlacements, FusionOutputs, FusionProfits};
 use crate::shards::{bazaar_api, fusion, shard_data};
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use eframe::epaint::{FontId, TextureHandle};
@@ -52,6 +52,7 @@ pub enum ShardCalculatorType {
     FusionProfits,
     AllFusionOutputs,
     FusionOutputs,
+    BestTrapPlacements,
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
@@ -105,6 +106,7 @@ impl eframe::App for ShardsPage {
                 ui.selectable_value(&mut self.calculator_type, FusionProfits, "Fusions Profits");
                 ui.selectable_value(&mut self.calculator_type, AllFusionOutputs, "All Fusion Outputs");
                 ui.selectable_value(&mut self.calculator_type, FusionOutputs, "Fusion Outputs");
+                ui.selectable_value(&mut self.calculator_type, BestTrapPlacements, "Traps");
             });
             ui.separator();
 
@@ -209,6 +211,29 @@ impl eframe::App for ShardsPage {
                             });
                             ui.add(Slider::new(&mut self.pure_reptile_attribute_level, 0..=10));
                             ui.end_row();
+                        } else if self.calculator_type == ShardCalculatorType::BestTrapPlacements {
+                            ui.horizontal(|ui| {
+                                images::add_image(&self.images, ui, "redstone_repeater.png");
+                                ui.label("Sort By:");
+                            });
+
+                            ui.horizontal(|ui| {
+                                ui.selectable_value(&mut self.profit_type, InstaSell, "Insta-Sell");
+                                ui.selectable_value(&mut self.profit_type, SellOffer, "Sell Offer");
+                            });
+                            ui.end_row();
+
+                            ui.label(""); // to force button into row two
+                            if self.bazaar_request_triggered && self.looking_up_bazaar_data {
+                                ui.add_enabled(false, Button::new("Refreshing data..."));
+                            } else if self.last_bazaar_request_ms.is_some_and(|last_update| system_time.duration_since(last_update).as_millis() < 60000) {
+                                let difference_in_ms = (system_time - self.last_bazaar_request_ms.unwrap()).as_millis();
+                                let time_until_button_enabled = 60 - (difference_in_ms) / 1000;
+                                ctx.request_repaint_after(Duration::from_millis(1000 - (difference_in_ms % 1000) as u64));
+                                ui.add_enabled(false, Button::new(format!("Can refresh Bazaar data in {time_until_button_enabled}s")));
+                            } else if ui.button("Refresh Bazaar").clicked() {
+                                self.bazaar_request_triggered = true;
+                            }
                         }
                     });
             });
@@ -220,12 +245,17 @@ impl eframe::App for ShardsPage {
                     ScrollArea::horizontal().id_salt("all_fusion_outputs").show(ui, |ui| {
                         self.add_all_fusion_combinations(ui)
                     });
-                },
+                }
                 FusionProfits => {
                     ScrollArea::horizontal().id_salt("fusion_profits").show(ui, |ui| {
                         self.add_most_profitable_shard_combinations(ui)
                     });
-                },
+                }
+                ShardCalculatorType::BestTrapPlacements => {
+                    ScrollArea::horizontal().id_salt("best_traps").show(ui, |ui| {
+                        self.add_best_traps(ui)
+                    });
+                }
             }
         });
     }
@@ -416,7 +446,7 @@ impl ShardsPage {
                             });
                             row.col(|ui| {
                                 let percent_gain = (((revenue as f64 / cost_of_fusion as f64) * 100.0) - 100.0) as i64;
-                                let possible_plus_sign = if profit >= 0 { "+" } else { ""};
+                                let possible_plus_sign = if profit >= 0 { "+" } else { "" };
                                 ui.label(RichText::new(format!("{}{}%", possible_plus_sign, percent_gain.to_formatted_string(&en))).color(get_profit_color(profit)));
                             });
                             row.col(|ui| {
@@ -425,6 +455,88 @@ impl ShardsPage {
                             })
                         }
                     };
+                });
+            });
+    }
+
+    fn add_best_traps(&mut self, ui: &mut Ui) {
+        if !self.looking_up_bazaar_data && (self.bazaar_data.is_none() || self.bazaar_request_triggered) {
+            self.looking_up_bazaar_data = true;
+            bazaar_api::set_shard_prices(self.bazaar_data_sender.clone());
+        }
+
+        if self.bazaar_data.is_none() {
+            ui.label("Fetching Bazaar Data...");
+            return;
+        }
+
+        let mut trap_shards = self.shards
+            .iter()
+            .filter(|(_, shard)| shard.sources.traps.is_some())
+            .map(|(name, shard)| (name.clone(), shard))
+            .collect::<Vec<(String, &ShardData)>>();
+
+        trap_shards.sort_by(|(_, a_data), (_, b_data)| {
+            let a_profit = a_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(self.profit_type);
+            let b_profit = b_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(self.profit_type);
+            b_profit.total_cmp(&a_profit)
+        });
+
+        ui.end_row();
+        let available_height = ui.available_height();
+        TableBuilder::new(ui)
+            .striped(true)
+            .resizable(false)
+            .cell_layout(Layout::left_to_right(egui::Align::Center))
+            .columns(Column::auto(), 9)
+            .column(Column::remainder())
+            .drag_to_scroll(true)
+            .min_scrolled_height(0.0)
+            .max_scroll_height(available_height)
+            .header(20.0, |mut header| {
+                header.col(|ui| {
+                    ui.strong("Shard");
+                });
+                header.col(|ui| {
+                    ui.strong("Locations");
+                });
+                header.col(|ui| {
+                    ui.strong("Insta-Sell Profit");
+                });
+                header.col(|ui| {
+                    ui.strong("Sell-Offer Profit");
+                });
+                header.col(|ui| {
+                    ui.strong("7 Day Insta-Buys");
+                });
+            })
+            .body(|body| {
+                body.rows(16.0, trap_shards.len(), |mut row| {
+                    let index = row.index();
+                    let (_, shard_data) = trap_shards.get(index).unwrap();
+
+                    let trap_data = shard_data.sources.traps.as_ref().unwrap();
+                    let trap_locations = trap_data.iter().map(|source| source.to_string()).collect::<Vec<String>>().join(", ");
+
+                    let insta_sell_profit = shard_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(InstaSell) as i64;
+                    let sell_offer_profit = shard_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(InstaSell) as i64;
+                    let purchased_in_last_week = shard_data.cached_bazaar_data.as_ref().unwrap().buy_moving_week;
+
+                    row.col(|ui| {
+                        add_shard_text(ui, shard_data, &self.images);
+                    });
+                    row.col(|ui| {
+                        ui.label(trap_locations);
+                    });
+                    row.col(|ui| {
+                        ui.label(RichText::new(insta_sell_profit.to_formatted_string(&en)).color(get_profit_color(insta_sell_profit)));
+                    });
+                    row.col(|ui| {
+                        ui.label(RichText::new(sell_offer_profit.to_formatted_string(&en)).color(get_profit_color(sell_offer_profit)));
+                    });
+                    row.col(|ui| {
+                        ui.label(RichText::new(purchased_in_last_week.to_formatted_string(&en)).color(Color32::from_rgb(255, 255, 85)));
+                    });
                 });
             });
     }
@@ -523,9 +635,9 @@ impl ShardsPage {
         let amount = match amount_type {
             ConsumedInFusion => shard.get_amount_consumed_in_fusion(),
             MadeInFusion => if combination.was_chameleon {
-                1 
-            } else { 
-                shard.get_default_amount_made_in_fusion() 
+                1
+            } else {
+                shard.get_default_amount_made_in_fusion()
             },
         };
         ui.horizontal(|ui| {
