@@ -967,11 +967,11 @@
       "traps": [
         {
           "location": "Murkwater Depths",
-          "placement_type": "UnderWater"
+          "placement_type": "Underwater"
         },
         {
           "location": "Murkwater Shallows",
-          "placement_type": "UnderWater"
+          "placement_type": "Underwater"
         }
       ]
     }
@@ -1191,7 +1191,7 @@
       "kuudra": true,
       "traps": {
         "location": "Crimson Isle",
-        "placement_type": "Land"
+        "placement_type": "Under Lava"
       }
     }
   },
@@ -2670,6 +2670,10 @@
         "second": {
           "shards": "Moray Eel"
         }
+      },
+      "traps": {
+        "location": "Crimson Isle",
+        "placement_type": "Under Lava"
       },
       "blacklisted_from_regular_fusion": true
     }
