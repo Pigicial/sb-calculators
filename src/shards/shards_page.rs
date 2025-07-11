@@ -519,7 +519,7 @@ impl ShardsPage {
                     let trap_locations = trap_data.iter().map(|source| source.to_string()).collect::<Vec<String>>().join(", ");
 
                     let insta_sell_profit = shard_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(InstaSell) as i64;
-                    let sell_offer_profit = shard_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(InstaSell) as i64;
+                    let sell_offer_profit = shard_data.cached_bazaar_data.as_ref().unwrap().get_sell_price(SellOffer) as i64;
                     let purchased_in_last_week = shard_data.cached_bazaar_data.as_ref().unwrap().buy_moving_week;
 
                     row.col(|ui| {
