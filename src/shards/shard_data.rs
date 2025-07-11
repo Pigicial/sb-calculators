@@ -259,6 +259,19 @@ pub struct TrapSource {
     pub other_conditions: Option<String>,
 }
 
+impl TrapSource {
+    pub fn to_string(&self) -> String {
+        let mut text = self.location.to_string();
+        if let Some(placement_type) = &self.placement_type {
+            text += &*format!(" ({placement_type})");
+        }
+        if let Some(other_conditions) = &self.other_conditions {
+            text += &*format!(" ({other_conditions})");
+        }
+        text
+    }
+}
+
 pub fn read_all_shards() -> Shards {
     let shard_data_path = include_str!("../../assets/attribute_shards/shard_data.json");
     let shards_list: Vec<ShardData> = serde_json::from_str(shard_data_path).expect("Failed to parse shard data");
