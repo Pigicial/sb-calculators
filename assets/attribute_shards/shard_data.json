@@ -338,7 +338,7 @@
     "shard_name": "Tank Zombie",
     "attribute_name": "Undead Resistance",
     "description": "Grants %%green%%+%s Defense %%reset%%against %%green%%Undead Monsters%%reset%%.",
-    "id": 17,
+    "id": 18,
     "scaling": 10,
     "rarity": "Common",
     "category": "Combat",
