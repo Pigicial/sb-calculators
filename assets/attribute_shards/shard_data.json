@@ -268,7 +268,7 @@
     }
   },
   {
-    "shard_name": "Sea Archer",
+    "shard_name": "Bogged",
     "attribute_name": "Creature Fisher",
     "id_override": "hunter",
     "description": "Grants %%dark_aqua%%+%s Sea Creature Chance%%reset%%.",
@@ -279,7 +279,6 @@
     "skill": "Fishing",
     "sources": {
       "mobs": {
-        "names": ["Bogged"],
         "salts": true,
         "black_hole": true
       }
