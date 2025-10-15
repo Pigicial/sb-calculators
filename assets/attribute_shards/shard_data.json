@@ -7,6 +7,7 @@
     "scaling": 2,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -31,6 +32,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -55,6 +57,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -79,6 +82,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Phantom"
     ],
@@ -100,6 +104,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Fishing",
     "families": [
       "Tropical Fish"
     ],
@@ -133,6 +138,7 @@
     ],
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Phantom"
     ],
@@ -154,6 +160,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Fishing",
     "families": [
       "Squid"
     ],
@@ -172,6 +179,7 @@
     "scaling": 10,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Enchanting",
     "families": [
       "Lapis"
     ],
@@ -194,6 +202,7 @@
     "scaling": 5,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Mining",
     "families": [
       "Shulker"
     ],
@@ -211,6 +220,7 @@
     "scaling": 3,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Fishing",
     "families": [
       "Tropical Fish"
     ],
@@ -241,6 +251,7 @@
     "scaling": 3,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -258,15 +269,17 @@
   },
   {
     "shard_name": "Sea Archer",
-    "attribute_name": "Monster Bait",
+    "attribute_name": "Creature Fisher",
     "id_override": "hunter",
     "description": "Grants %%dark_aqua%%+%s Sea Creature Chance%%reset%%.",
     "id": 14,
     "scaling": 0.5,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
+        "names": ["Bogged"],
         "salts": true,
         "black_hole": true
       }
@@ -281,6 +294,7 @@
     "scaling": 4,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true,
@@ -300,6 +314,7 @@
     "scaling": 2,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -323,6 +338,7 @@
     "scaling": 10,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Foraging",
     "sources": {
       "mobs": {
         "fishing_net": true,
@@ -342,6 +358,7 @@
     "scaling": 10,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -360,6 +377,7 @@
     "scaling": 5,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Bird"
     ],
@@ -377,6 +395,7 @@
     "scaling": 0.02,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Frog"
@@ -406,6 +425,7 @@
     "scaling": 4,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -421,6 +441,7 @@
     "scaling": 5,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Fishing",
     "families": [
       "Axolotl"
     ],
@@ -443,6 +464,7 @@
     "scaling": 5,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Bird"
     ],
@@ -465,6 +487,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Farming",
     "sources": {
       "grass": true,
       "traps": {
@@ -481,6 +504,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -500,6 +524,7 @@
     "scaling": 5,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Tropical Fish"
     ],
@@ -527,6 +552,7 @@
     "scaling": 4,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -547,6 +573,7 @@
     "scaling": 1,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -566,6 +593,7 @@
     "scaling": 2,
     "rarity": "Common",
     "category": "Forest",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -589,6 +617,7 @@
     "scaling": 2,
     "rarity": "Common",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Lizard",
       "Reptile"
@@ -612,6 +641,7 @@
     "scaling": 2,
     "rarity": "Common",
     "category": "Combat",
+    "skill": "Mining",
     "families": [
       "Cave Dweller"
     ],
@@ -640,6 +670,7 @@
     "scaling": 2,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -664,6 +695,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -688,6 +720,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -712,6 +745,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Bird"
     ],
@@ -729,6 +763,7 @@
     "scaling": 30,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "special_fusion": {
         "first": {
@@ -749,6 +784,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Mining",
     "families": [
       "Cave Dweller"
     ],
@@ -771,6 +807,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -793,6 +830,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Lizard",
       "Reptile"
@@ -816,6 +854,7 @@
     "scaling": 2,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Serpent"
@@ -839,6 +878,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -857,6 +897,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Frog"
@@ -891,6 +932,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -910,6 +952,7 @@
     "scaling": 2,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true,
@@ -925,6 +968,7 @@
     "scaling": 10,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Bird"
     ],
@@ -942,6 +986,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -957,6 +1002,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "fishing_net": true
@@ -985,6 +1031,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Serpent"
@@ -1008,9 +1055,10 @@
     "attribute_name": "Insect Power",
     "description": "Your Vacuum deals +%s% extra Damage.",
     "id": 22,
-    "scaling": 5,
+    "scaling": 10,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -1020,7 +1068,7 @@
           "shards": "Pest"
         },
         "second": {
-          "shards": "Pest"
+          "category": "Combat"
         }
       }
     }
@@ -1034,6 +1082,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -1054,6 +1103,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Panda"
     ],
@@ -1079,6 +1129,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -1097,6 +1148,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Bird"
     ],
@@ -1114,6 +1166,7 @@
     "scaling": 2,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true,
@@ -1139,6 +1192,7 @@
     "scaling": 0.5,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true,
@@ -1158,6 +1212,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Panda"
     ],
@@ -1183,6 +1238,7 @@
     "scaling": 0.2,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1204,6 +1260,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1224,6 +1281,7 @@
     "scaling": 1,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -1248,6 +1306,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -1271,6 +1330,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Water",
+    "skill": "Combat",
     "families": [
       "Drowned"
     ],
@@ -1296,6 +1356,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Combat",
+    "skill": "Taming",
     "families": [
       "Amphibian",
       "Frog"
@@ -1319,6 +1380,7 @@
     "scaling": 3,
     "rarity": "Uncommon",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -1328,7 +1390,7 @@
           "family": "Bug"
         },
         "second": {
-          "shards": "Praying Mantis"
+          "skill": "Mining"
         }
       }
     }
@@ -1342,6 +1404,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -1366,6 +1429,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -1390,6 +1454,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -1414,6 +1479,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Panda"
     ],
@@ -1437,6 +1503,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Frog"
@@ -1463,6 +1530,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1484,6 +1552,7 @@
     ],
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Bug"
     ],
@@ -1499,6 +1568,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Lizard",
       "Reptile"
@@ -1524,6 +1594,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Serpent"
@@ -1549,6 +1620,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -1568,6 +1640,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Treasure Fish"
     ],
@@ -1596,6 +1669,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -1618,6 +1692,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Enchanting",
     "families": [
       "Lapis"
     ],
@@ -1641,19 +1716,17 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
     "sources": {
       "special_fusion": {
         "first": {
-          "shards": [
-            "Invisibug",
-            "Termite"
-          ]
+          "shards": "Termite"
         },
         "second": {
-          "category": "Forest"
+          "shards": "Praying Mantis"
         }
       }
     }
@@ -1666,6 +1739,7 @@
     "scaling": 3,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "names": [
@@ -1690,6 +1764,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1706,6 +1781,7 @@
     "scaling": 5,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -1729,6 +1805,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Treasure Fish"
     ],
@@ -1751,6 +1828,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Spider"
     ],
@@ -1768,6 +1846,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Bug"
     ],
@@ -1787,6 +1866,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "names": [
@@ -1803,6 +1883,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Treasure Fish"
     ],
@@ -1824,6 +1905,7 @@
     "scaling": 2.5,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true
@@ -1847,6 +1929,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Cave Dweller"
     ],
@@ -1868,6 +1951,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Mining",
     "families": [
       "Cave Dweller"
     ],
@@ -1895,6 +1979,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -1921,6 +2006,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Treasure Fish"
     ],
@@ -1939,6 +2025,7 @@
     "scaling": 2.5,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1955,6 +2042,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1974,6 +2062,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -1994,6 +2083,7 @@
     "scaling": 30,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -2010,16 +2100,17 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
     "sources": {
       "special_fusion": {
         "first": {
-          "shards": "Cropeetle"
+          "shards": "Termite"
         },
         "second": {
-          "family": "Bug"
+          "shards": "Invisibug"
         }
       }
     }
@@ -2032,6 +2123,7 @@
     "scaling": 5,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Squid"
     ],
@@ -2053,6 +2145,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Croco",
       "Reptile"
@@ -2071,6 +2164,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Foraging",
     "families": [
       "Amphibian",
       "Frog"
@@ -2097,6 +2191,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Phantom"
     ],
@@ -2132,6 +2227,7 @@
     "scaling": 5,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "fishing_net": true
@@ -2150,6 +2246,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Cave Dweller"
     ],
@@ -2177,6 +2274,7 @@
     "scaling": 10,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Combat",
     "families": [
       "Cave Dweller"
     ],
@@ -2202,6 +2300,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Eel"
@@ -2223,6 +2322,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Serpent"
@@ -2248,6 +2348,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -2269,6 +2370,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Dragon"
     ],
@@ -2289,6 +2391,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -2312,6 +2415,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Treasure Fish"
     ],
@@ -2334,6 +2438,7 @@
     "scaling": 1,
     "rarity": "Rare",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "dungeon_loot": {
         "floor": 7
@@ -2348,6 +2453,7 @@
     "scaling": 2,
     "rarity": "Rare",
     "category": "Forest",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Scaled"
@@ -2360,6 +2466,23 @@
     }
   },
   {
+    "shard_name": "Hummingbird",
+    "attribute_name": "Chop",
+    "description": "Grants a +%s% chance to Chop an extra log, on top of the ones you swept.",
+    "id": 64,
+    "scaling": 10,
+    "rarity": "Rare",
+    "category": "Forest",
+    "skill": "Foraging",
+    "families": [
+      "Phantom"
+    ],
+    "sources": {
+      "tree_gifts": true,
+      "blacklisted_from_regular_fusion": true
+    }
+  },
+  {
     "shard_name": "Terra",
     "attribute_name": "Earth Elemental",
     "description": "Grants +%s Health.",
@@ -2367,6 +2490,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -2391,6 +2515,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -2415,6 +2540,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -2439,6 +2565,7 @@
     "scaling": 0.5,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Foraging",
     "families": [
       "Panda"
     ],
@@ -2462,6 +2589,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Lizard",
       "Reptile"
@@ -2487,6 +2615,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Croco",
       "Reptile"
@@ -2512,6 +2641,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Frog"
@@ -2537,6 +2667,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Serpent"
@@ -2562,6 +2693,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Scaled"
@@ -2587,6 +2719,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Eel"
@@ -2612,6 +2745,7 @@
     "scaling": 1.5,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "dungeon_loot": {
         "floor": 4
@@ -2626,6 +2760,7 @@
     "scaling": 5,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -2650,6 +2785,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Fishing",
     "families": [
       "Amphibian",
       "Eel"
@@ -2686,6 +2822,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Mining",
     "families": [
       "Cave Dweller"
     ],
@@ -2703,6 +2840,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -2728,6 +2866,7 @@
     "scaling": 3,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "salts": true,
@@ -2743,6 +2882,7 @@
     "scaling": 3,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true,
@@ -2760,6 +2900,7 @@
     "scaling": 3,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "names": [
@@ -2778,6 +2919,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "names": [
@@ -2802,6 +2944,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Scaled"
@@ -2827,6 +2970,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "salts": true
@@ -2836,11 +2980,12 @@
   {
     "shard_name": "Shellwise",
     "attribute_name": "Shell",
-    "description": "Gain +%s% Regular Knockback Resistance.",
+    "description": "Gain +%s% immunity to ALL knockback.",
     "id": 26,
     "scaling": 10,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Reptile",
       "Turtle"
@@ -2863,6 +3008,7 @@
     "scaling": 2.5,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -2879,6 +3025,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -2902,6 +3049,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -2918,6 +3066,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Croco",
       "Reptile"
@@ -2943,6 +3092,7 @@
     "scaling": 5,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -2973,6 +3123,7 @@
     "scaling": 2,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Eel",
@@ -2999,6 +3150,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Cave Dweller"
     ],
@@ -3021,6 +3173,7 @@
     "scaling": 1,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "names": [
@@ -3046,6 +3199,7 @@
     "scaling": 0.5,
     "rarity": "Epic",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Turtle"
@@ -3071,6 +3225,7 @@
     "scaling": 0.5,
     "rarity": "Epic",
     "category": "Combat",
+    "skill": "Mining",
     "families": [
       "Cave Dweller"
     ],
@@ -3097,6 +3252,7 @@
     "scaling": 0.5,
     "rarity": "Epic",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -3119,6 +3275,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -3144,6 +3301,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -3169,6 +3327,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -3194,6 +3353,7 @@
     "scaling": [],
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Hunting",
     "families": [
       "Reptile"
     ],
@@ -3210,6 +3370,7 @@
     "scaling": 5,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Hunting",
     "families": [
       "Croco",
       "Reptile"
@@ -3235,6 +3396,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Scaled"
@@ -3260,6 +3422,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Turtle"
@@ -3286,6 +3449,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "location": "The End"
@@ -3300,6 +3464,7 @@
     "scaling": 0.05,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Amphibian",
       "Eel"
@@ -3325,6 +3490,7 @@
     "scaling": 0.5,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Combat",
     "sources": {
       "special_fusion": {
         "first": {
@@ -3350,6 +3516,7 @@
     "scaling": 0.01,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Farming",
     "families": [
       "Bug"
     ],
@@ -3359,8 +3526,7 @@
           "shards": "Dragonfly"
         },
         "second": {
-          "rarity": "Legendary",
-          "rarity_or_higher": true
+          "shards": "Lunar Moth"
         }
       }
     }
@@ -3373,6 +3539,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Foraging",
     "sources": {
       "mobs": {
         "fishing_net": true
@@ -3398,6 +3565,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Demon"
     ],
@@ -3413,6 +3581,7 @@
     "scaling": 0.1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Combat",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -3429,6 +3598,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Demon"
     ],
@@ -3440,8 +3610,7 @@
         },
         "second": {
           "shards": "Kraken"
-        },
-        "amount_override": 1
+        }
       }
     }
   },
@@ -3453,6 +3622,7 @@
     "scaling": 0.1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Demon"
     ],
@@ -3478,6 +3648,7 @@
     "scaling": 1.25,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Combat",
     "sources": {
       "fishing_loot": {
         "location": "Star Bait Attribute"
@@ -3492,6 +3663,7 @@
     "scaling": 2,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Bird",
       "Demon"
@@ -3517,6 +3689,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Global",
     "families": [
       "Shulker"
     ],
@@ -3543,6 +3716,7 @@
     "scaling": 0.5,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Fishing",
     "sources": {
       "mobs": {
         "black_hole": true,
@@ -3559,6 +3733,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Demon"
     ],
@@ -3584,6 +3759,7 @@
     "scaling": 0.5,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Global",
     "sources": {
       "mobs": {
         "lasso": true,
@@ -3602,6 +3778,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Hunting",
     "families": [
       "Reptile",
       "Turtle"
@@ -3627,6 +3804,7 @@
     "scaling": 3,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Dragon"
     ],
@@ -3644,6 +3822,7 @@
     "scaling": 0.5,
     "rarity": "Legendary",
     "category": "Forest",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -3666,15 +3845,23 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Global",
     "sources": {
       "special_fusion": {
         "first": {
           "shards": "Shinyfish"
         },
         "second": {
-          "shards": "Shinyfish"
-        },
-        "amount_override": 1
+          "shards": [
+            "Bezal",
+            "Cinderbat",
+            "Flare",
+            "Lava Flame",
+            "Fire Eel",
+            "Bal",
+            "Flaming Spider"
+          ]
+        }
       }
     }
   },
@@ -3686,6 +3873,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Combat",
     "families": [
       "Dragon"
     ],
@@ -3703,6 +3891,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Taming",
     "families": [
       "Bird"
     ],
@@ -3725,6 +3914,7 @@
     "scaling": 0.1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Demon",
       "Dragon"
@@ -3749,6 +3939,7 @@
     "scaling": 0.1,
     "rarity": "Legendary",
     "category": "Water",
+    "skill": "Global",
     "families": [
       "Demon",
       "Dragon"
@@ -3772,6 +3963,7 @@
     "scaling": 1,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "sources": {
       "special_fusion": {
         "first": {
@@ -3792,6 +3984,7 @@
     "scaling": 5,
     "rarity": "Legendary",
     "category": "Combat",
+    "skill": "Global",
     "families": [
       "Demon",
       "Dragon"
@@ -3814,7 +4007,8 @@
     "id": 44,
     "scaling": 2,
     "rarity": "Legendary",
-    "category": "Combat",
+    "category": "Water",
+    "skill": "Global",
     "families": [
       "Elemental"
     ],
@@ -3828,6 +4022,40 @@
           "shards": "Galaxy Fish"
         },
         "amount_override": 1
+      }
+    }
+  },
+  {
+    "shard_name": "Titanoboa",
+    "attribute_name": "Bayou Biter",
+    "description": "Grants +%s Double Hook Chance while on the Backwayer Bayou",
+    "id": 47,
+    "scaling": 0.5,
+    "rarity": "Legendary",
+    "category": "Water",
+    "skill": "Fishing",
+    "families": [
+      "Reptile"
+    ],
+    "sources": {
+      "mobs": {
+        "black_hole": true,
+        "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Scarf",
+    "attribute_name": "Catacombs Graduate",
+    "description": "Gain +%s% more Dungeons class experience.",
+    "id": 51,
+    "scaling": 2,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "skill": "Combat",
+    "sources": {
+      "dungeon_loot": {
+        "floor": 7
       }
     }
   }
