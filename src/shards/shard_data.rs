@@ -21,6 +21,7 @@ pub struct ShardData {
     pub scaling: Vec<f32>,
     pub rarity: Rarity,
     pub category: Category,
+    pub skill: Skill,
     pub families: Option<Vec<String>>,
     pub sources: Sources,
     
@@ -48,6 +49,12 @@ impl ShardData {
 
         if let Some(required_category) = &requirements.category {
             if required_category != &self.category {
+                return false;
+            }
+        }
+        
+        if let Some(required_skill) = &requirements.skill {
+            if required_skill != &self.skill {
                 return false;
             }
         }
@@ -140,6 +147,19 @@ pub enum Category {
     Water,
     Combat,
     Forest,
+}
+
+#[derive(Deserialize, Serialize, Clone, Debug, Eq, PartialEq)]
+pub enum Skill {
+    Combat,
+    Fishing,
+    Farming,
+    Foraging,
+    Mining,
+    Taming,
+    Enchanting,
+    Hunting,
+    Global
 }
 
 #[derive(Deserialize, Serialize, Eq, PartialEq, Ord, PartialOrd, Debug, Hash)]
@@ -246,6 +266,7 @@ pub struct ShardConditions {
     #[serde_as(as = "Option<OneOrMany<_>>")]
     pub shards: Option<Vec<String>>,
     pub category: Option<Category>,
+    pub skill: Option<Skill>,
     pub family: Option<String>,
     pub rarity: Option<Rarity>,
     pub rarity_or_higher: Option<bool>,
