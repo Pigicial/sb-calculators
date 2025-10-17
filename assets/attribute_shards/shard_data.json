@@ -271,6 +271,7 @@
     "shard_name": "Bogged",
     "attribute_name": "Creature Fisher",
     "id_override": "hunter",
+    "bazaar_id_override": "sea_archer",
     "description": "Grants %%dark_aqua%%+%s Sea Creature Chance%%reset%%.",
     "id": 14,
     "scaling": 0.5,

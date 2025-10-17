@@ -619,7 +619,11 @@ impl ShardsPage {
     pub fn cache_bazaar_prices(&mut self) {
         if let Some(bazaar_data) = self.bazaar_data.as_ref() {
             for shard_data in self.shards.values_mut() {
-                let quick_status = &bazaar_data.get(&shard_data.get_bazaar_id()).unwrap().quick_status;
+                let possible_data = bazaar_data.get(&shard_data.get_bazaar_id());
+                if possible_data.is_none() {
+                    eprintln!("Couldn't fetch data for shard {} ({}) ({})", shard_data.shard_name, shard_data.attribute_name, shard_data.get_bazaar_id());
+                }
+                let quick_status = &possible_data.unwrap().quick_status;
                 shard_data.cached_bazaar_data = Some(quick_status.clone());
             }
         }
