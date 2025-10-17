@@ -2738,21 +2738,6 @@
     }
   },
   {
-    "shard_name": "Thorn",
-    "attribute_name": "Dominance",
-    "description": "Gain +%s% more Damage when at full health.",
-    "id": 12,
-    "scaling": 1.5,
-    "rarity": "Epic",
-    "category": "Combat",
-    "skill": "Combat",
-    "sources": {
-      "dungeon_loot": {
-        "floor": 4
-      }
-    }
-  },
-  {
     "shard_name": "Lunar Moth",
     "attribute_name": "Lunar Power",
     "description": "Grants +%s Farming Fortune during the Night.",
@@ -4041,6 +4026,21 @@
       "mobs": {
         "black_hole": true,
         "salts": true
+      }
+    }
+  },
+  {
+    "shard_name": "Thorn",
+    "attribute_name": "Dominance",
+    "description": "Gain +%s% more Damage when at full health.",
+    "id": 48,
+    "scaling": 1.5,
+    "rarity": "Legendary",
+    "category": "Combat",
+    "skill": "Combat",
+    "sources": {
+      "dungeon_loot": {
+        "floor": 4
       }
     }
   },
