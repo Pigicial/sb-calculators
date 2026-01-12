@@ -1,4 +1,4 @@
-use crate::catacombs::catacombs_loot::LootChest;
+use crate::catacombs::catacombs_loot::{LootChest, TestingQualityIncrease};
 use crate::catacombs::catacombs_loot_calculator::{cache_chances_per_rng_meter_value, calculate_average_chances, calculate_quality, AveragesCalculationResult, ChanceAndWeight, RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData};
 use crate::catacombs::catacombs_page::CalculatorType::{AveragesLootTable, SpecificEntryRollCombinations, RandomLootTable, RngMeterDeselection};
 use crate::catacombs::{catacombs_loot, catacombs_loot_calculator, options};
@@ -25,6 +25,7 @@ pub struct CatacombsLootPage {
     pub treasure_accessory_multiplier: f64,
     pub boss_luck_increase: u8,
     pub catacombs_box_attribute_increase: u8,
+    pub testing_quality_bonus: TestingQualityIncrease,
     pub s_plus: bool,
     pub forced_s_plus_const: bool,
     pub rng_meter_data: RngMeterData,
@@ -94,6 +95,8 @@ impl eframe::App for CatacombsLootPage {
                             ui.end_row();
                             options::add_chest_options(self, ui);
                             ui.end_row();
+                            options::add_testing_quality_option(self, ui);
+                            ui.end_row();
                             options::add_rng_meter_options(self, ui);
 
                             if self.calculator_type == RngMeterDeselection {
@@ -101,7 +104,7 @@ impl eframe::App for CatacombsLootPage {
                                 ui.end_row();
                             }
 
-                            #[cfg(not(target_arch = "wasm32"))]
+                            // 7#[cfg(not(target_arch = "wasm32"))]
                             if self.calculator_type == AveragesLootTable && self.get_loot_table_chances().is_some() {
                                 options::add_comparison_options(self, ui);
                                 ui.end_row();
@@ -138,6 +141,7 @@ impl eframe::App for CatacombsLootPage {
                             self.treasure_accessory_multiplier,
                             self.boss_luck_increase,
                             self.catacombs_box_attribute_increase,
+                            &self.testing_quality_bonus,
                             self.s_plus || chest.require_s_plus(),
                         );
 
@@ -162,6 +166,7 @@ impl eframe::App for CatacombsLootPage {
                             self.treasure_accessory_multiplier,
                             self.boss_luck_increase,
                             self.catacombs_box_attribute_increase,
+                            &self.testing_quality_bonus,
                             self.s_plus || chest.require_s_plus(),
                         );
 
@@ -197,6 +202,7 @@ impl eframe::App for CatacombsLootPage {
                             self.treasure_accessory_multiplier,
                             self.boss_luck_increase,
                             self.catacombs_box_attribute_increase,
+                            &self.testing_quality_bonus,
                             self.s_plus || chest.require_s_plus(),
                         );
 
@@ -253,6 +259,7 @@ impl eframe::App for CatacombsLootPage {
                                     self.treasure_accessory_multiplier,
                                     self.boss_luck_increase,
                                     self.catacombs_box_attribute_increase,
+                                    &self.testing_quality_bonus,
                                     self.s_plus || chest.require_s_plus(),
                                 );
 
@@ -394,6 +401,7 @@ impl CatacombsLootPage {
             treasure_accessory_multiplier: 1.0,
             boss_luck_increase: 0,
             catacombs_box_attribute_increase: 0,
+            testing_quality_bonus: TestingQualityIncrease::default(),
             s_plus: false,
             forced_s_plus_const: true,
             rng_meter_data: Default::default(),
@@ -438,6 +446,7 @@ impl CatacombsLootPage {
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
             self.catacombs_box_attribute_increase,
+            &self.testing_quality_bonus,
             self.s_plus || chest.require_s_plus(),
         );
 
@@ -652,6 +661,7 @@ impl CatacombsLootPage {
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
             self.catacombs_box_attribute_increase,
+            &self.testing_quality_bonus,
             self.s_plus || chest.require_s_plus(),
         );
 
@@ -718,6 +728,7 @@ impl CatacombsLootPage {
             self.treasure_accessory_multiplier,
             self.boss_luck_increase,
             self.catacombs_box_attribute_increase,
+            &self.testing_quality_bonus,
             self.s_plus || chest.require_s_plus(),
         );
 
@@ -744,7 +755,7 @@ impl CatacombsLootPage {
                 ui.strong("Added Cost");
             });
             header.col(|ui| {
-                ui.strong(format!("Quality ({})", starting_quality));
+                ui.strong(format!("Quality ({starting_quality})"));
             });
             header.col(|ui| {
                 ui.strong("Weight (Total)");
@@ -844,6 +855,7 @@ impl CatacombsLootPage {
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
         self.catacombs_box_attribute_increase.hash(&mut hasher);
+        self.testing_quality_bonus.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.chest.hash(&mut hasher);
         self.rng_meter_data.selected_xp.hash(&mut hasher);
@@ -859,6 +871,7 @@ impl CatacombsLootPage {
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
         self.catacombs_box_attribute_increase.hash(&mut hasher);
+        self.testing_quality_bonus.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.rng_meter_data.selected_item.hash(&mut hasher);
         hasher.finish()
@@ -872,14 +885,14 @@ impl CatacombsLootPage {
             .hash(&mut hasher);
         self.boss_luck_increase.hash(&mut hasher);
         self.catacombs_box_attribute_increase.hash(&mut hasher);
+        self.testing_quality_bonus.hash(&mut hasher);
         self.floor.hash(&mut hasher);
         self.chest.hash(&mut hasher);
         self.rng_meter_data.selected_item.hash(&mut hasher);
         self.rng_meter_data.selected_xp.hash(&mut hasher);
         self.rng_meter_calculation_runs.hash(&mut hasher);
         self.rng_meter_calculation_iterations.hash(&mut hasher);
-        self.rng_meter_calculation_use_kismet_feathers
-            .hash(&mut hasher);
+        self.rng_meter_calculation_use_kismet_feathers.hash(&mut hasher);
         hasher.finish()
     }
 

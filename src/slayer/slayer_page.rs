@@ -175,10 +175,12 @@ impl SlayerLootPage {
                         for replacement_entry in highest_tier_chest.loot.iter() {
                             if replacement_entry.to_string() == selected_item_data.identifier {
                                 let item_weight = replacement_entry.get_weight();
-                                let required_xp: i32 = (300.0
-                                    * (highest_tier_chest_total_weight as f32 / item_weight as f32))
-                                    .round()
-                                    as i32;
+                                let highest_base_drop_rate = highest_tier_chest_total_weight as f32 / item_weight as f32;
+                                let required_xp: i32 = if boss_type.eq("Vampire") {
+                                    25000.0 / highest_base_drop_rate
+                                } else {
+                                    50000.0 / highest_base_drop_rate
+                                }.round() as i32;
 
                                 let lowest_match = find_matching_item_from_lowest_chest(
                                     replacement_entry,
@@ -186,14 +188,11 @@ impl SlayerLootPage {
                                 )
                                 .unwrap();
 
-                                selected_item_data.lowest_boss_level =
-                                    lowest_match.0.boss_tier.clone();
-                                selected_item_data.lowest_tier_chest_entry =
-                                    Rc::clone(lowest_match.1);
+                                selected_item_data.lowest_boss_level = lowest_match.0.boss_tier;
+                                selected_item_data.lowest_tier_chest_entry = Rc::clone(lowest_match.1);
 
                                 selected_item_data.required_xp = required_xp;
-                                selected_item_data.highest_tier_chest_entry =
-                                    Rc::clone(replacement_entry);
+                                selected_item_data.highest_tier_chest_entry = Rc::clone(replacement_entry);
                                 self.rng_meter_data.selected_xp = selected_xp.min(required_xp);
 
                                 reset_selected = false;
@@ -256,8 +255,8 @@ impl SlayerLootPage {
         if self.boss_type.is_none() {
             return;
         }
-        let floor = self.boss_type.as_ref().unwrap();
-        let highest_tier_chest = self.loot.get(floor).unwrap().last().unwrap();
+        let boss_type = self.boss_type.as_ref().unwrap();
+        let highest_tier_chest = self.loot.get(boss_type).unwrap().last().unwrap();
         let total_weight: i32 = highest_tier_chest
             .loot
             .iter()
@@ -277,10 +276,13 @@ impl SlayerLootPage {
             .selected_item
             .as_ref()
             .map(|entry| {
-                // todo fix required xp logic
-                let required_xp: i32 = (300.0
-                    * (total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32))
-                    .round() as i32;
+                let highest_base_drop_rate = total_weight as f32 / entry.highest_tier_chest_entry.get_weight() as f32;
+                let required_xp: i32 = if boss_type.eq("Vampire") {
+                    25000.0 / highest_base_drop_rate
+                } else {
+                    50000.0 / highest_base_drop_rate
+                }.round() as i32;
+                
                 let mut text = RichText::new(format!(
                     "{} ({} XP)",
                     entry.highest_tier_chest_entry,
@@ -349,7 +351,7 @@ impl SlayerLootPage {
 
                         let lowest_match = find_matching_item_from_lowest_chest(
                             entry,
-                            self.loot.get(floor).unwrap(),
+                            self.loot.get(boss_type).unwrap(),
                         )
                         .unwrap();
 
@@ -427,7 +429,7 @@ impl SlayerLootPage {
                     if ui.button(button_text).clicked() {
                         let lowest_tier_chest = self
                             .loot
-                            .get(floor)
+                            .get(boss_type)
                             .unwrap()
                             .iter()
                             .find(|c| c.boss_tier == selected_item_data.lowest_boss_level)

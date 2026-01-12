@@ -3,7 +3,7 @@ use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 use crate::catacombs::catacombs_page::CalculatorType::AveragesLootTable;
 use crate::catacombs::catacombs_page::{CalculatorType, CatacombsLootPage};
 use crate::images;
-use egui::{Checkbox, Label, RichText, Slider, TextWrapMode, Ui};
+use egui::{Checkbox, DragValue, Label, RichText, Slider, TextWrapMode, Ui};
 use num_format::{Locale, ToFormattedString};
 use std::rc::Rc;
 
@@ -49,6 +49,32 @@ pub fn add_catacombs_box_attribute_options(calc: &mut CatacombsLootPage, ui: &mu
     });
     ui.horizontal(|ui| {
         ui.add(Slider::new(&mut calc.catacombs_box_attribute_increase, 0..=13));
+    });
+}
+
+pub fn add_testing_quality_option(calc: &mut CatacombsLootPage, ui: &mut Ui) {
+    ui.heading("Debug Options");
+    ui.end_row();
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "command_block.gif");
+        ui.label("Quality Increase: ");
+    });
+    ui.horizontal(|ui| {
+        let suffix = if calc.testing_quality_bonus.is_percentage { "%" } else { "" };
+        ui.horizontal(|ui| {
+            ui.add(DragValue::new(&mut calc.testing_quality_bonus.amount).speed(1).range(0..=99).suffix(suffix));
+            if calc.testing_quality_bonus.amount != 0 && ui.button("Reset").clicked() {
+                calc.testing_quality_bonus.amount = 0;
+            }
+        })
+    });
+    ui.end_row();
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "chicken_because_why_not.png");
+        ui.label("Is Percentage: ");
+    });
+    ui.horizontal(|ui| {
+        ui.checkbox(&mut calc.testing_quality_bonus.is_percentage, "Click to toggle");
     });
 }
 
@@ -321,9 +347,9 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
             }
         });
 
-    ui.end_row();
 
     if let Some(selected_item_data) = calc.rng_meter_data.selected_item.as_ref() {
+        ui.end_row();
         let selected_item = &selected_item_data.lowest_tier_chest_entry;
         ui.horizontal(|ui| {
             images::add_first_valid_image(

@@ -4,7 +4,6 @@ use include_dir::Dir;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
-use std::process::id;
 use std::rc::Rc;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Hash)]
@@ -66,6 +65,12 @@ impl ChestType {
             ChestType::Bedrock => 6,
         }
     }
+}
+
+#[derive(Default, Hash)]
+pub struct TestingQualityIncrease {
+    pub amount: u8,
+    pub is_percentage: bool
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Eq, Hash)]
