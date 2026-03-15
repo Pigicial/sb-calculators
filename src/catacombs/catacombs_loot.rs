@@ -1,6 +1,7 @@
 use crate::catacombs::catacombs_loot_calculator::SelectedRngMeterItem;
 use convert_case::{Case, Casing};
 use include_dir::Dir;
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt::Display;
@@ -79,40 +80,40 @@ pub enum LootEntry {
     Item {
         item: String,
         item_name: Option<String>,
-        weight: u16,
+        weight: OrderedFloat<f32>,
         quality: i16,
         extra_chest_cost: u32,
     },
     Pet {
         pet: String,
         tier: String,
-        weight: u16,
+        weight: OrderedFloat<f32>,
         quality: i16,
         extra_chest_cost: u32,
     },
     Enchantment {
         enchantment: String,
         enchantment_level: u8,
-        weight: u16,
+        weight: OrderedFloat<f32>,
         quality: i16,
         extra_chest_cost: u32,
     },
     Essence {
         essence_type: String,
         essence_amount: u8,
-        weight: u16,
+        weight: OrderedFloat<f32>,
         quality: i16,
         extra_chest_cost: u32,
     },
 }
 
 impl LootEntry {
-    pub fn get_weight(&self) -> u16 {
+    pub fn get_weight(&self) -> f32 {
         match self {
-            LootEntry::Item { weight, .. } => *weight,
-            LootEntry::Pet { weight, .. } => *weight,
-            LootEntry::Enchantment { weight, .. } => *weight,
-            LootEntry::Essence { weight, .. } => *weight,
+            LootEntry::Item { weight, .. } => weight.0,
+            LootEntry::Pet { weight, .. } => weight.0,
+            LootEntry::Enchantment { weight, .. } => weight.0,
+            LootEntry::Essence { weight, .. } => weight.0,
         }
     }
 

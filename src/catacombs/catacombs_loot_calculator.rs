@@ -135,14 +135,14 @@ pub fn calculate_average_chances(
 
         match entry.as_ref() {
             LootEntry::Essence { weight, quality, .. } => {
-                if weight > &0 && quality > &0 {
+                if weight.0 > 0.0 && quality > &0 {
                     let pointer = Rc::new(RefCell::new(chance_entry));
                     weighted_entries.push(Rc::clone(&pointer));
                     weighted_essence_entry = Some(Rc::clone(&pointer));
-                } else if weight == &0 && quality == &1 {
+                } else if weight.0 == 0.0 && quality == &1 {
                     leftover_essence_entry = Some(Rc::new(RefCell::new(chance_entry)));
                 } else {
-                    assert_eq!(weight, &0, "Weight should be 0");
+                    assert_eq!(weight.0, 0.0, "Weight should be 0");
                     assert_eq!(quality, &0, "Quality should be 0");
                     chance_entry.chance = 1.0;
                     guaranteed_essence_entries.push(chance_entry);
@@ -383,7 +383,7 @@ pub fn generate_random_table(
             LootEntry::Essence {
                 weight, quality, ..
             } => {
-                if weight == &0 && quality == &0 {
+                if weight == &0.0 && quality == &0 {
                     guaranteed_essence_entries.push(RandomlySelectedLootEntry {
                         entry: Rc::clone(entry),
                         used_weight: 0.0,
@@ -393,7 +393,7 @@ pub fn generate_random_table(
                         overall_chance: 1.0,
                     });
                 } else {
-                    weighted_entries.push((Rc::clone(entry), *weight as f64));
+                    weighted_entries.push((Rc::clone(entry), weight.0 as f64));
                 }
             }
             _ => {

@@ -127,10 +127,10 @@ pub fn add_floor_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
                     let selected_xp = calc.rng_meter_data.selected_xp;
 
                     let highest_tier_chest = calc.loot.get(floor).and_then(|v| v.last()).unwrap();
-                    let highest_tier_chest_total_weight: i32 = highest_tier_chest
+                    let highest_tier_chest_total_weight: f32 = highest_tier_chest
                         .loot
                         .iter()
-                        .map(|e| e.get_weight() as i32)
+                        .map(|e| e.get_weight() as f32)
                         .sum();
 
                     let mut reset_selected = true;
@@ -243,10 +243,10 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     }
     let floor = calc.floor.as_ref().unwrap();
     let highest_tier_chest = calc.loot.get(floor).unwrap().last().unwrap();
-    let total_weight: i32 = highest_tier_chest
+    let total_weight: f32 = highest_tier_chest
         .loot
         .iter()
-        .map(|e| e.get_weight() as i32)
+        .map(|e| e.get_weight() as f32)
         .sum();
 
     ui.heading("RNG Meter");
