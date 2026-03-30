@@ -301,10 +301,11 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
                 let in_loot = entry.1;
                 let entry = entry.0;
 
-                if entry.is_essence_and_can_roll_multiple_times() {
+                if entry.is_essence_and_can_roll_multiple_times() || entry.is_guaranteed() {
                     // essence doesn't show in rng meter
                     continue;
                 }
+                
                 let item_weight = entry.get_weight();
                 let required_xp: i32 =
                     (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;

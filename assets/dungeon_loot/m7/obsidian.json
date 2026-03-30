@@ -182,6 +182,13 @@
       "extra_chest_cost": 0,
       "quality": 0,
       "weight": 0
+    },
+    {
+      "item": "WITHER_SHARD",
+      "item_name": "Wither Shard",
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
     }
   ]
 }

@@ -261,6 +261,13 @@
       "quality": 0,
       "weight": 0,
       "extra_chest_cost": 0
+    },
+    {
+      "item": "APEX_DRAGON_POWER_DRAGON_SHARDS",
+      "item_name": "Apex Dragon or Power Dragon Shard",
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
     }
   ]
 }

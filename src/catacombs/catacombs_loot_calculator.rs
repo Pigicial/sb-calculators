@@ -125,13 +125,19 @@ pub fn calculate_average_chances(
     let mut weighted_essence_entry: Option<Rc<RefCell<LootChanceEntry>>> = None;
 
     let mut leftover_essence_entry: Option<Rc<RefCell<LootChanceEntry>>> = None;
-    let mut guaranteed_essence_entries: Vec<LootChanceEntry> = Vec::new();
+    let mut guaranteed_entries: Vec<LootChanceEntry> = Vec::new();
 
     let mut recursion_data: RecursiveData = Default::default();
     let mut lowest_non_essence_quality: Option<i16> = None;
 
     for entry in &chest.loot {
         let mut chance_entry = LootChanceEntry::new(Rc::clone(entry));
+        
+        if entry.get_weight() == 0 && entry.get_quality() == 0 {
+            chance_entry.chance = 1.0;
+            guaranteed_entries.push(chance_entry);
+            continue
+        }
 
         match entry.as_ref() {
             LootEntry::Essence { weight, quality, .. } => {
@@ -145,7 +151,7 @@ pub fn calculate_average_chances(
                     assert_eq!(weight, &0, "Weight should be 0");
                     assert_eq!(quality, &0, "Quality should be 0");
                     chance_entry.chance = 1.0;
-                    guaranteed_essence_entries.push(chance_entry);
+                    guaranteed_entries.push(chance_entry);
                 }
             }
             _ => {
@@ -207,7 +213,7 @@ pub fn calculate_average_chances(
             let mut results = data.weighted_entries;
             results.push(data.leftover_essence_entry);
 
-            for guaranteed_entry in guaranteed_essence_entries {
+            for guaranteed_entry in guaranteed_entries {
                 results.push(Rc::new(RefCell::new(guaranteed_entry)));
             }
 
@@ -238,6 +244,7 @@ fn sort_entries(entries: &mut [Rc<RefCell<LootChanceEntry>>], rng_meter_item: Op
             .eq(&rng_meter_string)
             .cmp(&a.borrow().entry.to_string().eq(&rng_meter_string))
             .then((a.borrow().chance == 0.0).cmp(&(b.borrow().chance == 0.0)))
+            .then(a.borrow().entry.is_guaranteed().cmp(&b.borrow().entry.is_guaranteed()))
             .then(
                 a.borrow().entry
                     .is_essence_and_can_roll_multiple_times()
@@ -284,26 +291,6 @@ fn process_random_entries(
         } else {
             0
         };
-        
-        /*
-        let mut combination = if let Some(last_combination) = &last_combination {
-            last_combination.clone() 
-        } else {
-            SlotCombinations {
-                entries: Vec::new(),
-                total_chance: 1.0,
-            }
-        };
-
-        if entry.borrow().entry.to_string().contains("Handle") {
-            println!("Test {} {} {}", entry_quality, new_remaining_quality, weight_roll_chance);
-        }
-        
-        combination.add_entry(Rc::clone(entry), weight_roll_chance);
-        if !entry.borrow().entry.is_essence_and_can_roll_multiple_times() {
-            entry.borrow_mut().roll_combinations.push(combination.clone());
-        }
-        */
 
         recursion_data.iterations += 1;
         if depth > recursion_data.highest_depth {
@@ -373,56 +360,55 @@ pub fn generate_random_table(
     rng_meter_data: &RngMeterData,
 ) -> Vec<RandomlySelectedLootEntry> {
     let mut rolled_entries: Vec<RandomlySelectedLootEntry> = Vec::new();
-    let mut guaranteed_essence_entries = Vec::new();
+    let mut guaranteed_entries = Vec::new();
 
     let mut weighted_entries: Vec<(Rc<LootEntry>, f64)> = Vec::new();
 
+    
     for entry in &chest.loot {
-        let mut weight = entry.get_weight() as f64;
-        match entry.as_ref() {
-            LootEntry::Essence {
-                weight, quality, ..
-            } => {
-                if weight == &0 && quality == &0 {
-                    guaranteed_essence_entries.push(RandomlySelectedLootEntry {
-                        entry: Rc::clone(entry),
-                        used_weight: 0.0,
-                        total_weight: 0.0,
-                        before_quality: 0,
-                        roll_chance: 1.0,
-                        overall_chance: 1.0,
-                    });
-                } else {
-                    weighted_entries.push((Rc::clone(entry), *weight as f64));
-                }
-            }
-            _ => {
-                if let Some(selected_item_data) = &rng_meter_data.selected_item {
-                    if selected_item_data.identifier.eq(&entry.to_string()) {
-                        let multiplier = 1.0
-                            + (2.0 * rng_meter_data.selected_xp as f32
-                            / selected_item_data.required_xp as f32)
-                            .min(2.0) as f64;
-                        weight *= multiplier;
 
-                        // only guarantee the drop in the lowest tier chest
-                        if multiplier >= 3.0 && &selected_item_data.lowest_tier_chest_entry == entry
-                        {
-                            rolled_entries.push(RandomlySelectedLootEntry {
-                                entry: Rc::clone(entry),
-                                used_weight: weight,
-                                total_weight: weight,
-                                before_quality: quality,
-                                roll_chance: 1.0,
-                                overall_chance: 1.0,
-                            });
-                            quality -= entry.get_quality();
-                            continue;
-                        }
+        if entry.get_weight() == 0 && entry.get_quality() == 0 {
+            guaranteed_entries.push(RandomlySelectedLootEntry {
+                entry: Rc::clone(entry),
+                used_weight: 0.0,
+                total_weight: 0.0,
+                before_quality: 0,
+                roll_chance: 1.0,
+                overall_chance: 1.0,
+            });
+            continue
+        }
+
+        let mut weight = entry.get_weight() as f64;
+        
+        if let LootEntry::Essence { weight, .. } = entry.as_ref() {
+            weighted_entries.push((Rc::clone(entry), *weight as f64));
+        } else {
+            if let Some(selected_item_data) = &rng_meter_data.selected_item {
+                if selected_item_data.identifier.eq(&entry.to_string()) {
+                    let multiplier = 1.0
+                        + (2.0 * rng_meter_data.selected_xp as f32
+                        / selected_item_data.required_xp as f32)
+                        .min(2.0) as f64;
+                    weight *= multiplier;
+
+                    // only guarantee the drop in the lowest tier chest
+                    if multiplier >= 3.0 && &selected_item_data.lowest_tier_chest_entry == entry
+                    {
+                        rolled_entries.push(RandomlySelectedLootEntry {
+                            entry: Rc::clone(entry),
+                            used_weight: weight,
+                            total_weight: weight,
+                            before_quality: quality,
+                            roll_chance: 1.0,
+                            overall_chance: 1.0,
+                        });
+                        quality -= entry.get_quality();
+                        continue;
                     }
                 }
-                weighted_entries.push((Rc::clone(entry), weight));
             }
+            weighted_entries.push((Rc::clone(entry), weight));
         };
     }
 
@@ -466,8 +452,8 @@ pub fn generate_random_table(
         weighted_entries.retain(|(e, _)| quality >= e.get_quality());
     }
 
-    for essence_entry in guaranteed_essence_entries {
-        rolled_entries.push(essence_entry);
+    for guaranteed_entry in guaranteed_entries {
+        rolled_entries.push(guaranteed_entry);
     }
 
     rolled_entries

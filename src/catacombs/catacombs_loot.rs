@@ -147,7 +147,7 @@ impl LootEntry {
             "https://wiki.hypixel.net/{}",
             match self {
                 LootEntry::Item { item, .. } => item.clone(),
-                LootEntry::Pet { pet, .. } => pet.to_case(Case::Title),
+                LootEntry::Pet { pet, .. } => format!("{} Pet", pet.to_case(Case::Title)),
                 LootEntry::Enchantment { enchantment, .. } =>
                     format!("{} Enchantment", enchantment.to_case(Case::Title)),
                 LootEntry::Essence { essence_type, .. } =>
@@ -158,6 +158,10 @@ impl LootEntry {
 
     pub fn is_essence_and_can_roll_multiple_times(&self) -> bool {
         matches!(self, LootEntry::Essence { .. })
+    }
+    
+    pub fn is_guaranteed(&self) -> bool {
+        self.get_weight() == 0 && self.get_quality() == 0
     }
 
     pub fn get_possible_file_names(&self) -> Vec<String> {
@@ -184,7 +188,7 @@ impl Display for LootEntry {
                 let default = item.to_case(Case::Title);
                 write!(f, "{}", item_name.as_ref().unwrap_or(&default))
             }
-            LootEntry::Pet { pet, .. } => write!(f, "{}", pet.to_case(Case::Title)),
+            LootEntry::Pet { pet, .. } => write!(f, "{} Pet", pet.to_case(Case::Title)),
             LootEntry::Enchantment {
                 enchantment,
                 enchantment_level,
