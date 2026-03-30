@@ -117,7 +117,8 @@ impl eframe::App for CatacombsLootPage {
             if cfg!(not(target_arch = "wasm32")) {
                 ui.horizontal_wrapped(|ui| {
                     ui.selectable_value(&mut self.calculator_type, AveragesLootTable, "Loot Tables");
-                    ui.selectable_value(&mut self.calculator_type, SpecificEntryRollCombinations, "Roll Combinations");
+                    // todo: broken it seems, so hiding
+                    //ui.selectable_value(&mut self.calculator_type, SpecificEntryRollCombinations, "Roll Combinations");
                     ui.selectable_value(&mut self.calculator_type, RandomLootTable, "Casino");
                     ui.selectable_value(&mut self.calculator_type, RngMeterDeselection, "RNG Meter Deselection Calculator");
                 });
