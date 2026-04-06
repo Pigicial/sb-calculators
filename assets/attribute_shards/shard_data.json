@@ -752,7 +752,8 @@
     "sources": {
       "crafting": {
         "collection": "Fig Collection VII"
-      }
+      },
+      "blacklisted_from_regular_fusion": true
     }
   },
   {
@@ -1155,7 +1156,8 @@
     "sources": {
       "crafting": {
         "collection": "Mangrove Collection VI"
-      }
+      },
+      "blacklisted_from_regular_fusion": true
     }
   },
   {
