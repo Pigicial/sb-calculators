@@ -108,6 +108,10 @@ impl ShardData {
     }
     
     pub fn get_amount_consumed_in_fusion(&self) -> u8 {
+        if self.shard_name.eq("Chameleon") {
+            return 1;
+        }
+        
         if let Some(families) = &self.families {
             if families.contains(&"Amphibian".to_string()) || families.contains(&"Reptile".to_string()) || families.contains(&"Elemental".to_string()) {
                 return 2;        
