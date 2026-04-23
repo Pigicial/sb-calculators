@@ -145,7 +145,7 @@ pub fn add_floor_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
                                 replacement_entry,
                                 calc.loot.get(floor).unwrap(),
                             )
-                            .unwrap();
+                                .unwrap();
 
                             selected_item_data.lowest_tier_chest_type =
                                 lowest_match.0.chest_type.clone();
@@ -207,7 +207,7 @@ pub fn add_comparison_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     if chances.is_none() {
         return;
     }
-    
+
     let hash = calc.generate_loot_table_hash();
     ui.heading("Comparisons");
     ui.horizontal(|ui| {
@@ -227,13 +227,13 @@ pub fn add_comparison_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
         });
     }
     ui.end_row();
-    
+
     if calc.comparison_hash.is_some() {
         ui.horizontal(|_| {});
         ui.horizontal(|ui| {
             if ui.button("Clear Comparison").clicked() {
                 calc.comparison_hash = None;
-            } 
+            }
         });
     }
 }
@@ -305,7 +305,7 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
                     // essence doesn't show in rng meter
                     continue;
                 }
-                
+
                 let item_weight = entry.get_weight();
                 let required_xp: i32 =
                     (300.0 * (total_weight as f32 / item_weight as f32)).round() as i32;
@@ -449,6 +449,60 @@ pub fn add_rng_meter_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     ui.end_row();
 }
 
+pub fn add_wiki_item_option(calc: &mut CatacombsLootPage, ui: &mut Ui) {
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "oak_sign.png");
+        ui.label("Item Search:");
+    });
+    ui.text_edit_singleline(&mut calc.wiki_selected_item_search_query);
+    ui.end_row();
+
+    ui.horizontal(|ui| {
+        images::add_image(&calc.images, ui, "painting.png");
+        ui.label("Item: ");
+    });
+
+    let default = String::from("None");
+    let selected_item_string = calc.wiki_selected_item_identifier.as_ref().unwrap_or(&default);
+
+    egui::ComboBox::from_id_salt("select_item")
+        .selected_text(selected_item_string)
+        .height(150.0)
+        .show_ui(ui, |ui| {
+            ui.selectable_value(&mut calc.wiki_selected_item_identifier, None, "None");
+
+            let mut loot_names = Vec::new();
+            for chests in calc.loot.values() {
+                for chest in chests {
+                    for loot in chest.loot.iter() {
+                        if loot.is_guaranteed() || loot.is_essence_and_can_roll_multiple_times() {
+                            continue;
+                        }
+
+                        let identifier = loot.to_string();
+                        if !identifier.to_lowercase().contains(calc.wiki_selected_item_search_query.to_lowercase().as_str()) {
+                            continue;
+                        }
+                        
+                        if !loot_names.contains(&identifier) {
+                            loot_names.push(identifier);
+                        }
+                    }
+                }
+            }
+
+            loot_names.sort();
+            for loot_name in loot_names {
+                let label = egui::SelectableLabel::new(calc.wiki_selected_item_identifier.as_ref().is_some_and(|s| s == &loot_name), loot_name.clone());
+                if ui.add(label).clicked() {
+                    calc.wiki_selected_item_identifier = Some(loot_name);
+                }
+            }
+        });
+
+    ui.end_row();
+}
+
 pub fn add_rng_meter_simulation_options(calc: &mut CatacombsLootPage, ui: &mut Ui) {
     if calc.floor.is_none() {
         return;
@@ -543,6 +597,24 @@ pub fn floor_to_text(floor: String) -> String {
         }
         'm' => {
             format!("Master Mode Floor {}", floor.chars().last().unwrap())
+        }
+        _ => floor.to_string(),
+    }
+}
+
+
+pub fn floor_to_wiki_text(floor: &String) -> String {
+    let raw_floor = floor.to_uppercase();
+    match floor.chars().next().unwrap() {
+        'f' => {
+            let floor = floor.chars().last().unwrap();
+            let roman = roman::to(floor.to_digit(10).unwrap() as i32).unwrap();
+            format!("[[File:{raw_floor} RNG Meter.png|25px]] [[The Catacombs - Floor {roman}|Floor {roman}]]")
+        }
+        'm' => {
+            let floor = floor.chars().last().unwrap();
+            let roman = roman::to(floor.to_digit(10).unwrap() as i32).unwrap();
+            format!("[[File:{raw_floor} RNG Meter.png|25px]] [[The Catacombs - Floor {roman}|Floor {roman}]] ({{{{Red|Master Mode}}}})")
         }
         _ => floor.to_string(),
     }

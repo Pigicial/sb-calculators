@@ -87,7 +87,7 @@ impl LootEntry {
 
     pub fn get_wiki_page_name(&self) -> String {
         format!(
-            "https://wiki.hypixel.net/{}",
+            "https://hypixelskyblock.minecraft.wiki/w/{}",
             match self {
                 LootEntry::Item { item, .. } => item.clone(),
                 LootEntry::Enchantment { enchantment, .. } =>

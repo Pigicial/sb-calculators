@@ -1,10 +1,11 @@
 use crate::catacombs::catacombs_loot::{LootChest, TestingQualityIncrease};
 use crate::catacombs::catacombs_loot_calculator::{cache_chances_per_rng_meter_value, calculate_average_chances, calculate_quality, AveragesCalculationResult, ChanceAndWeight, RandomlySelectedLootEntry, RngMeterCalculation, RngMeterData};
-use crate::catacombs::catacombs_page::CalculatorType::{AveragesLootTable, SpecificEntryRollCombinations, RandomLootTable, RngMeterDeselection};
+use crate::catacombs::catacombs_page::CalculatorType::{AveragesLootTable, RandomLootTable, RngMeterDeselection, SpecificEntryRollCombinations, WikiChestTable, WikiItemFloorTable};
 use crate::catacombs::{catacombs_loot, catacombs_loot_calculator, options};
 use crate::images;
 use eframe::epaint::{Color32, TextureHandle};
-use egui::{Context, Grid, Label, RichText, ScrollArea, SidePanel, TextStyle, TextWrapMode, Ui};
+use egui::text::LayoutJob;
+use egui::{Align, Context, Grid, Label, RichText, ScrollArea, SidePanel, TextStyle, TextWrapMode, Ui};
 use egui_extras::{Column, TableBuilder};
 use egui_plot::LineStyle::Solid;
 use egui_plot::{Legend, Line, Plot, PlotPoints};
@@ -15,6 +16,7 @@ use std::collections::hash_map::Entry;
 use std::collections::{BTreeMap, HashMap};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
+use crate::catacombs::options::{floor_to_text, floor_to_wiki_text};
 
 static ASSETS_DIR: Dir<'static> = include_dir!("assets");
 
@@ -30,6 +32,8 @@ pub struct CatacombsLootPage {
     pub forced_s_plus_const: bool,
     pub rng_meter_data: RngMeterData,
 
+    pub wiki_selected_item_identifier: Option<String>,
+    pub wiki_selected_item_search_query: String,
     pub calculator_type: CalculatorType,
     hashed_chances: HashMap<u64, AveragesCalculationResult>,
     pub comparison_hash: Option<u64>,
@@ -54,6 +58,8 @@ pub enum CalculatorType {
     SpecificEntryRollCombinations,
     RandomLootTable,
     RngMeterDeselection,
+    WikiChestTable,
+    WikiItemFloorTable,
 }
 
 impl CalculatorType {
@@ -83,31 +89,39 @@ impl eframe::App for CatacombsLootPage {
                         .spacing([15.0, 4.0])
                         .striped(true)
                         .show(ui, |ui| {
-                            options::add_treasure_talisman_options(self, ui);
-                            ui.end_row();
-                            options::add_boss_luck_options(self, ui);
-                            ui.end_row();
-                            options::add_catacombs_box_attribute_options(self, ui);
-                            ui.end_row();
-                            options::add_s_plus_options(self, ui);
-                            ui.end_row();
+                            if self.calculator_type == WikiItemFloorTable {
+                                options::add_wiki_item_option(self, ui);
+                                return;
+                            }
+
                             options::add_floor_options(self, ui);
                             ui.end_row();
                             options::add_chest_options(self, ui);
-                            ui.end_row();
-                            options::add_testing_quality_option(self, ui);
-                            ui.end_row();
-                            options::add_rng_meter_options(self, ui);
 
-                            if self.calculator_type == RngMeterDeselection {
-                                options::add_rng_meter_simulation_options(self, ui);
+                            if self.calculator_type != WikiChestTable {
                                 ui.end_row();
-                            }
+                                options::add_treasure_talisman_options(self, ui);
+                                ui.end_row();
+                                options::add_boss_luck_options(self, ui);
+                                ui.end_row();
+                                options::add_catacombs_box_attribute_options(self, ui);
+                                ui.end_row();
+                                options::add_s_plus_options(self, ui);
+                                ui.end_row();
+                                options::add_testing_quality_option(self, ui);
+                                ui.end_row();
+                                options::add_rng_meter_options(self, ui);
 
-                            // 7#[cfg(not(target_arch = "wasm32"))]
-                            if self.calculator_type == AveragesLootTable && self.get_loot_table_chances().is_some() {
-                                options::add_comparison_options(self, ui);
-                                ui.end_row();
+                                if self.calculator_type == RngMeterDeselection {
+                                    options::add_rng_meter_simulation_options(self, ui);
+                                    ui.end_row();
+                                }
+
+                                // 7#[cfg(not(target_arch = "wasm32"))]
+                                if self.calculator_type == AveragesLootTable && self.get_loot_table_chances().is_some() {
+                                    options::add_comparison_options(self, ui);
+                                    ui.end_row();
+                                }
                             }
                         });
                 });
@@ -121,17 +135,18 @@ impl eframe::App for CatacombsLootPage {
                     //ui.selectable_value(&mut self.calculator_type, SpecificEntryRollCombinations, "Roll Combinations");
                     ui.selectable_value(&mut self.calculator_type, RandomLootTable, "Casino");
                     ui.selectable_value(&mut self.calculator_type, RngMeterDeselection, "RNG Meter Deselection Calculator");
+                    ui.selectable_value(&mut self.calculator_type, CalculatorType::WikiChestTable, "Wiki Chest Table Syntax");
+                    ui.selectable_value(&mut self.calculator_type, CalculatorType::WikiItemFloorTable, "Wiki Item Table Syntax");
                 });
                 ui.separator();
             }
 
-            if self.floor.is_none() || self.chest.is_none() {
-                ui.label("Select a floor and chest to see its loot.");
-                return;
-            }
-
             match self.calculator_type {
                 AveragesLootTable => {
+                    if self.floor.is_none() || self.chest.is_none() {
+                        ui.label("Select a floor and chest to see its loot.");
+                        return;
+                    }
                     let hash = self.generate_loot_table_hash();
 
                     let chances = self.get_loot_table_chances();
@@ -157,6 +172,10 @@ impl eframe::App for CatacombsLootPage {
                     });
                 }
                 SpecificEntryRollCombinations => {
+                    if self.floor.is_none() || self.chest.is_none() {
+                        ui.label("Select a floor and chest to see its loot.");
+                        return;
+                    }
                     let hash = self.generate_loot_table_hash();
 
                     let chances = self.get_loot_table_chances();
@@ -183,6 +202,10 @@ impl eframe::App for CatacombsLootPage {
                 }
                 #[cfg(not(target_arch = "wasm32"))]
                 RandomLootTable => {
+                    if self.floor.is_none() || self.chest.is_none() {
+                        ui.label("Select a floor and chest to see its loot.");
+                        return;
+                    }
                     let hash = self.generate_loot_table_hash();
                     let current_hash = self.random_table_source_options_hash.unwrap_or(0);
 
@@ -219,6 +242,10 @@ impl eframe::App for CatacombsLootPage {
                 }
                 #[cfg(not(target_arch = "wasm32"))]
                 RngMeterDeselection => {
+                    if self.floor.is_none() || self.chest.is_none() {
+                        ui.label("Select a floor and chest to see its loot.");
+                        return;
+                    }
                     let selected_item_data = &self.rng_meter_data.selected_item;
                     if selected_item_data.is_none() {
                         return;
@@ -384,6 +411,61 @@ impl eframe::App for CatacombsLootPage {
                             });
                     }
                 }
+                CalculatorType::WikiChestTable => {
+                    if self.floor.is_none() || self.chest.is_none() {
+                        ui.label("Select a floor and chest to see its loot.");
+                        return;
+                    }
+                    let base_table_hash = self.generate_base_wiki_table_hash();
+                    let max_table_hash = self.generate_max_wiki_table_hash();
+                    let chest = self.chest.as_ref().unwrap();
+
+                    let base_table_quality = calculate_quality(chest,
+                                                               1.0,
+                                                               0,
+                                                               0,
+                                                               &TestingQualityIncrease::default(),
+                                                               chest.require_s_plus(),
+                    );
+                    let max_table_quality = calculate_quality(chest,
+                                                              1.03,
+                                                              10,
+                                                              13,
+                                                              &TestingQualityIncrease::default(),
+                                                              true,
+                    );
+
+                    let base_chances = self.get_loot_table_chances_by_hash(base_table_hash);
+                    if base_chances.is_none() {
+                        let new_chances = calculate_average_chances(chest, base_table_quality, &RngMeterData::default());
+                        self.hashed_chances.insert(base_table_hash, new_chances);
+                    }
+
+                    let max_chances = self.get_loot_table_chances_by_hash(max_table_hash);
+                    if max_chances.is_none() {
+                        let new_chances = calculate_average_chances(chest, max_table_quality, &RngMeterData::default());
+                        self.hashed_chances.insert(max_table_hash, new_chances);
+                    }
+
+
+                    // Horizontal scrolling is done here, vertical scrolling is done on the table scrolling end
+                    // (this took painfully long to figure out)
+                    ScrollArea::horizontal().id_salt("wiki_cata_loot").show(ui, |ui| {
+                        self.add_wiki_loot_section(ui, ctx, base_table_hash, max_table_hash, base_table_quality, max_table_quality);
+                    });
+                }
+                WikiItemFloorTable => {
+                    if self.wiki_selected_item_identifier.is_none() {
+                        ui.label("Select an item obtainable from any of its floors to see its loot.");
+                        return;
+                    }
+
+                    // Horizontal scrolling is done here, vertical scrolling is done on the table scrolling end
+                    // (this took painfully long to figure out)
+                    ScrollArea::horizontal().id_salt("wiki_item_loot").show(ui, |ui| {
+                        self.add_wiki_single_item_loot_section(ui, ctx);
+                    });
+                }
                 _ => {}
             }
         });
@@ -407,6 +489,8 @@ impl CatacombsLootPage {
             forced_s_plus_const: true,
             rng_meter_data: Default::default(),
 
+            wiki_selected_item_identifier: None,
+            wiki_selected_item_search_query: String::new(),
             hashed_chances: HashMap::new(),
             calculator_type: AveragesLootTable,
             random_table: None,
@@ -594,7 +678,7 @@ impl CatacombsLootPage {
                             .find(|e| e.borrow().entry.to_string() == entry.to_string());
 
                         row.col(|_| {}); // spacer
-                        
+
                         if let Some(previous_chance) = previous_chance {
                             let previous_chance = previous_chance.borrow().chance;
                             row.col(|ui| {
@@ -615,6 +699,244 @@ impl CatacombsLootPage {
                 });
             }
         });
+    }
+
+    fn add_wiki_loot_section(&mut self, ui: &mut Ui, ctx: &Context, base_table_hash: u64, max_table_hash: u64, base_quality: i16, max_quality: i16) {
+        let base_chances = self.get_loot_table_chances_by_hash(base_table_hash);
+        let max_chances = self.get_loot_table_chances_by_hash(max_table_hash);
+        if base_chances.is_none() || max_chances.is_none() {
+            return;
+        }
+
+        let base_chances = base_chances.unwrap();
+        let max_chances = max_chances.unwrap();
+        let chest = self.chest.as_ref().unwrap();
+
+        let mut lines: Vec<String> = Vec::new();
+
+        lines.push("{|class=\"wikitable ct\"".to_string());
+        lines.push(format!("! colspan=\"7\" | [[File:{} Chest Render.png|x40px]] {} [[Dungeon Reward Chest|Chest Loot]] - {}", chest.chest_type, chest.chest_type, floor_to_wiki_text(self.floor.as_ref().unwrap())));
+        lines.push("|-".to_string());
+        lines.push("! Entry".to_string());
+        lines.push(format!("! Added Cost <br> (Base {{{{C|{}}}}})", chest.base_cost.to_formatted_string(&en)));
+        lines.push("! [[Dungeon_Reward_Chest#Loot_Rolling_Process|Quality]]".to_string());
+        lines.push("! [[Dungeon_Reward_Chest#Loot_Rolling_Process|Weight]]".to_string());
+        lines.push("! First Roll Chance".to_string());
+        if chest.require_s_plus() {
+            lines.push(format!("! Average Chance <br> ({{{{Dungeon Ranking|S+}}}} No Bonuses, {{{{Aqua|{base_quality}}}}} Quality)"));
+        } else {
+            lines.push(format!("! Average Chance <br> (No Bonuses, {{{{Aqua|{base_quality}}}}} Quality)"));
+        }
+        lines.push(format!("! Average Chance <br> ({{{{Dungeon Ranking|S+}}}} [[Dungeon_Reward_Chest#Quality_Upgrades|Max Bonuses]], {{{{Aqua|{max_quality}}}}} Quality)"));
+
+        for base_chance_entry in base_chances.entries.iter() {
+            let base_chance_entry = base_chance_entry.borrow();
+            let loot_entry = &base_chance_entry.entry;
+            let max_chance_entry = max_chances.entries.iter().find(|e| e.borrow().entry == *loot_entry).unwrap().borrow();
+
+            let added_chest_price = loot_entry.get_added_chest_price();
+            let quality = loot_entry.get_quality();
+            let weight = base_chance_entry.used_weight;
+
+            let first_roll_chance = weight / base_chances.total_weight;
+            let no_modifiers_average_chance = base_chance_entry.chance;
+            let max_modifiers_average_chance = max_chance_entry.chance;
+
+            lines.push("|-".to_string());
+            lines.push(format!("| style=\"text-align: left\" | {}", loot_entry.get_wiki_template_reference()));
+            lines.push(format!("| {{{{Coins|{}}}}}", added_chest_price.to_formatted_string(&en)));
+            lines.push(format!("| {{{{Aqua|{quality}}}}}"));
+            lines.push(format!("| {{{{Aqua|{}}}}}", format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.')));
+            lines.push(get_wiki_chance_text(first_roll_chance));
+            lines.push(get_wiki_chance_text(no_modifiers_average_chance));
+            lines.push(get_wiki_chance_text(max_modifiers_average_chance));
+        }
+        lines.push("|}".to_string());
+
+        let line_height = TextStyle::Body
+            .resolve(ui.style())
+            .size
+            .max(ui.spacing().interact_size.y);
+
+        if ui.button("Copy to Clipboard").clicked() {
+            ctx.copy_text(lines.join("\n"));
+        }
+
+        ScrollArea::vertical()
+            .auto_shrink(false)
+            .show(ui, |ui| {
+                let mut job = LayoutJob::single_section(
+                    lines.join("\n"),
+                    egui::TextFormat {
+                        extra_letter_spacing: 0.0,
+                        line_height: Some(line_height),
+                        ..Default::default()
+                    },
+                );
+                job.wrap = egui::text::TextWrapping {
+                    max_rows: 10000,
+                    break_anywhere: true,
+                    overflow_character: None,
+                    ..Default::default()
+                };
+
+                // NOTE: `Label` overrides some of the wrapping settings,
+                // e.g. wrap width, halign, and justify.
+                ui.with_layout(
+                    egui::Layout::top_down(Align::LEFT).with_cross_justify(true),
+                    |ui| {
+                        ui.label(job);
+                    },
+                );
+            });
+    }
+
+    fn add_wiki_single_item_loot_section(&mut self, ui: &mut Ui, ctx: &Context) {
+        if self.wiki_selected_item_identifier.is_none() {
+            return;
+        }
+
+        let entry_identifier = self.wiki_selected_item_identifier.as_ref().unwrap();
+
+        // let mut replaced = false;
+        let mut lines = vec![
+            "{|class=\"wikitable ct\"".to_string(),
+            //"! colspan=\"7\" | ITEM_HERE Catacombs Drop Rates".to_string(),
+            //"|-".to_string(),
+            "! [[Catacombs#Floors|Floor]]".to_string(),
+            "! [[Dungeon_Reward_Chest#Chest_Types|Chest]]".to_string(),
+            "! Cost <br> (Chest + Added)".to_string(),
+            //"! First Roll Chance <br> (Shown in [[RNG Meter]])".to_string(),
+            "! Average Chance <br> (No Bonuses)".to_string(),
+            "! Average Chance <br> ({{Dungeon Ranking|S+}} [[Dungeon_Reward_Chest#Quality_Upgrades|Max Bonuses]])".to_string(),
+            "! [[Dungeon_Reward_Chest#Loot_Rolling_Process|Quality]]".to_string(),
+            "! [[Dungeon_Reward_Chest#Loot_Rolling_Process|Weight]]".to_string()
+        ];
+
+        for (floor, chests) in self.loot.iter() {
+            for chest in chests {
+                if !chest.has_matching_entry_identifier(entry_identifier) {
+                    continue;
+                }
+
+                let base_table_hash = generate_base_wiki_table_hash(floor, chest);
+                let max_table_hash = generate_max_wiki_table_hash(floor, chest);
+                let base_table_quality = calculate_quality(chest,
+                                                           1.0,
+                                                           0,
+                                                           0,
+                                                           &TestingQualityIncrease::default(),
+                                                           chest.require_s_plus(),
+                );
+                let max_table_quality = calculate_quality(chest,
+                                                          1.03,
+                                                          10,
+                                                          13,
+                                                          &TestingQualityIncrease::default(),
+                                                          true,
+                );
+
+                let base_chances = self.get_loot_table_chances_by_hash(base_table_hash);
+                if base_chances.is_none() {
+                    let new_chances = calculate_average_chances(chest, base_table_quality, &RngMeterData::default());
+                    self.hashed_chances.insert(base_table_hash, new_chances);
+                }
+
+                let max_chances = self.get_loot_table_chances_by_hash(max_table_hash);
+                if max_chances.is_none() {
+                    let new_chances = calculate_average_chances(chest, max_table_quality, &RngMeterData::default());
+                    self.hashed_chances.insert(max_table_hash, new_chances);
+                }
+
+                let base_chances = self.get_loot_table_chances_by_hash(base_table_hash);
+                let max_chances = self.get_loot_table_chances_by_hash(max_table_hash);
+                if base_chances.is_none() || max_chances.is_none() {
+                    continue;
+                }
+
+                let base_chances = base_chances.unwrap();
+                let base_chance_entry = base_chances.entries.iter()
+                    .find(|e| e.borrow().entry.to_string() == *entry_identifier).unwrap().borrow();
+
+                let max_chances = max_chances.unwrap();
+                let max_chance_entry = max_chances.entries.iter()
+                    .find(|e| e.borrow().entry.to_string() == *entry_identifier).unwrap().borrow();
+
+                let loot_entry = &base_chance_entry.entry;
+                /*
+                if !replaced {
+                    replaced = true;
+                    let entry_to_replace = lines.get(1);
+                    let replacement = entry_to_replace.unwrap().replace("ITEM_HERE", &loot_entry.get_wiki_template_reference());
+                    lines[1] = replacement;
+                }
+                 */
+
+                let chest_price = chest.base_cost + loot_entry.get_added_chest_price();
+                let quality = loot_entry.get_quality();
+                let weight = base_chance_entry.used_weight;
+
+                //let first_roll_chance = weight / base_chances.total_weight;
+                let no_modifiers_average_chance = base_chance_entry.chance;
+                let max_modifiers_average_chance = max_chance_entry.chance;
+
+                if no_modifiers_average_chance == 0.0 {
+                    continue;
+                }
+
+                lines.push("|-".to_string());
+                lines.push(format!("| style=\"text-align: left\" | {}", floor_to_wiki_text(floor)));
+                lines.push(format!("| [[File:{} Chest Render.png|x25px]] {}", chest.chest_type, chest.chest_type));
+                lines.push(format!("| {{{{Coins|{}}}}}", chest_price.to_formatted_string(&en)));
+
+                //lines.push(get_wiki_chance_text(first_roll_chance));
+                lines.push(get_wiki_chance_text(no_modifiers_average_chance));
+                lines.push(get_wiki_chance_text(max_modifiers_average_chance));
+
+                lines.push(format!("| {{{{Aqua|{quality}}}}}"));
+                lines.push(format!("| {{{{Aqua|{}}}}}", format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.')));
+            }
+        }
+
+
+        lines.push("|}".to_string());
+
+        let line_height = TextStyle::Body
+            .resolve(ui.style())
+            .size
+            .max(ui.spacing().interact_size.y);
+
+        if ui.button("Copy to Clipboard").clicked() {
+            ctx.copy_text(lines.join("\n"));
+        }
+
+        ScrollArea::vertical()
+            .auto_shrink(false)
+            .show(ui, |ui| {
+                let mut job = LayoutJob::single_section(
+                    lines.join("\n"),
+                    egui::TextFormat {
+                        extra_letter_spacing: 0.0,
+                        line_height: Some(line_height),
+                        ..Default::default()
+                    },
+                );
+                job.wrap = egui::text::TextWrapping {
+                    max_rows: 10000,
+                    break_anywhere: true,
+                    overflow_character: None,
+                    ..Default::default()
+                };
+
+                // NOTE: `Label` overrides some of the wrapping settings,
+                // e.g. wrap width, halign, and justify.
+                ui.with_layout(
+                    egui::Layout::top_down(Align::LEFT).with_cross_justify(true),
+                    |ui| {
+                        ui.label(job);
+                    },
+                );
+            });
     }
 
     fn add_loot_combinations_section(&mut self, ui: &mut Ui) {
@@ -864,6 +1186,21 @@ impl CatacombsLootPage {
         hasher.finish()
     }
 
+    pub fn generate_base_wiki_table_hash(&self) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        self.floor.hash(&mut hasher);
+        self.chest.hash(&mut hasher);
+        0.hash(&mut hasher);
+        hasher.finish()
+    }
+    pub fn generate_max_wiki_table_hash(&self) -> u64 {
+        let mut hasher = DefaultHasher::new();
+        self.floor.hash(&mut hasher);
+        self.chest.hash(&mut hasher);
+        100.hash(&mut hasher);
+        hasher.finish()
+    }
+
     fn generate_rng_meter_calculation_chests_and_item_hash(&self) -> u64 {
         let mut hasher = DefaultHasher::new();
         (self.s_plus || self.require_s_plus()).hash(&mut hasher);
@@ -901,6 +1238,26 @@ impl CatacombsLootPage {
         let hash = self.generate_loot_table_hash();
         self.hashed_chances.get(&hash)
     }
+
+    pub fn get_loot_table_chances_by_hash(&self, hash: u64) -> Option<&AveragesCalculationResult> {
+        self.hashed_chances.get(&hash)
+    }
+}
+
+fn generate_base_wiki_table_hash(floor: &String, chest: &Rc<LootChest>) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    floor.hash(&mut hasher);
+    chest.hash(&mut hasher);
+    0.hash(&mut hasher);
+    hasher.finish()
+}
+
+fn generate_max_wiki_table_hash(floor: &String, chest: &Rc<LootChest>) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    floor.hash(&mut hasher);
+    chest.hash(&mut hasher);
+    100.hash(&mut hasher);
+    hasher.finish()
 }
 
 fn find_chests_with_entry<'a>(
@@ -945,6 +1302,20 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
         );
         ui.label(" runs)");
     }
+}
+
+fn get_wiki_chance_text(chance: f64) -> String {
+    let mut text = format!("| {{{{G|{}%}}}}", format!("{:.4}", chance * 100.0).trim_end_matches('0').trim_end_matches('.'));
+
+    if chance == 1.0 {
+        text += " (guaranted)";
+    } else if chance == 0.0 {
+        text += " (never)";
+    } else {
+        text += &format!(" (1 in {{{{Gold|{}}}}} runs)", format!("{:.1}", 1.0 / chance).trim_end_matches('0').trim_end_matches('.'));
+    }
+
+    text
 }
 
 fn fill_in_chance_differences_column(ui: &mut Ui, current_chance: f64, previous_chance: f64) {

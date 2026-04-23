@@ -243,7 +243,7 @@ fn sort_entries(entries: &mut [Rc<RefCell<LootChanceEntry>>], rng_meter_item: Op
             .to_string()
             .eq(&rng_meter_string)
             .cmp(&a.borrow().entry.to_string().eq(&rng_meter_string))
-            .then((a.borrow().chance == 0.0).cmp(&(b.borrow().chance == 0.0)))
+            //.then((a.borrow().chance == 0.0).cmp(&(b.borrow().chance == 0.0)))
             .then(a.borrow().entry.is_guaranteed().cmp(&b.borrow().entry.is_guaranteed()))
             .then(
                 a.borrow().entry

@@ -67,10 +67,18 @@ impl ChestType {
     }
 }
 
+impl Display for ChestType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            _ => write!(f, "{:?}", self),
+        }
+    }
+}
+
 #[derive(Default, Hash)]
 pub struct TestingQualityIncrease {
     pub amount: u8,
-    pub is_percentage: bool
+    pub is_percentage: bool,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone, Eq, Hash)]
@@ -144,9 +152,9 @@ impl LootEntry {
 
     pub fn get_wiki_page_name(&self) -> String {
         format!(
-            "https://wiki.hypixel.net/{}",
+            "https://hypixelskyblock.minecraft.wiki/w/{}",
             match self {
-                LootEntry::Item { item, .. } => item.clone(),
+                LootEntry::Item { item, item_name, .. } => item_name.as_ref().unwrap_or(&item.to_case(Case::Title)).to_string(),
                 LootEntry::Pet { pet, .. } => format!("{} Pet", pet.to_case(Case::Title)),
                 LootEntry::Enchantment { enchantment, .. } =>
                     format!("{} Enchantment", enchantment.to_case(Case::Title)),
@@ -156,10 +164,21 @@ impl LootEntry {
         )
     }
 
+    pub fn get_wiki_template_reference(&self) -> String {
+        match self {
+            LootEntry::Item { item, item_name, .. } => format!("{{{{ID|{}}}}}", item_name.as_ref().unwrap_or(&item.to_case(Case::Title))),
+            LootEntry::Pet { pet, .. } => format!("{{{{ID|{} Pet}}}}", pet.to_case(Case::Title)),
+            LootEntry::Enchantment { enchantment, enchantment_level, .. } =>
+                format!("{{{{ID|Enchanted Book &{} {}&}}}}", enchantment.to_case(Case::Title), enchantment_level),
+            LootEntry::Essence { essence_type, essence_amount, .. } =>
+                format!("{{{{RD|{} {} Essence}}}}", essence_amount, essence_type.to_case(Case::Title)),
+        }
+    }
+
     pub fn is_essence_and_can_roll_multiple_times(&self) -> bool {
         matches!(self, LootEntry::Essence { .. })
     }
-    
+
     pub fn is_guaranteed(&self) -> bool {
         self.get_weight() == 0 && self.get_quality() == 0
     }

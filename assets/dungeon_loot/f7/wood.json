@@ -6,7 +6,7 @@
   "base_quality": 125,
   "loot": [
     {
-      "enchantment": "ULTIMATE_BANK",
+      "enchantment": "BANK",
       "enchantment_level": 1,
       "extra_chest_cost": 0,
       "quality": 100,

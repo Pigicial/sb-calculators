@@ -218,18 +218,21 @@
     },
     {
       "item": "MAXOR_THE_FISH",
+      "item_name": "Maxor the Fish",
       "quality": 61,
       "weight": 5,
       "extra_chest_cost": 0
     },
     {
       "item": "GOLDOR_THE_FISH",
+      "item_name": "Goldor the Fish",
       "quality": 61,
       "weight": 5,
       "extra_chest_cost": 0
     },
     {
       "item": "STORM_THE_FISH",
+      "item_name": "Storm the Fish",
       "quality": 61,
       "weight": 5,
       "extra_chest_cost": 0
