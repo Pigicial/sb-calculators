@@ -76,6 +76,13 @@
       "weight": 14
     },
     {
+      "item": "WITHER_SHARD",
+      "item_name": "Wither Shard",
+      "extra_chest_cost": 0,
+      "quality": 170,
+      "weight": 350
+    },
+    {
       "item": "WITHER_BOOTS",
       "extra_chest_cost": 1500000,
       "quality": 170,
@@ -179,13 +186,6 @@
     {
       "essence_type": "UNDEAD",
       "essence_amount": 100,
-      "extra_chest_cost": 0,
-      "quality": 0,
-      "weight": 0
-    },
-    {
-      "item": "WITHER_SHARD",
-      "item_name": "Wither Shard",
       "extra_chest_cost": 0,
       "quality": 0,
       "weight": 0
