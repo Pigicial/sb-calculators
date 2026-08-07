@@ -130,6 +130,13 @@
       "extra_chest_cost": 0,
       "quality": 0,
       "weight": 0
+    },
+    {
+      "item": "BONZO_SHARD",
+      "item_name": "Bonzo Shard",
+      "extra_chest_cost": 0,
+      "quality": 0,
+      "weight": 0
     }
   ]
 }
