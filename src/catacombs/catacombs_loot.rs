@@ -175,6 +175,17 @@ impl LootEntry {
         }
     }
 
+    pub fn get_wiki_templateless_template_reference(&self) -> String {
+        match self {
+            LootEntry::Item { item, item_name, .. } => format!("{}", item_name.as_ref().unwrap_or(&item.to_case(Case::Title))),
+            LootEntry::Pet { pet, .. } => format!("{} Pet", pet.to_case(Case::Title)),
+            LootEntry::Enchantment { enchantment, enchantment_level, .. } =>
+                format!("Enchanted Book &{} {}&", enchantment.to_case(Case::Title), enchantment_level),
+            LootEntry::Essence { essence_type, essence_amount, .. } =>
+                format!("{} {} Essence", essence_amount, essence_type.to_case(Case::Title)),
+        }
+    }
+
     pub fn is_essence_and_can_roll_multiple_times(&self) -> bool {
         matches!(self, LootEntry::Essence { .. })
     }

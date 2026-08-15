@@ -14,6 +14,7 @@ use num_format::Locale::{cu, en, it};
 use num_format::ToFormattedString;
 use std::collections::hash_map::Entry;
 use std::collections::{BTreeMap, HashMap};
+use std::fmt::format;
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::rc::Rc;
 use crate::catacombs::options::{floor_to_text, floor_to_wiki_text};
@@ -714,7 +715,7 @@ impl CatacombsLootPage {
 
         let mut lines: Vec<String> = Vec::new();
 
-        lines.push("{|class=\"wikitable ct\"".to_string());
+        lines.push("{|class=\"wikitable\"".to_string());
         lines.push(format!("! colspan=\"7\" | [[File:{} Chest Render.png|x40px]] {} [[Dungeon Reward Chest|Chest Loot]] - {}", chest.chest_type, chest.chest_type, floor_to_wiki_text(self.floor.as_ref().unwrap())));
         lines.push("|-".to_string());
         lines.push("! Entry".to_string());
@@ -728,6 +729,7 @@ impl CatacombsLootPage {
             lines.push(format!("! Average Chance <br> (No Bonuses, {{{{Aqua|{base_quality}}}}} Quality)"));
         }
         lines.push(format!("! Average Chance <br> ({{{{Dungeon Ranking|S+}}}} [[Dungeon_Reward_Chest#Quality_Upgrades|Max Bonuses]], {{{{Aqua|{max_quality}}}}} Quality)"));
+        lines.push("|-".to_string());
 
         for base_chance_entry in base_chances.entries.iter() {
             let base_chance_entry = base_chance_entry.borrow();
@@ -735,6 +737,7 @@ impl CatacombsLootPage {
             let max_chance_entry = max_chances.entries.iter().find(|e| e.borrow().entry == *loot_entry).unwrap().borrow();
 
             let added_chest_price = loot_entry.get_added_chest_price();
+            let min_entry_price = added_chest_price + chest.base_cost;
             let quality = loot_entry.get_quality();
             let weight = base_chance_entry.used_weight;
 
@@ -742,14 +745,21 @@ impl CatacombsLootPage {
             let no_modifiers_average_chance = base_chance_entry.chance;
             let max_modifiers_average_chance = max_chance_entry.chance;
 
-            lines.push("|-".to_string());
-            lines.push(format!("| style=\"text-align: left\" | {}", loot_entry.get_wiki_template_reference()));
-            lines.push(format!("| {{{{Coins|{}}}}}", added_chest_price.to_formatted_string(&en)));
-            lines.push(format!("| {{{{Aqua|{quality}}}}}"));
-            lines.push(format!("| {{{{Aqua|{}}}}}", format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.')));
-            lines.push(get_wiki_chance_text(first_roll_chance));
-            lines.push(get_wiki_chance_text(no_modifiers_average_chance));
-            lines.push(get_wiki_chance_text(max_modifiers_average_chance));
+            lines.push("{{Catacombs Chest Loot Table Entry".to_string());
+            lines.push(format!("|floor = {}", chest.floor));
+            if chest.master_mode {
+                lines.push("|master_mode = yes".to_string());
+            }
+            lines.push(format!("|chest = {}", chest.chest_type));
+            lines.push(format!("|entry = {}", loot_entry.get_wiki_templateless_template_reference()));
+            lines.push(format!("|added_cost = {}", added_chest_price.to_formatted_string(&en)));
+            lines.push(format!("|total_cost = {}", min_entry_price.to_formatted_string(&en)));
+            lines.push(format!("|quality = {quality}"));
+            lines.push(format!("|weight = {}", format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.')));
+            lines.push(format!("|first_roll_chance = {}", get_wiki_chance_text(first_roll_chance)));
+            lines.push(format!("|average_chance_no_bonuses = {}", get_wiki_chance_text(no_modifiers_average_chance)));
+            lines.push(format!("|average_chance_max_bonuses = {}", get_wiki_chance_text(max_modifiers_average_chance)));
+            lines.push("}}".to_string());
         }
         lines.push("|}".to_string());
 
@@ -890,8 +900,8 @@ impl CatacombsLootPage {
                 lines.push(format!("| {{{{Coins|{}}}}}", chest_price.to_formatted_string(&en)));
 
                 //lines.push(get_wiki_chance_text(first_roll_chance));
-                lines.push(get_wiki_chance_text(no_modifiers_average_chance));
-                lines.push(get_wiki_chance_text(max_modifiers_average_chance));
+                lines.push(format!("| {}", get_wiki_chance_text(no_modifiers_average_chance)));
+                lines.push(format!("| {}", get_wiki_chance_text(max_modifiers_average_chance)));
 
                 lines.push(format!("| {{{{Aqua|{quality}}}}}"));
                 lines.push(format!("| {{{{Aqua|{}}}}}", format!("{:.3}", weight).trim_end_matches('0').trim_end_matches('.')));
@@ -1285,7 +1295,7 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
     );
 
     if chance == 1.0 {
-        ui.label(" (guaranted)");
+        ui.label(" (guaranteed)");
     } else if chance == 0.0 {
         ui.label(" (never)");
     } else {
@@ -1305,17 +1315,16 @@ fn fill_in_chance_column(ui: &mut Ui, chance: f64) {
 }
 
 fn get_wiki_chance_text(chance: f64) -> String {
-    let mut text = format!("| {{{{G|{}%}}}}", format!("{:.4}", chance * 100.0).trim_end_matches('0').trim_end_matches('.'));
+    let chance_text = format!("{}%", format!("{:.4}", chance * 100.0).trim_end_matches('0').trim_end_matches('.'));
 
+    let green_text = format!("{{{{Green|{chance_text}}}}}");
     if chance == 1.0 {
-        text += " (guaranted)";
+        green_text + " (guaranteed)"
     } else if chance == 0.0 {
-        text += " (never)";
+        green_text + " (never)"
     } else {
-        text += &format!(" (1 in {{{{Gold|{}}}}} runs)", format!("{:.1}", 1.0 / chance).trim_end_matches('0').trim_end_matches('.'));
+        format!("{{{{Chance|{chance_text}|1|{}|runs}}}}", format!("{:.1}", 1.0 / chance).trim_end_matches('0').trim_end_matches('.'))
     }
-
-    text
 }
 
 fn fill_in_chance_differences_column(ui: &mut Ui, current_chance: f64, previous_chance: f64) {
