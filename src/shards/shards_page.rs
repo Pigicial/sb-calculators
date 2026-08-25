@@ -173,7 +173,7 @@ impl eframe::App for ShardsPage {
                             ui.end_row();
 
                             ui.horizontal(|ui| {
-                                images::add_image(&self.images, ui, "Pure Reptile Shard.png");
+                                images::add_image(&self.images, ui, "Crocodile Shard.png");
                                 ui.label("Pure Reptile Level:");
                             });
                             ui.add(Slider::new(&mut self.pure_reptile_attribute_level, 0..=10));
@@ -206,7 +206,7 @@ impl eframe::App for ShardsPage {
                             }
                         } else if self.calculator_type == AllFusionOutputs {
                             ui.horizontal(|ui| {
-                                images::add_image(&self.images, ui, "Pure Reptile Shard.png");
+                                images::add_image(&self.images, ui, "Crocodile Shard.png");
                                 ui.label("Pure Reptile Level:");
                             });
                             ui.add(Slider::new(&mut self.pure_reptile_attribute_level, 0..=10));
