@@ -173,7 +173,7 @@ impl eframe::App for ShardsPage {
                             ui.end_row();
 
                             ui.horizontal(|ui| {
-                                images::add_image(&self.images, ui, "attribute_pure_reptile.png");
+                                images::add_image(&self.images, ui, "Pure Reptile Shard.png");
                                 ui.label("Pure Reptile Level:");
                             });
                             ui.add(Slider::new(&mut self.pure_reptile_attribute_level, 0..=10));
@@ -206,7 +206,7 @@ impl eframe::App for ShardsPage {
                             }
                         } else if self.calculator_type == AllFusionOutputs {
                             ui.horizontal(|ui| {
-                                images::add_image(&self.images, ui, "attribute_pure_reptile.png");
+                                images::add_image(&self.images, ui, "Pure Reptile Shard.png");
                                 ui.label("Pure Reptile Level:");
                             });
                             ui.add(Slider::new(&mut self.pure_reptile_attribute_level, 0..=10));
@@ -622,9 +622,11 @@ impl ShardsPage {
                 let possible_data = bazaar_data.get(&shard_data.get_bazaar_id());
                 if possible_data.is_none() {
                     eprintln!("Couldn't fetch data for shard {} ({}) ({})", shard_data.shard_name, shard_data.attribute_name, shard_data.get_bazaar_id());
+                    shard_data.cached_bazaar_data = None;
+                } else {
+                    let quick_status = &possible_data.unwrap().quick_status;
+                    shard_data.cached_bazaar_data = Some(quick_status.clone());
                 }
-                let quick_status = &possible_data.unwrap().quick_status;
-                shard_data.cached_bazaar_data = Some(quick_status.clone());
             }
         }
     }
@@ -790,8 +792,8 @@ fn add_shard_text(ui: &mut Ui, shard: &ShardData, images: &Rc<HashMap<String, Te
 }
 
 fn add_shard_image(ui: &mut Ui, shard: &ShardData, images: &Rc<HashMap<String, TextureHandle>>) {
-    let id = shard.id_override.clone().unwrap_or_else(|| shard.attribute_name.to_lowercase().replace("'", "").replace(" ", "_"));
-    let image_name = format!("attribute_{id}.png");
+    let shard_name = &shard.shard_name;
+    let image_name = format!("{shard_name} Shard.png");
     images::add_first_valid_image(images, ui, vec![image_name]);
 }
 

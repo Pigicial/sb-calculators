@@ -13,16 +13,17 @@ pub type Shards = HashMap<String, ShardData>;
 pub struct ShardData {
     pub shard_name: String,
     pub attribute_name: String,
-    bazaar_id_override: Option<String>,
-    pub id_override: Option<String>,
+    pub internal_id: Option<String>,
     pub description: String,
     pub id: u8,
-    #[serde_as(as = "OneOrMany<_>")]
-    pub scaling: Vec<f32>,
+    //#[serde_as(as = "OneOrMany<_>")]
+    //pub scaling: Vec<f32>,
     pub rarity: Rarity,
     pub category: Category,
     pub skill: Skill,
     pub families: Option<Vec<String>>,
+    pub blacklisted_from_regular_fusions: Option<bool>,
+    pub blacklisted_from_chameleon_fusions: Option<bool>,
     pub sources: Sources,
     
     #[serde(skip)]
@@ -40,71 +41,53 @@ impl Hash for ShardData {
 
 impl ShardData {
     pub fn meets_conditions(&self, requirements: &ShardConditions) -> bool {
-        // println!("test");
-        if let Some(whitelisted_shards) = &requirements.shards {
-            // println!("Whitelisted shards: {:?}", whitelisted_shards);
-            // println!("shard name: {}", self.shard_name);
-            return whitelisted_shards.contains(&self.shard_name);
-        }
-
-        if let Some(required_category) = &requirements.category {
-            if required_category != &self.category {
-                return false;
-            }
-        }
-        
-        if let Some(required_skill) = &requirements.skill {
-            if required_skill != &self.skill {
+        let only_one_required = requirements.one_requirement.unwrap_or(false);
+        for requirement in &requirements.requirements {
+            // println!("test");
+            let meets_requirement = self.meets_requirement(requirement);
+            if only_one_required && meets_requirement {
+                return true;
+            } else if !meets_requirement && !only_one_required {
                 return false;
             }
         }
 
-        if let Some(required_family) = &requirements.family {
-            // println!("required family: {:?}", required_family);
-            // println!("shard: {:?}", self.shard_name);
-            match &self.families {
-                None => return false,
+        !only_one_required
+    }
+    
+    pub fn meets_requirement(&self, requirement: &ShardCondition) -> bool {
+        if let Some(whitelisted_shards) = &requirement.shard {
+            whitelisted_shards == &self.shard_name
+        } else if let Some(required_category) = &requirement.category {
+            return required_category == &self.category;
+        } else if let Some(required_skill) = &requirement.skill {
+            return required_skill == &self.skill;
+        } else if let Some(required_family) = &requirement.family {
+            return match &self.families {
+                None => false,
                 Some(families) => {
-                    if !families.contains(required_family) {
-                        // println!("returning false");
-                        return false;
-                    } else {
-                        // println!("no its true");
-                    }
+                    families.contains(required_family)
                 }
             }
-        }
-
-        if let Some(required_rarity) = &requirements.rarity {
-            let rarity_or_higher = &requirements.rarity_or_higher.unwrap_or(false);
-            match rarity_or_higher {
-                false => if required_rarity != &self.rarity {
-                    return false;
-                },
-                true => if &self.rarity < required_rarity {
-                    return false;
-                }
+        } else if let Some(required_rarity) = &requirement.rarity {
+            let rarity_or_higher = &requirement.rarity_or_higher.unwrap_or(false);
+            return match rarity_or_higher {
+                false => required_rarity == &self.rarity,
+                true => &self.rarity >= required_rarity,
             }
+        } else {
+            return false;
         }
-
-        true
     }
 
     pub fn is_special_fusion_or_special_source_only(&self) -> bool {
-        let sources = &self.sources;
-        if let Some(blacklisted_from_regular_fusions) = sources.blacklisted_from_regular_fusion {
+        if let Some(blacklisted_from_regular_fusions) = self.blacklisted_from_regular_fusions {
             return blacklisted_from_regular_fusions;
         }
-
+        
+        let sources = &self.sources;
         let has_special_fusion_source = sources.special_fusion.is_some();
-        let has_no_other_sources = !sources.beacon.unwrap_or(false)
-            && !sources.tree_gifts.unwrap_or(false)
-            && sources.fishing_loot.is_none()
-            && sources.mobs.is_none()
-            && sources.crafting.is_none()
-            && sources.traps.is_none();
-
-        has_special_fusion_source && has_no_other_sources
+        has_special_fusion_source
     }
     
     pub fn get_amount_consumed_in_fusion(&self) -> u8 {
@@ -138,8 +121,8 @@ impl ShardData {
     }
     
     pub fn get_bazaar_id(&self) -> String {
-        if let Some(bazaar_id_override) = &self.bazaar_id_override {
-            format!("SHARD_{}", bazaar_id_override.to_uppercase())
+        if let Some(internal_id) = &self.internal_id {
+            format!("SHARD_{}", internal_id.to_uppercase())
         } else {
             format!("SHARD_{}", self.shard_name.to_uppercase().replace(" ", "_"))
         }
@@ -163,7 +146,8 @@ pub enum Skill {
     Taming,
     Enchanting,
     Hunting,
-    Global
+    Global,
+    Alchemy
 }
 
 #[derive(Deserialize, Serialize, Eq, PartialEq, Ord, PartialOrd, Debug, Hash)]
@@ -210,16 +194,8 @@ impl Rarity {
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
 pub struct Sources {
-    pub mobs: Option<MobSource>,
-    pub kuudra: Option<bool>,
-    pub beacon: Option<bool>,
-    pub tree_gifts: Option<bool>,
-    pub crafting: Option<CraftingSource>,
-    pub shop_purchase: Option<ShopPurchaseSource>,
     #[serde_as(as = "Option<OneOrMany<_>>")]
     pub traps: Option<Vec<TrapSource>>,
-    pub fishing_loot: Option<FishingLootSource>,
-    pub dungeon_loot: Option<DungeonLootSource>,
     pub special_fusion: Option<SpecialFusionSource>,
     pub blacklisted_from_regular_fusion: Option<bool>,
 }
@@ -267,14 +243,19 @@ pub struct SpecialFusionSource {
 #[serde_as]
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
 pub struct ShardConditions {
-    #[serde_as(as = "Option<OneOrMany<_>>")]
-    pub shards: Option<Vec<String>>,
+    pub one_requirement: Option<bool>,
+    pub requirements: Vec<ShardCondition>
+}
+
+#[serde_as]
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
+pub struct ShardCondition { 
+    pub shard: Option<String>,
     pub category: Option<Category>,
     pub skill: Option<Skill>,
     pub family: Option<String>,
     pub rarity: Option<Rarity>,
     pub rarity_or_higher: Option<bool>,
-    pub just_single_condition_required: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]

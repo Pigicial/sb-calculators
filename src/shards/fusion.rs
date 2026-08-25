@@ -2,6 +2,7 @@ use crate::shards::shard_data::{ShardData, Shards};
 use crate::shards::shards_page::{BuyType, ProfitType};
 use std::collections::{HashMap, HashSet};
 use std::hash::{Hash, Hasher};
+use num_format::Locale::ne;
 
 pub type ShardFusionCombinations = HashMap<String, HashSet<FusionResults>>;
 
@@ -75,15 +76,15 @@ impl FusionResults {
 
     pub fn get_result_profit(&self, resulting_shard_name: &String, buy_type: BuyType, profit_type: ProfitType, pure_reptile_attribute_level: u8, bazaar_tax_rate: f64, shards: &Shards) -> f64 {
         let shard = shards.get(resulting_shard_name).unwrap();
-        let bazaar_quick_status = shard.cached_bazaar_data.as_ref().unwrap();
+        let bazaar_quick_status = shard.cached_bazaar_data.as_ref();
 
         let mut amount_created = if self.was_chameleon { 1 } else { shard.get_default_amount_made_in_fusion() } as f64;
         if self.is_reptile_fusion {
             amount_created *= 1.0 + (pure_reptile_attribute_level as f64 * 0.02);
         }
 
-        let cost_of_fusion = self.get_total_cost(buy_type, shards).unwrap() as f64;
-        let sell_price = bazaar_quick_status.get_sell_price(profit_type) * amount_created * (1.0 - bazaar_tax_rate);
+        let cost_of_fusion = self.get_total_cost(buy_type, shards).unwrap_or(0) as f64;
+        let sell_price = bazaar_quick_status.map(|data| data.get_sell_price(profit_type)).unwrap_or(0f64) * amount_created * (1.0 - bazaar_tax_rate);
 
         sell_price - cost_of_fusion
     }
@@ -118,7 +119,7 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
             }
 
             if let Some(next_shard) = next_shard {
-                if next_shard != first_shard && next_shard != second_shard {
+                if next_shard != first_shard && next_shard != second_shard && !next_shard.blacklisted_from_chameleon_fusions.unwrap_or(false) {
                     found_outputs.push(next_shard.shard_name.clone());
                 }
             }
@@ -157,23 +158,30 @@ pub fn generate_outputs(first_shard: &ShardData, second_shard: &ShardData, all_s
     }
 
     let mut special_fusions = find_applicable_special_fusions(first_shard, second_shard, all_shards);
+
+    // todo: deprioritize "generic_plus" fusions
     special_fusions.sort_by(|a, b| {
         b.rarity.cmp(&a.rarity).then(a.id.cmp(&b.id))
     });
 
     let mut listed_fusions = Vec::with_capacity(3);
-    if let Some(first_base_fusion) = first_base_fusion {
-        listed_fusions.push(first_base_fusion.shard_name.clone());
-    }
-    if let Some(second_base_fusion) = second_base_fusion {
-        listed_fusions.push(second_base_fusion.shard_name.clone());
-    }
 
     for special_fusion_output in &special_fusions {
         if listed_fusions.len() < 3 {
             listed_fusions.push(special_fusion_output.shard_name.clone());
         } else {
             break;
+        }
+    }
+
+    if let Some(first_base_fusion) = first_base_fusion {
+        if listed_fusions.len() < 3 {
+            listed_fusions.push(first_base_fusion.shard_name.clone());
+        }
+    }
+    if let Some(second_base_fusion) = second_base_fusion {
+        if listed_fusions.len() < 3 {
+            listed_fusions.push(second_base_fusion.shard_name.clone());
         }
     }
 
