@@ -56,7 +56,9 @@ impl ShardData {
     }
     
     pub fn meets_requirement(&self, requirement: &ShardCondition) -> bool {
-        if let Some(whitelisted_shards) = &requirement.shard {
+        if let Some(any) = &requirement.any {
+            *any
+        } else if let Some(whitelisted_shards) = &requirement.shard {
             whitelisted_shards == &self.shard_name
         } else if let Some(required_category) = &requirement.category {
             return required_category == &self.category;
@@ -256,6 +258,7 @@ pub struct ShardCondition {
     pub family: Option<String>,
     pub rarity: Option<Rarity>,
     pub rarity_or_higher: Option<bool>,
+    pub any: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]

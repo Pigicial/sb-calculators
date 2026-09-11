@@ -7598,7 +7598,23 @@
     ],
     "flavor_text": "With unmatched agility and strength, Apex can strike down its enemies with devastating precision, leaving nothing but ruin and despair in its wake.",
     "sources": {
-      "catacombs": true
+      "catacombs": true,
+      "special_fusion": {
+        "first": {
+          "requirements": [
+            {
+              "shard": "Power Dragon"
+            }
+          ]
+        },
+        "second": {
+          "requirements": [
+            {
+              "any": true
+            }
+          ]
+        }
+      }
     }
   },
   {
